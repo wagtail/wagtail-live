@@ -40,6 +40,7 @@ class LivePageMixin(models.Model):
 
     last_update_at = models.DateTimeField(
         help_text="Date and time of the last update for this channel/page",
+        null=True,
         blank=True,
     )
 
