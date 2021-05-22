@@ -54,7 +54,7 @@ class ImageMessageBlock(BaseMessageBlock):
     """A block that represents an image message in a messaging app.
 
     Attributes:
-        images (int):
+        image (int):
             Foreign key to the image of a message
     """
 
