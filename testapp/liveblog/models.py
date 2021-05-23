@@ -1,4 +1,5 @@
 from wagtail.core.models import Page
+
 from wagtail_live.models import LivePageMixin
 
 

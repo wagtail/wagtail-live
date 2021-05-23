@@ -11,7 +11,7 @@ class TestSimpleLivePage(TestCase):
         self.live_page = Page.objects.get(id=3).specific
 
     def test_get_channel_name(self):
-        """ Ensure channel's name is properly set."""
+        """Ensure channel's name is properly set."""
 
         channel_name = self.live_page.channel_name
         self.assertEqual(channel_name, "SimpleLiveChannel")
