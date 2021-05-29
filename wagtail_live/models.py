@@ -1,6 +1,6 @@
 """ Wagtail Live models.
 
-The LivePageMixin class embodies relevant properties to pages 
+The LivePageMixin class embodies relevant properties to pages
 using Wagtail Live.
 
     Typical usage example:
@@ -13,11 +13,13 @@ using Wagtail Live.
         ] + LivePageMixin.panels
 """
 
+from functools import lru_cache
+
 from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.fields import StreamField
 
-from .blocks import EmbedMessageBlock, ImageMessageBlock, TextMessageBlock
+from .blocks import LivePostBlock
 
 
 class LivePageMixin(models.Model):
@@ -46,9 +48,7 @@ class LivePageMixin(models.Model):
 
     live_posts = StreamField(
         [
-            ("text", TextMessageBlock()),
-            ("image", ImageMessageBlock()),
-            ("embed", EmbedMessageBlock()),
+            ("live_post", LivePostBlock()),
         ],
         blank=True,
     )
@@ -58,6 +58,29 @@ class LivePageMixin(models.Model):
         FieldPanel("last_update_at"),
         StreamFieldPanel("live_posts"),
     ]
+
+    @lru_cache(maxsize=1)
+    def get_posts_by_id_index_pair(self, last_update_at):
+        """Returns a dict that maps a post id to its index in live_posts.
+        
+        Not sure if the implementation is right, but the idea is that
+        we don't need to recompute this value if there is not a new message.
+        Editing a message doesn't affect the mapping msg_id-index but deleting does. 
+        So keep track of last_update.
+        """
+
+        return {msg.id: index for index, msg in enumerate(self.live_posts)}
+
+    def get_live_post_index(self, live_post_id):
+        """Returns an existing livepost with live_post_id."""
+
+        posts_by_id_index_pair = self.get_posts_by_id_index_pair(self.last_update_at)
+        return posts_by_id_index_pair[live_post_id]
+
+    def get_live_post(self, live_post_index):
+        """Return a live post given its index in live_posts."""
+
+        return self.live_posts[live_post_index]
 
     class Meta:
         abstract = True
