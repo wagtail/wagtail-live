@@ -183,6 +183,7 @@ class SlackEventsAPIReceiver:
         # live_post is also saved with ID equals to message's ID;
         # this facilitates tracking blocks
         live_page.live_posts.append(("live_post", live_post, message_id))
+        live_page.last_update_at = now()
         live_page.save()
 
     def delete_message(self, message):
