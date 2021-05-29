@@ -157,7 +157,6 @@ class SlackEventsAPIReceiver:
                     ),
                 )
                 img.save()
-                breakpoint()
                 block = construct_image_block(img)
                 add_block_to_live_post_block(IMAGE, block, live_post)
 
