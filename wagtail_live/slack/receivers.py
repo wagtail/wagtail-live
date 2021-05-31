@@ -143,9 +143,9 @@ class SlackEventsAPIReceiver:
                 live_page.add_block_to_live_post(IMAGE, block, live_post)
 
     def add_message(self, message):
+        message_id = self.get_message_id_from_message(message)
         channel_name = self.get_channel_name_from_message(message)
         live_page = self.get_live_page_from_channel_name(channel_name)
-        message_id = self.get_message_id_from_message(message)
 
         live_post = construct_live_post_block(message_id, now())
 
@@ -158,9 +158,9 @@ class SlackEventsAPIReceiver:
         live_page.add_live_post(live_post, message_id)
 
     def change_message(self, message):
+        message_id = self.get_message_id_from_edited_message(message)
         channel_name = self.get_channel_name_from_message(message)
         live_page = self.get_live_page_from_channel_name(channel_name)
-        message_id = self.get_message_id_from_edited_message(message)
 
         live_post = live_page.get_live_post_by_id(live_post_id=message_id)
         live_page.clear_live_post_content(live_post)
@@ -174,8 +174,8 @@ class SlackEventsAPIReceiver:
         live_page.update_live_post(live_post)
 
     def delete_message(self, message):
+        message_id = self.get_message_id_from_edited_message(message)
         channel_name = self.get_channel_name_from_message(message)
         live_page = self.get_live_page_from_channel_name(channel_name)
-        message_id = self.get_message_id_from_edited_message(message)
 
         live_page.delete_live_post(message_id)

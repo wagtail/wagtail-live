@@ -93,16 +93,14 @@ class LivePageMixin(models.Model):
         live_block["content"].append((block_type, block))
 
     def add_live_post(self, live_post, live_post_id):
-        if self.live_posts:
-            lp_index = len(self.live_posts)
-            while float(self.live_posts[lp_index - 1].id) > float(live_post_id):
-                lp_index -= 1
+        lp_index = len(self.live_posts) if self.live_posts else 0
+        while self.live_posts and float(self.live_posts[lp_index - 1].id) > float(
+            live_post_id
+        ):
+            lp_index -= 1
 
-            # Insert to keep posts sorted by time
-            self.live_posts.insert(lp_index, ("live_post", live_post, live_post_id))
-
-        else:
-            self.live_posts.append(("live_post", live_post, live_post_id))
+        # Insert to keep posts sorted by time
+        self.live_posts.insert(lp_index, ("live_post", live_post, live_post_id))
 
         self.last_update_at = now()
         self.save()
