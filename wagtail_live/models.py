@@ -59,23 +59,28 @@ class LivePageMixin(models.Model):
         StreamFieldPanel("live_posts"),
     ]
 
-    @lru_cache(maxsize=1)
-    def get_posts_by_id_index_pair(self, last_update_at):
-        """Returns a dict that maps a post id to its index in live_posts.
-        
-        Not sure if the implementation is right, but the idea is that
-        we don't need to recompute this value if there is not a new message.
-        Editing a message doesn't affect the mapping msg_id-index but deleting does. 
-        So keep track of last_update.
-        """
+    def _get_live_post_index(self, live_post_id, low, high):
 
-        return {msg.id: index for index, msg in enumerate(self.live_posts)}
+        while low < high:
+
+            mid = (low + high) // 2
+            curr_id = self.live_posts[mid].id
+
+            if float(curr_id) == float(live_post_id):
+                return mid
+
+            elif float(curr_id) < float(live_post_id):
+                low = mid + 1
+
+            else:
+                high = mid - 1
+
+        return low
 
     def get_live_post_index(self, live_post_id):
         """Returns an existing livepost with live_post_id."""
 
-        posts_by_id_index_pair = self.get_posts_by_id_index_pair(self.last_update_at)
-        return posts_by_id_index_pair[live_post_id]
+        return self._get_live_post_index(live_post_id, 0, len(self.live_posts))
 
     def get_live_post(self, live_post_index):
         """Return a live post given its index in live_posts."""

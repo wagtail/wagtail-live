@@ -38,7 +38,6 @@ from wagtail.images.blocks import ImageChooserBlock
 
 from ..blocks import ContentBlock, LivePostBlock
 
-
 TEXT = "message"
 IMAGE = "image"
 EMBED = "embed"
@@ -58,6 +57,16 @@ def construct_image_block(image):
 def construct_embed_block(url):
     embed_block = EmbedBlock()
     return embed_block.to_python(url)
+
+
+def construct_live_post_block(message_id):
+    live_post = LivePostBlock()
+    return live_post.to_python(
+        {
+            "message_id": message_id,
+            "created": now(),
+        }
+    )
 
 
 def add_block_to_live_post_block(block_type, block, live_block):
@@ -110,7 +119,7 @@ class SlackEventsAPIReceiver:
         return []
 
     def get_message_id_from_edited_message(self, message):
-        return message["previous_message"]["ts"]
+        return self.get_message_id_from_message(message["previous_message"])
 
     def get_message_text_from_edited_message(self, message):
         return self.get_message_text(message["message"])
@@ -165,13 +174,7 @@ class SlackEventsAPIReceiver:
         live_page = self.get_live_page_from_channel_name(channel_name)
         message_id = self.get_message_id_from_message(message)
 
-        live_post = LivePostBlock()
-        live_post = live_post.to_python(
-            {
-                "message_id": message_id,
-                "created": now(),
-            }
-        )
+        live_post = construct_live_post_block(message_id)
 
         message_text = self.get_message_text(message)
         self.process_text(live_post, message_text)
@@ -201,13 +204,9 @@ class SlackEventsAPIReceiver:
         live_page = self.get_live_page_from_channel_name(channel_name)
         message_id = self.get_message_id_from_edited_message(message)
 
-        # Empty content block which replaces previous content
-        new_content_block = ContentBlock()
-        new_content_block = new_content_block.to_python([])
-
         live_post_index = live_page.get_live_post_index(live_post_id=message_id)
         live_post = live_page.get_live_post(live_post_index=live_post_index)
-        live_post.value["content"] = new_content_block
+        live_post.value.get("content").clear()
 
         message_text = self.get_message_text_from_edited_message(message)
         self.process_text(live_post.value, message_text)
