@@ -30,47 +30,20 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 from django.utils.timezone import now
-from wagtail.core.blocks import TextBlock
-from wagtail.embeds.blocks import EmbedBlock
 from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
-from wagtail.images.blocks import ImageChooserBlock
 
-from ..blocks import ContentBlock, LivePostBlock
+from ..blocks import (
+    construct_embed_block,
+    construct_image_block,
+    construct_live_post_block,
+    construct_text_block,
+)
 
 TEXT = "message"
 IMAGE = "image"
 EMBED = "embed"
 LivePost = "live_post"
-
-
-def construct_text_block(text):
-    text_block = TextBlock()
-    return text_block.to_python(text)
-
-
-def construct_image_block(image):
-    image_block = ImageChooserBlock()
-    return image_block.to_python(image.id)
-
-
-def construct_embed_block(url):
-    embed_block = EmbedBlock()
-    return embed_block.to_python(url)
-
-
-def construct_live_post_block(message_id):
-    live_post = LivePostBlock()
-    return live_post.to_python(
-        {
-            "message_id": message_id,
-            "created": now(),
-        }
-    )
-
-
-def add_block_to_live_post_block(block_type, block, live_block):
-    live_block["content"].append((block_type, block))
 
 
 def is_embed(text):
@@ -127,7 +100,7 @@ class SlackEventsAPIReceiver:
     def get_message_files_from_edited_message(self, message):
         return self.get_message_files(message["message"])
 
-    def process_text(self, live_post, message_text):
+    def process_text(self, live_page, live_post, message_text):
         message_parts = message_text.split("\n")
         for part in message_parts:
             block_type = ""
@@ -146,9 +119,9 @@ class SlackEventsAPIReceiver:
                 block = construct_text_block(part)
                 block_type = TEXT
 
-            add_block_to_live_post_block(block_type, block, live_post)
+            live_page.add_block_to_live_post(block_type, block, live_post)
 
-    def process_files(self, live_post, files):
+    def process_files(self, live_page, live_post, files):
         for item in files:
             mime_type = item["mimetype"]
             if mime_type in ["image/png", "image/jpeg", "image/gif"]:
@@ -167,53 +140,42 @@ class SlackEventsAPIReceiver:
                 )
                 img.save()
                 block = construct_image_block(img)
-                add_block_to_live_post_block(IMAGE, block, live_post)
+                live_page.add_block_to_live_post(IMAGE, block, live_post)
 
     def add_message(self, message):
         channel_name = self.get_channel_name_from_message(message)
         live_page = self.get_live_page_from_channel_name(channel_name)
         message_id = self.get_message_id_from_message(message)
 
-        live_post = construct_live_post_block(message_id)
+        live_post = construct_live_post_block(message_id, now())
 
         message_text = self.get_message_text(message)
-        self.process_text(live_post, message_text)
+        self.process_text(live_page, live_post, message_text)
 
         files = self.get_message_files(message)
-        self.process_files(live_post, files)
+        self.process_files(live_page, live_post, files)
 
-        # Finally, add live post to live page and save it.
-        # live_post is also saved with ID equals to message's ID;
-        # this facilitates tracking blocks
-        live_page.live_posts.append(("live_post", live_post, message_id))
-        live_page.last_update_at = now()
-        live_page.save()
-
-    def delete_message(self, message):
-        channel_name = self.get_channel_name_from_message(message)
-        live_page = self.get_live_page_from_channel_name(channel_name)
-        message_id = self.get_message_id_from_edited_message(message)
-
-        live_post_index = live_page.get_live_post_index(live_post_id=message_id)
-        del live_page.live_posts[live_post_index]
-        live_page.last_update_at = now()
-        live_page.save()
+        live_page.add_live_post(live_post, message_id)
 
     def change_message(self, message):
         channel_name = self.get_channel_name_from_message(message)
         live_page = self.get_live_page_from_channel_name(channel_name)
         message_id = self.get_message_id_from_edited_message(message)
 
-        live_post_index = live_page.get_live_post_index(live_post_id=message_id)
-        live_post = live_page.get_live_post(live_post_index=live_post_index)
-        live_post.value.get("content").clear()
+        live_post = live_page.get_live_post_by_id(live_post_id=message_id)
+        live_page.clear_live_post_content(live_post)
 
         message_text = self.get_message_text_from_edited_message(message)
-        self.process_text(live_post.value, message_text)
+        self.process_text(live_page, live_post.value, message_text)
 
         files = self.get_message_files_from_edited_message(message)
-        self.process_files(live_post.value, files)
+        self.process_files(live_page, live_post.value, files)
 
-        live_post.value["modified"] = now()
-        live_page.last_update_at = now()
-        live_page.save()
+        live_page.update_live_post(live_post)
+
+    def delete_message(self, message):
+        channel_name = self.get_channel_name_from_message(message)
+        live_page = self.get_live_page_from_channel_name(channel_name)
+        message_id = self.get_message_id_from_edited_message(message)
+
+        live_page.delete_live_post(message_id)

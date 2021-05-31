@@ -45,3 +45,28 @@ class LivePostBlock(StructBlock):
         help_text="Indicates if this message is shown/hidden",
     )
     content = ContentBlock()
+
+
+def construct_text_block(text):
+    text_block = TextBlock()
+    return text_block.to_python(text)
+
+
+def construct_image_block(image):
+    image_block = ImageChooserBlock()
+    return image_block.to_python(image.id)
+
+
+def construct_embed_block(url):
+    embed_block = EmbedBlock()
+    return embed_block.to_python(url)
+
+
+def construct_live_post_block(message_id, created):
+    live_post = LivePostBlock()
+    return live_post.to_python(
+        {
+            "message_id": message_id,
+            "created": created,
+        }
+    )
