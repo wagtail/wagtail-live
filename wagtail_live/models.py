@@ -1,6 +1,6 @@
 """ Wagtail Live models.
 
-The LivePageMixin class embodies relevant properties to pages 
+The LivePageMixin class embodies relevant properties to pages
 using Wagtail Live.
 
     Typical usage example:
@@ -61,4 +61,3 @@ class LivePageMixin(models.Model):
 
     class Meta:
         abstract = True
-
