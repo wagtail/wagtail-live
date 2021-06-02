@@ -10,9 +10,22 @@ cd wagtail-live
 With your preferred virtualenv activated, install the package in development mode with the included testing and documentation dependencies:
 
 ```shell
-[TODO: needs setup.cfg and setup.py] python -m pip install -e '.[test,docs]' -U
+python -m pip install -e '.[test,docs]' -U
+```
 
-[TODO: temp remove]  python -m pip install -r development_requirements.txt
+## Testing
+
+Run the test suite locally
+
+```shell
+pytest
+```
+
+Or test all supported configurations using tox:
+
+```shell
+python -m pip install tox
+tox
 ```
 
 ## Documentation
@@ -22,6 +35,7 @@ Run documentation locally
 ```shell
 mkdocs serve
 ```
+
 
 Deploy documentation to Github pages:
 

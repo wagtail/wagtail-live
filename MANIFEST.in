@@ -1,2 +1,11 @@
+exclude *
+recursive-exclude * *
+
+include CHANGELOG.md
 include LICENSE
+include MANIFEST.in
 include README.md
+include setup.cfg
+include setup.py
+
+recursive-include wagtail_live *.html *.py

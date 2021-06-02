@@ -1,3 +1,6 @@
+# Mac files
+.DS_Store
+
 # Thumbnails
 ._*
 
@@ -19,12 +22,14 @@ downloads/
 eggs/
 lib/
 lib64/
+venv/
 parts/
 sdist/
 var/
 *.egg-info/
 .installed.cfg
 *.egg
+.pytest_cache
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
