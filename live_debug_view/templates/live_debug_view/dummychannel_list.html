@@ -1,0 +1,49 @@
+{% extends 'live_debug_view/base.html' %}
+{% load static %}
+
+{% block title %} Dummy Channels {% endblock title %}
+
+{% block header %}
+  <h2>Channels</h2>
+{% endblock header %}
+
+{% block form %}
+<form id="new-channel-form">
+    {% csrf_token %}
+    <div>
+      <input type="text" id="channel_name" name="channel_name" required>
+    </div>
+    <div>
+      <button type="submit">New Dummy Channel</button>
+    </div>
+</form>
+{% endblock form %}
+
+{% block content %}
+<ul>
+  {% for channel in dummy_channels %}
+    {% with channel.channel_name as channel_name %}
+      <li id="{{ channel_name }}">
+        <div>
+          <a href="{% url 'channel_detail' channel_name %}">#{{ channel_name }}</a>
+          <span class="date">{{ channel.created }}</span>
+        </div>
+        <div class="btn-group channel-btn">
+          <a href="{% url 'channel_detail' channel_name %}">
+            <button class="enter-btn">Go to channel</button>
+          </a>
+          <button class="delete-btn" data-channel="{{channel_name}}">Delete</button>
+        </div>
+      </li>
+    {% endwith %}
+  {% endfor %}
+</ul>
+{% endblock content %}
+
+
+{% block extra_js %}
+<script>
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+</script>
+<script src="{% static 'live_debug_view/js/channels.js' %}"></script>
+{% endblock extra_js %}

@@ -1,2 +1,4 @@
 include LICENSE
 include README.md
+recursive-include live_debug_view/templates *
+recursive-include live_debug_view/static *

@@ -1,0 +1,1 @@
+"""Wagtail Live test suite"""
