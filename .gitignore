@@ -1,1 +1,3 @@
 site/
+.pytest_cache/
+.tox/
