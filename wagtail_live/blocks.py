@@ -1,9 +1,10 @@
-""" Block types are defined in this module."""
+""" Block types and block constructors are defined in this module."""
 
 from wagtail.core.blocks import (
     BooleanBlock,
     CharBlock,
     DateTimeBlock,
+    StreamBlock,
     StructBlock,
     TextBlock,
 )
@@ -11,20 +12,16 @@ from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 
 
-class BaseMessageBlock(StructBlock):
-    """A generic block that maps to a message in a messaging app.
+class ContentBlock(StreamBlock):
+    """A block that represents a live post content."""
 
-    Attributes:
-        message_id (str):
-            Represents the message's id.
-        created (DateTime):
-            Indicates when the message was first sent.
-        modified (DateTime):
-            Indicates when the message was last modified.
-        show (Boolean):
-            Optional; Indicates if the message is shown or not
-            in the corresponding page.
-    """
+    message = TextBlock(help_text="Text of the message")
+    image = ImageChooserBlock(help_text="Image of the message")
+    embed = EmbedBlock(help_text="URL of the embed message")
+
+
+class LivePostBlock(StructBlock):
+    """A generic block that maps to a message in a messaging app."""
 
     message_id = CharBlock(help_text="Message's ID")
     created = DateTimeBlock(help_text="Date and time of message creation")
@@ -37,36 +34,68 @@ class BaseMessageBlock(StructBlock):
         required=False,
         help_text="Indicates if this message is shown/hidden",
     )
+    content = ContentBlock()
 
 
-class TextMessageBlock(BaseMessageBlock):
-    """A block that represents a text message in a messaging app.
+def construct_text_block(text):
+    """Helper function to construct a text block for a LivePostBlock content.
 
-    Attributes:
-        message (str):
-            Text of a message
+    Args:
+        text (str): Text to add
+
+    Returns:
+        a TextBlock
     """
 
-    message = TextBlock(help_text="Text of the message")
+    text_block = TextBlock()
+    return text_block.to_python(text)
 
 
-class ImageMessageBlock(BaseMessageBlock):
-    """A block that represents an image message in a messaging app.
+def construct_image_block(image):
+    """Helper function to construct an image block for a LivePostBlock content.
 
-    Attributes:
-        image (int):
-            Foreign key to the image of a message
+    Args:
+        image (pk): Foreign key to the image to add
+
+    Returns:
+        an ImageBlock
     """
 
-    image = ImageChooserBlock(help_text="Image of the message")
+    image_block = ImageChooserBlock()
+    return image_block.to_python(image.id)
 
 
-class EmbedMessageBlock(BaseMessageBlock):
-    """A block that represents an embed link message in a messaging app.
+def construct_embed_block(url):
+    """Helper function to construct an embed block for a LivePostBlock content.
 
-    Attributes:
-        embed (str):
-            Embed link of a message
+    Args:
+        url (str): Url of the embed
+
+    Returns:
+        an EmbedBlock
     """
 
-    embed = EmbedBlock(help_text="URL of the embed message")
+    embed_block = EmbedBlock()
+    return embed_block.to_python(url)
+
+
+def construct_live_post_block(message_id, created):
+    """Helper function to construct a LivePostBlock .
+
+    Args:
+        message_id (str):
+            Id of the message to construct a live post for.
+        created (DateTime):
+            Date and time of message creation.
+
+    Returns:
+        a LivePostBlock
+    """
+
+    live_post = LivePostBlock()
+    return live_post.to_python(
+        {
+            "message_id": message_id,
+            "created": created,
+        }
+    )
