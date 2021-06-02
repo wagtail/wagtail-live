@@ -1,0 +1,14 @@
+site_name: Wagtail Live
+repo_url: https://github.com/wagtail/wagtail-live
+edit_uri: blob/main/docs/
+theme:
+  name: 'material'
+  palette:
+    primary: 'teal'
+    accent: 'indigo'
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+nav:
+  - Home: index.md
+  - Development: development.md
