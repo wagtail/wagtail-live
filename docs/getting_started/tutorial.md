@@ -137,7 +137,7 @@ You will then need to add `wagtail_live` and `liveblog` to your `INSTALLED_APPS`
     ]
 
 We can now create our first `LiveBlogPage`. Add the following in `liveblog.models`:
-```
+```python
     from wagtail.core.models import Page
 
     from wagtail_live.models import LivePageMixin
