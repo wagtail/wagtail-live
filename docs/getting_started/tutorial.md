@@ -25,7 +25,7 @@ Wagtail Live needs the following information to communicate with your app:
     > Bot tokens are the token type that most apps use.
 
 
-    In your app's **Basic Information** page, navigate to the **OAuth & Permissions** 
+    In your app's **Basic Information** page, navigate to **OAuth & Permissions** 
     on the left sidebar and scroll down to the **Bot Token Scopes** section. Click `Add an OAuth Scope`.
     Add the `channels:history` scope. This scope lets your app
     > View messages and other content in public channels that your slack app has been added to.
