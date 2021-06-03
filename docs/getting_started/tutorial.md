@@ -15,7 +15,7 @@ Click the `Create App` button and you should see your app's **Basic Information*
 
 ### Retrieve your tokens
 
-Wagtail Live needs the following informations to communicate with your app:
+Wagtail Live needs the following information to communicate with your app:
 
 - `SLACK_BOT_TOKEN`
 
