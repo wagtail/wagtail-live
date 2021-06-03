@@ -271,7 +271,7 @@ Head to http://127.0.0.1:8000/admin/ and log in with the superuser credentials y
 Create a new Live Blog Page with the title of your preference. To find the identifier of the channel you created,
 you can simply go to the channel page, and grab the second identifier in the URL displayed on the adress bar.
 
-For example, if you go on your channel's page and the URL looks like https://app.slack.com/client/T023G8L63FS/C024931MDK3,
+For example, if you go on your channel's page and the URL is https://app.slack.com/client/T023G8L63FS/C024931MDK3,
 then your channel identifier is **C024931MDK3**. 
 
 Add this identifier to the channel name field in your Live Blog Page.
