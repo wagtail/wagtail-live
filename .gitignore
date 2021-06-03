@@ -73,4 +73,9 @@ db.sqlite3
 site/
 .pytest_cache/
 .tox/
+<<<<<<< HEAD
 >>>>>>> Updated gitignore file.
+=======
+*.egg-info/
+dist/
+>>>>>>> Configuration files
