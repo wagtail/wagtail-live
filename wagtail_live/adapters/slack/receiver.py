@@ -1,4 +1,4 @@
-""" How to use it?
+"""How to use it?
 To create an app, register your URL to slack, get a token plus all additional infrastucture, see:
 https://github.com/slackapi/bolt-python/tree/main/examples/django
 Then do something like this in your url_patterns:
