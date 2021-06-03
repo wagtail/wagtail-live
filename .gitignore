@@ -1,3 +1,5 @@
 site/
 .pytest_cache/
 .tox/
+*.egg-info/
+dist/
