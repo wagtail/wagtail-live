@@ -230,7 +230,7 @@ Bolt uses the `/slack/events` endpoint to listen to all incoming requests from S
 Therefore, we must append `/slack/events` to all request URLs.
 
 In your `urls.py` file, add the following:
-```
+```python
     from wagtail_live.adapters.slack.views import slack_events_handler
 
 
