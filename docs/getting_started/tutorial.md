@@ -7,7 +7,7 @@ This tutorial walks you through building a live blog with Wagtail Live and Slack
 ### Create a Slack app
 
 First, you will need to create [a Slack app](https://api.slack.com/apps/new).
-You may be prompted to create it from scracth or from an App Manifest. For the purpose of
+You may be prompted to create it from scratch or from an App Manifest. For the purpose of
 this tutorial, you can create your app from scratch.
 
 Fill out your app name and pick a workspace to develop your app in.
@@ -18,10 +18,12 @@ Click the `Create App` button and you should see your app's **Basic Information*
 Wagtail Live needs the following informations to communicate with your app:
 
 - `SLACK_BOT_TOKEN`
+
     There are two token types available to a Slack app: user tokens and bot tokens.
     However, we will only need bot tokens for our live blog.
     > The bot token your app uses will be the same no matter which user performed the installation. 
     > Bot tokens are the token type that most apps use.
+
 
     In your app's **Basic Information** page, navigate to the **OAuth & Permissions** 
     on the left sidebar and scroll down to the **Bot Token Scopes** section. Click `Add an OAuth Scope`.
@@ -37,6 +39,7 @@ Wagtail Live needs the following informations to communicate with your app:
     Grab the token and copy it somewhere. (Keep your token safe!)
 
 - `SLACK_SIGNING_SECRET`
+
     Slack signs the requests it sends using this secret. We need it in order to confirm that each 
     request comes from Slack by verifying its unique signature.
 
@@ -91,6 +94,8 @@ $ export SLACK_BOT_TOKEN=xoxb-<your-bot-token>
 
 Use pip to install Wagtail and Wagtail Live:
 
+> Wagtail Live isn't released yet. See Development docs to install it.
+
 ```console
 $ pip install wagtail
 $ pip install wagtail-live
@@ -140,6 +145,8 @@ We can now create our first `LiveBlogPage`. Add the following in `liveblog.model
     class LiveBlogPage(Page, LivePageMixin):
         content_panels = Page.content_panels + LivePageMixin.panels
 ```
+
+
 
 Create a `templates` folder inside your `liveblog` app. Add a `liveblog` folder in the `templates` folder
 you just created and create a `live_blog_page.html` file. This respresents our `LiveBlogPage` template.
@@ -232,7 +239,7 @@ In your `urls.py` file, add the following:
     ]
 ```
 
-Now we can fire the server. Make sure ngrok is running on port 80.
+Now we can fire the server. Make sure ngrok is running on port 8000.
 Type:
 
 ```console
@@ -259,7 +266,7 @@ You will see another `More` dropdown button, click it and choose `Add apps`.
 
 Add your app to the channel.
 
-Head to (http://127.0.0.1:8000/admin/) and log in with the superuser credentials you created.
+Head to http://127.0.0.1:8000/admin/ and log in with the superuser credentials you created.
 
 Create a new Live Blog Page with the title of your preference. To know the identifier of the channel you created,
 you can simply go to the channel page, and grab the second identifier in the URL displayed on the adress bar.

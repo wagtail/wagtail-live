@@ -3,7 +3,7 @@ The LivePageMixin class embodies relevant properties to pages
 using Wagtail Live.
 
     Typical usage example:
-    
+
     class LiveBlogPage(Page, LivePageMixin):
         category = models.CharField(max_length=255)
         content_panels = Page.content_panels + [
@@ -67,11 +67,13 @@ class LivePageMixin(models.Model):
             (int) Index of the live post if found else -1
         """
 
-        n = len(self.live_posts)
-        for j in range(1, n):
-            if self.live_posts[n - j].id == live_post_id:
-                return n - j
-        return -1
+        index = len(self.live_posts) - 1
+        while index >= 0:
+            if self.live_posts[index].id == live_post_id:
+                break
+            index -= 1
+
+        return index
 
     def get_live_post_index(self, live_post_id):
         """Retrieve index of a livepost with its ID.
