@@ -144,8 +144,9 @@ We can now create our first `LiveBlogPage`. Add the following in `liveblog.model
 Create a `templates` folder inside your `liveblog` app. Add a `liveblog` folder in the `templates` folder
 you just created and create a `live_blog_page.html` file. This respresents our `LiveBlogPage` template.
 For now, add this to your `live_blog_page.html` template:
+```
     {{ self.live_posts }}
-
+```
 That's all we need in our models.
 
 ### Create the database
@@ -250,7 +251,7 @@ You don't have to bother about it, Bolt handles it.
 ### Channel configuration
 
 After your request URL is verified, scroll down to **Subscribe to Bot Events** and click the `Add Bot User Event` button.
-Choose the `message.channels` event and git the `Save Changes` button. This allow your bot to listen for messages in public channels that it is added to.
+Choose the `message.channels` event and hit the `Save Changes` button. This allow your bot to listen for messages in public channels that it is added to.
 
 In the workspace you installed the app, create a new channel.
 In the channel's page, look for the `Show channel details` icon at the top right of the page and click it.
@@ -260,7 +261,7 @@ Add your app to the channel.
 
 Head to (http://127.0.0.1:8000/admin/) and log in with the superuser credentials you created.
 
-Create a new Live Blog Page with the title of your preference. To know the identifier og the channel you created,
+Create a new Live Blog Page with the title of your preference. To know the identifier of the channel you created,
 you can simply go to the channel page, and grab the second identifier in the URL displayed on the adress bar.
 
 For example, if you go on your channel's page and the URL looks like https://app.slack.com/client/T023G8L63FS/C024931MDK3,
