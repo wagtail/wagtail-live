@@ -176,7 +176,7 @@ class LivePageMixin(models.Model):
     def clear_live_post_content(self, live_post):
         """Clears the content of a live post.
         Args:
-            live_post (livePostBlock): Live post which content will be cleared.
+            live_post (LivePostBlock): Live post which content will be cleared.
         """
 
         live_post.value["content"].clear()
