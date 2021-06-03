@@ -20,7 +20,7 @@ Wagtail Live needs the following information to communicate with your app:
 - `SLACK_BOT_TOKEN`
 
     There are two token types available to a Slack app: user tokens and bot tokens.
-    However, we will only need bot tokens for our live blog.
+    We will only need bot tokens for our live blog.
     > The bot token your app uses will be the same no matter which user performed the installation. 
     > Bot tokens are the token type that most apps use.
 
