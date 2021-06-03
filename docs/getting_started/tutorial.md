@@ -178,7 +178,7 @@ Before firing up the server, we need additional setup to listen to Slack events.
 ### Add tokens to `settings`
 
 Add the following in your `settings.base` file:
-```
+```python
     # Wagtail Live settings
 
     SLACK_BOT_TOKEN = os.environ['SLACK_BOT_TOKEN']
