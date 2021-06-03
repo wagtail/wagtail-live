@@ -91,6 +91,8 @@ $ export SLACK_BOT_TOKEN=xoxb-<your-bot-token>
 
 Use pip to install Wagtail and Wagtail Live:
 
+> Wagtail Live isn't released yet. See Development docs to install it.
+
 ```console
 $ pip install wagtail
 $ pip install wagtail-live
