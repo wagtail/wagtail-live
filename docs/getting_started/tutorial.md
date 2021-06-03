@@ -44,7 +44,7 @@ Wagtail Live needs the following information to communicate with your app:
     request comes from Slack by verifying its unique signature.
 
     Go back to your app's page and navigate to the **Basic Information** section on the left sidebar.
-    Scroll down to **App Credentials**. You'll find there your Signing Secret. Grab it and keep it in a safe
+    Scroll down to **App Credentials**. You'll find your Signing Secret there. Copy it and keep it in a safe
     place too.
 
 ## Install and run Wagtail Live
