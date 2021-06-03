@@ -15,6 +15,7 @@ docs_requires = [
 test_requires = [
     "black==21.5b2",
     "isort==5.8.0",
+    "flake8==3.9.2",
     "pytest>=6.2,<6.3",
     "pytest-cov>=2.12,<3",
     "pytest-django>=4.3.0,<5",

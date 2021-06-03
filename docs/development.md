@@ -28,6 +28,22 @@ python -m pip install tox
 tox
 ```
 
+## Code style linting
+
+Check code style of all files (requires GNU Make to be installed)
+
+```shell
+make lint
+```
+
+Fix any errors that can be automatically fixed
+
+```shell
+make format
+```
+
+
+
 ## Documentation
 
 Run documentation locally
