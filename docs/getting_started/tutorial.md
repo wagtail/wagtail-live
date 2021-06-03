@@ -258,7 +258,7 @@ You don't have to bother about it, Bolt handles it.
 ### Channel configuration
 
 After your request URL is verified, scroll down to **Subscribe to Bot Events** and click the `Add Bot User Event` button.
-Choose the `message.channels` event and hit the `Save Changes` button. This allow your bot to listen for messages in public channels that it is added to.
+Choose the `message.channels` event and hit the `Save Changes` button. This enables your bot to listen for messages in public channels that it is added to.
 
 In the workspace you installed the app, create a new channel.
 In the channel's page, look for the `Show channel details` icon at the top right of the page and click it.
