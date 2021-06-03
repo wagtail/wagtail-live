@@ -1,7 +1,7 @@
 from django.conf import settings
 from slack_bolt import App
 
-from .receivers import SlackEventsAPIReceiver
+from .receiver import SlackEventsAPIReceiver
 
 app = App(
     token=settings.SLACK_BOT_TOKEN,
