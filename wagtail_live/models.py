@@ -184,7 +184,7 @@ class LivePageMixin(models.Model):
     def update_live_post(self, live_post):
         """Update a live post when it has been edited.
         Args:
-            live_post (livePostBlock): Live post to update.
+            live_post (LivePostBlock): Live post to update.
         """
 
         live_post.value["modified"] = now()
