@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block content %}
+  <h1>{{ page.title }}</h1>
+  <p>Modified: {{ page.last_update_at }}</p>
+  <hr>
+  {% for post in page.live_posts %}
+    <article data-post-id="{{ post.id }}">
+         {% for block in post.value.content %}
+            {% if forloop.first %}
+              <h2>{{ block.value }}</h2>
+              <p style="font-size: .75em">{{ post.value.created }}</p>
+            {% else %}
+              {% include_block block %}
+            {% endif %}
+         {% endfor %}
+    </article>
+    <hr>
+  {% endfor %}
+{% endblock content %}

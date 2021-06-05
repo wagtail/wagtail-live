@@ -3,3 +3,4 @@ site/
 .tox/
 *.egg-info/
 dist/
+testapp/db.sqlite3
