@@ -1,15 +1,19 @@
 """Wagtail Live receiver classes."""
 
 import re
+from importlib import import_module
 
 import requests
+
 from django.apps import apps
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.timezone import now
+
 from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
 
@@ -304,3 +308,40 @@ class BaseMessageReceiver:
             return
 
         live_page.delete_live_post(message_id)
+
+
+class DebugMessageReceiver(BaseMessageReceiver):
+
+    def __init__(self, channel=None, message_id=None, message=None):
+        self.channel = channel
+        self.message_id = message_id
+        self.message = message
+
+        dotted_path, model_name = settings.LIVE_BLOG_PAGE.rsplit(".", 1)
+        module = import_module(dotted_path)
+        self.model = getattr(module, model_name)
+
+    def get_page(self):
+        return self.model.objects.get(channel_name=self.channel)
+
+    def process(self):
+        post = construct_live_post_block(self.message_id, timezone.localtime(timezone.now()))
+        page = self.get_page()
+        self.process_text(page, post, self.message)
+        page.add_live_post(post, self.message_id)
+
+    def process_text(self, live_page, live_post, message_text):
+        lines = message_text.split("\n")
+        for idx, line in enumerate(lines):
+            # First line, is always a heading.
+            if idx == 0:
+                block = construct_text_block(line)
+                block_type = TEXT
+            elif line.startswith("http") and is_embed(line):
+                block = construct_embed_block(line)
+                block_type = EMBED
+            else:
+                block = construct_text_block(line)
+                block_type = TEXT
+
+            live_page.add_block_to_live_post(block_type, block, live_post)
