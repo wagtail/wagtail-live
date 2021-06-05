@@ -1,0 +1,18 @@
+{% load static wagtailuserbar %}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>
+            {% block title %}
+                {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+            {% endblock %}
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <body>
+        {% wagtailuserbar %}
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>
