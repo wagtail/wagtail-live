@@ -239,7 +239,7 @@ In your `urls.py` file, add the following:
     ]
 ```
 
-Now we can fire the server. Make sure ngrok is running on port 8000.
+Now we can start the server. Make sure ngrok is running on port 8000.
 Type:
 
 ```console
