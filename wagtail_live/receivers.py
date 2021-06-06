@@ -27,7 +27,7 @@ LivePost = "live_post"
 
 
 def is_embed(text):
-    """Check if a text is a link to embed.
+    """Checks if a text is a link to embed.
 
     Args:
         text (str): Text to check
@@ -66,7 +66,7 @@ class BaseMessageReceiver:
         raise NotImplementedError
 
     def get_channel_id_from_message(self, message):
-        """Retrieve a channel ID from a message.
+        """Retrieves a channel ID from a message.
 
         Args:
             message: A received message from a messaging app
@@ -78,7 +78,7 @@ class BaseMessageReceiver:
         raise NotImplementedError
 
     def get_live_page_from_channel_id(self, channel_id):
-        """Retrieve the live page with a given channel ID.
+        """Retrieves the live page with a given channel ID.
 
         Args:
             channel_id (str): Channel ID
@@ -93,7 +93,7 @@ class BaseMessageReceiver:
         return get_object_or_404(self.model, channel_id=channel_id)
 
     def get_message_id_from_message(self, message):
-        """Retrieve message's ID.
+        """Retrieves message's ID.
 
         Args:
             message: A received message from a messaging app
@@ -105,7 +105,7 @@ class BaseMessageReceiver:
         raise NotImplementedError
 
     def get_message_text(self, message):
-        """Retrieve the text of a message.
+        """Retrieves the text of a message.
 
         A message is made of text and files.
 
@@ -119,7 +119,7 @@ class BaseMessageReceiver:
         raise NotImplementedError
 
     def get_message_files(self, message):
-        """Retrieve the files of a message.
+        """Retrieves the files of a message.
 
         A message is made of text and files.
 
@@ -133,7 +133,7 @@ class BaseMessageReceiver:
         raise NotImplementedError
 
     def get_message_id_from_edited_message(self, message):
-        """Retrieve the ID of the original message.
+        """Retrieves the ID of the original message.
 
         Args:
             message: A received message from a messaging app
@@ -145,7 +145,7 @@ class BaseMessageReceiver:
         raise NotImplementedError
 
     def get_message_text_from_edited_message(self, message):
-        """Retrieve the text an edited message
+        """Retrieves the text an edited message
 
         Args:
             message: A received message from a messaging app
@@ -157,7 +157,7 @@ class BaseMessageReceiver:
         raise NotImplementedError
 
     def get_message_files_from_edited_message(self, message):
-        """Retrieve the files  from an edited message
+        """Retrieves the files  from an edited message
 
         Args:
             message: A received message from a messaging app
@@ -168,19 +168,17 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def is_embed(self, text):
-        """Check if a text is an embed for this receiver.
+    def get_embed(self, text):
+        """Check if a text is an embed for this receiver and return embed URL if so.
+        
+        Args:
+            text (str): Text to check
 
-        Mesaging apps have different ways to handle embed.
-        By default, use the is_embed function.
+        Returns:
+            (str) URL of the embed if the text contains an embed, else "".
         """
 
-        return is_embed(text=text)
-
-    def get_embed(self, text):
-        """Retrieve the actual URL of the embed."""
-
-        return text
+        return text if is_embed(text=text) else ""
 
     def process_text(self, live_page, live_post, message_text):
         """Processes the text of a message.
@@ -202,8 +200,8 @@ class BaseMessageReceiver:
         for text in message_parts:
             block_type = ""
 
-            if self.is_embed(text=text):
-                url = self.get_embed(text=text)
+            url = self.get_embed(text=text)
+            if url:
                 block = construct_embed_block(url=url)
                 block_type = EMBED
 
@@ -212,8 +210,8 @@ class BaseMessageReceiver:
                 block_type = TEXT
 
             live_page.add_block_to_live_post(
-                block_type=block_type, 
-                block=block, 
+                block_type=block_type,
+                block=block,
                 live_block=live_post,
             )
 
@@ -251,13 +249,13 @@ class BaseMessageReceiver:
                 img.save()
                 block = construct_image_block(image=img)
                 live_page.add_block_to_live_post(
-                    block_type=IMAGE, 
-                    block=block, 
+                    block_type=IMAGE,
+                    block=block,
                     live_block=live_post,
                 )
 
     def add_message(self, message):
-        """Add a received message from a messaging app to the corresponding channel.
+        """Adds a received message from a messaging app to the corresponding channel.
 
         Args:
             message: A message received from a messaging app
@@ -274,7 +272,9 @@ class BaseMessageReceiver:
         live_post = construct_live_post_block(message_id=message_id, created=now())
 
         message_text = self.get_message_text(message=message)
-        self.process_text(live_page=live_page, live_post=live_post, message_text=message_text)
+        self.process_text(
+            live_page=live_page, live_post=live_post, message_text=message_text
+        )
 
         files = self.get_message_files(message=message)
         self.process_files(live_page=live_page, live_post=live_post, files=files)
@@ -282,7 +282,7 @@ class BaseMessageReceiver:
         live_page.add_live_post(live_post=live_post, live_post_id=message_id)
 
     def change_message(self, message):
-        """Change a message when it's edited from a messaging app.
+        """Changes a message when it's edited from a messaging app.
 
         Args:
             message: A message edited from a messaging app
@@ -299,7 +299,9 @@ class BaseMessageReceiver:
         live_page.clear_live_post_content(live_post=live_post)
 
         message_text = self.get_message_text_from_edited_message(message=message)
-        self.process_text(live_page=live_page, live_post=live_post.value, message_text=message_text)
+        self.process_text(
+            live_page=live_page, live_post=live_post.value, message_text=message_text
+        )
 
         files = self.get_message_files_from_edited_message(message=message)
         self.process_files(live_page=live_page, live_post=live_post.value, files=files)
@@ -307,7 +309,7 @@ class BaseMessageReceiver:
         live_page.update_live_post(live_post=live_post)
 
     def delete_message(self, message):
-        """Delete a message when it's deleted from a messaging app.
+        """Deletes a message when it's deleted from a messaging app.
 
         Args:
             message: A message deleted from a messaging app
