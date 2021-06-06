@@ -192,7 +192,7 @@ Add the following in your `settings.base` file:
 In order to receive events like whan a message is sent in a channel, we need to hook a **Request URL** that
 Slack uses to send HTTP POST requests corresponding to events we specify.
 This URL needs to be publicly accessible. However, running `./manage.py runserver` only provide us a locally
-accessible URL. We use a development proxy(ngrok) that will create a public URL and tunnel requests to our own 
+accessible URL. We use a development proxy (ngrok) that will create a public URL and tunnel requests to our own 
 development environment. 
 
 ### Setting up ngrok
