@@ -7,6 +7,8 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 SECRET_KEY = "django-insecure-2%2hup1&(r-6(88=)txivii25r^o%4-&00u5vgs#n93r#t8+y0"
 
+DEBUG = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -34,6 +36,7 @@ INSTALLED_APPS = [
     "tests.testapp",
     # This package
     "wagtail_live",
+    "wagtail_live_debug",
 ]
 
 MIDDLEWARE = [
@@ -73,6 +76,8 @@ TEMPLATES = [
         },
     },
 ]
+
+STATIC_URL = "/static/"
 
 # Wagtail settings
 
