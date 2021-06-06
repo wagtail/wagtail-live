@@ -168,7 +168,7 @@ $ python3 manage.py migrate
 ### Create an admin user
 
 ```console
-$ python manage.py createsuperuser
+$ python3 manage.py createsuperuser
 ```
 
 When logged into the admin site, a superuser has full permissions and is able to view/create/manage the database.
