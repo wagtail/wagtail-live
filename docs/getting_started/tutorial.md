@@ -161,7 +161,7 @@ That's all we need in our models.
 Let's create our tables now:
 
 ```console
-$ python manage.py makemigrations
+$ python3 manage.py makemigrations
 $ python manage.py migrate
 ```
 
