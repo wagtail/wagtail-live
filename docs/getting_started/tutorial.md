@@ -243,7 +243,7 @@ Now we can start the server. Make sure ngrok is running on port 8000.
 Type:
 
 ```console
-$ python manage.py runserver
+$ python3 manage.py runserver
 ```
 
 Search for **Event Subscriptions** on your app's **Basic Information** page and toggle the `Enable events` button.
