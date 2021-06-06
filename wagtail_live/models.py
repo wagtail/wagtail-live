@@ -22,8 +22,8 @@ from .blocks import LivePostBlock
 class LivePageMixin(models.Model):
     """A helper class for pages using Wagtail Live.
     Attributes:
-        channel_name (str):
-            Name of the corresponding channel in a messaging app.
+        channel_id (str):
+            Id of the corresponding channel in a messaging app.
         last_update_at (DateTime):
             Date and time of the last update for this channel/page.
         live_posts (StreamField):
@@ -31,8 +31,8 @@ class LivePageMixin(models.Model):
             respectively on this page/channel.
     """
 
-    channel_name = models.CharField(
-        help_text="Channel name",
+    channel_id = models.CharField(
+        help_text="Channel ID",
         max_length=255,
     )
 
@@ -50,7 +50,7 @@ class LivePageMixin(models.Model):
     )
 
     panels = [
-        FieldPanel("channel_name"),
+        FieldPanel("channel_id"),
         FieldPanel("last_update_at"),
         StreamFieldPanel("live_posts"),
     ]
@@ -101,7 +101,8 @@ class LivePageMixin(models.Model):
             live_post = self.live_posts[live_post_index]
         except KeyError:
             raise
-        return live_post
+        else:
+            return live_post
 
     def get_live_post_by_id(self, live_post_id):
         """Retrieve a live post by its ID.
