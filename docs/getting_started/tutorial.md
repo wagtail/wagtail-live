@@ -162,7 +162,7 @@ Let's create our tables now:
 
 ```console
 $ python3 manage.py makemigrations
-$ python manage.py migrate
+$ python3 manage.py migrate
 ```
 
 ### Create an admin user
