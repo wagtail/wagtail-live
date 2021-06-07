@@ -17,7 +17,7 @@ class DummyChannel(models.Model):
     )
 
     def __str__(self):
-        return self.channel_name
+        return f"#{self.channel_name}"
 
     class Meta:
         ordering = ["-created"]

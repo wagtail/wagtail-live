@@ -25,7 +25,7 @@
     {% with channel.channel_name as channel_name %}
       <li id="{{ channel_name }}">
         <div>
-          <a href="{% url 'channel_detail' channel_name %}">#{{ channel_name }}</a>
+          <a href="{% url 'channel_detail' channel_name %}">{{ channel_name }}</a>
           <span class="date">{{ channel.created }}</span>
         </div>
         <div class="btn-group channel-btn">
