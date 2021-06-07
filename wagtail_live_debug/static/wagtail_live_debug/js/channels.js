@@ -17,7 +17,7 @@ async function createChannel(event) {
     let newChannelName = form["channel_name"].value;
     var regexp = /^[a-zA-Z0-9-_]+$/;
     if (!newChannelName.match(regexp)) {
-        let errorMsg = "Channel names con only contain alphanumeric characters or - and _";
+        let errorMsg = "Channel names can only contain alphanumeric characters or - and _";
         showNotif(errorMsg, reason=0);
         // Clear out composition fields
         document.querySelector('#channel_name').value = '';
@@ -46,7 +46,9 @@ async function createChannel(event) {
         }
   
     } catch(error) {
-        /* Need better error handling */
+        /**
+         * @todo Need better error handling.
+        */
         err = await response.json(); 
         return err;
     }
