@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Mac files
 .DS_Store
 
@@ -62,20 +61,10 @@ target/
 
 ### Django ###
 *.log
-*.pot
 *.pyc
-__pycache__/
 local_settings.py
 
 .env
 db.sqlite3
-=======
-site/
+
 .pytest_cache/
-.tox/
-<<<<<<< HEAD
->>>>>>> Updated gitignore file.
-=======
-*.egg-info/
-dist/
->>>>>>> Configuration files
