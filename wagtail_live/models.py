@@ -56,7 +56,7 @@ class LivePageMixin(models.Model):
     ]
 
     def _get_live_post_index(self, live_post_id):
-        """Retrieve index of a live post in page's live posts.
+        """Retrieves the index of a live post in page's live posts.
 
         Searches backwards.
 
@@ -76,7 +76,7 @@ class LivePageMixin(models.Model):
         return index
 
     def get_live_post_index(self, live_post_id):
-        """Retrieve index of a livepost with its ID.
+        """Retrieves index of a livepost with its ID.
 
         Args:
             live_post_id (str); Id of the live post to look for.
@@ -87,7 +87,7 @@ class LivePageMixin(models.Model):
         return self._get_live_post_index(live_post_id)
 
     def get_live_post_by_index(self, live_post_index):
-        """Retrieve a live post by its index.
+        """Retrieves a live post by its index.
 
         Args:
             live_post_index (str): Index of the live post to look for.
@@ -105,7 +105,7 @@ class LivePageMixin(models.Model):
             return live_post
 
     def get_live_post_by_id(self, live_post_id):
-        """Retrieve a live post by its ID.
+        """Retrieves a live post by its ID.
 
         Args:
             live_post_id (str): ID of the live post to look for.
@@ -119,7 +119,7 @@ class LivePageMixin(models.Model):
         return self.get_live_post_by_index(live_post_index)
 
     def add_block_to_live_post(self, block_type, block, live_block):
-        """Add a new content block to a live post.
+        """Adds a new content block to a live post.
 
         Args:
             block_type (str):
@@ -133,7 +133,7 @@ class LivePageMixin(models.Model):
         live_block["content"].append((block_type, block))
 
     def add_live_post(self, live_post, live_post_id):
-        """Add a new live post to live page.
+        """Adds a new live post to live page.
         Live posts are added with a custom ID to facilitate
         keeping their track.
         By default, the value of a live post's ID is
@@ -159,7 +159,7 @@ class LivePageMixin(models.Model):
         self.save()
 
     def delete_live_post(self, live_post_id):
-        """Delete a live post by its ID.
+        """Deletes a live post by its ID.
 
         Args:
             live_post_id (str): Id of the live post to delete.
@@ -183,7 +183,7 @@ class LivePageMixin(models.Model):
         live_post.value["content"].clear()
 
     def update_live_post(self, live_post):
-        """Update a live post when it has been edited.
+        """Updates a live post when it has been edited.
         Args:
             live_post (livePostBlock): Live post to update.
         """
