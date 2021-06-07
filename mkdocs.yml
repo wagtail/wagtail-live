@@ -12,3 +12,4 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Development: development.md
+  - Slack tutorial: getting_started/tutorial.md
