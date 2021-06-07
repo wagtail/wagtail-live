@@ -1,0 +1,66 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{% endblock title %}</title>
+    <link href="{% static 'wagtail_live_debug/css/main.css' %}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet"> 
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        {% block header %}{% endblock header %}
+      </header>
+
+      <div id="infos">
+        <div id="success"></div>
+        <div id="error"></div>
+      </div>
+      <main>
+        <section class="compose-form">
+          {% block form %}{% endblock form %}
+        </section>
+        <section class="content">
+          {% block content %}{% endblock content %}
+        </section>
+      </main>
+    </div>
+
+    <script>
+      function showNotif(msg, reason=1){
+        if (reason == 1){
+          let successDiv = document.querySelector("#success");
+          displayNotif(successDiv, msg);     
+        } else {
+          let errorDiv = document.querySelector("#error");
+          displayNotif(errorDiv, msg);
+        }
+      };
+
+      function displayNotif(notifDiv, msg) {
+        notifDiv.innerText = msg;
+        notifDiv.style.display = "block";
+        setTimeout(() => {
+          notifDiv.style.display = "none";
+        }, 3000);
+      };
+
+      async function fetchHelper(path, method, body) {
+        let fullPath = "/wagtail_live_debug/api/" + path;
+        return fetch(fullPath, {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+          },
+          body: body,
+        });
+      }
+    </script>
+    {% block extra_js %}{% endblock extra_js %}
+  </body>
+</html>
