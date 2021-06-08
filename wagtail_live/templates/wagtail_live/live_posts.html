@@ -1,0 +1,15 @@
+{% load wagtailcore_tags %}
+
+<div id="live-posts">
+    {% for post in self.live_posts reversed %}
+    <div class="live-post-wrapper">
+        {% include_block post with block_id=post.id %}
+    </div>
+    {% endfor %}
+</div>
+
+{% csrf_token %}
+<script>
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const channelID = "{{ self.channel_id }}";
+</script>
