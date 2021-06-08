@@ -55,6 +55,18 @@ class LivePageMixin(models.Model):
         StreamFieldPanel("live_posts"),
     ]
 
+    @property
+    def last_update_timestamp(self):
+        """Timestamp of the last update of this page."""
+
+        return self.last_update_at.timestamp()
+
+    def save(self, *args, **kwargs):
+        """Updates last_update_at when page is saved."""
+        
+        self.last_update_at = now()
+        super().save(*args, **kwargs)
+
     def _get_live_post_index(self, live_post_id):
         """Retrieves the index of a live post in page's live posts.
 
@@ -148,14 +160,13 @@ class LivePageMixin(models.Model):
         """
 
         lp_index = len(self.live_posts)
-        post_id = float(live_post_id)
-        while self.live_posts and float(self.live_posts[lp_index - 1].id) > post_id:
+        post_created_at = live_post["created"]
+        while self.live_posts:
+            if self.live_posts[lp_index - 1].value["created"] < post_created_at:
+                break
             lp_index -= 1
 
-        # Insert to keep posts sorted by time
         self.live_posts.insert(lp_index, ("live_post", live_post, live_post_id))
-
-        self.last_update_at = now()
         self.save()
 
     def delete_live_post(self, live_post_id):
@@ -171,7 +182,6 @@ class LivePageMixin(models.Model):
         if live_post_index == -1:
             return
         del self.live_posts[live_post_index]
-        self.last_update_at = now()
         self.save()
 
     def clear_live_post_content(self, live_post):
@@ -189,7 +199,6 @@ class LivePageMixin(models.Model):
         """
 
         live_post.value["modified"] = now()
-        self.last_update_at = now()
         self.save()
 
     class Meta:
