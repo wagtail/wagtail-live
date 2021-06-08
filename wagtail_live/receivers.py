@@ -10,11 +10,12 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from django.utils.timezone import now
+from wagtail.embeds.embeds import get_embed
+from wagtail.embeds.exceptions import EmbedException
 from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
 
 from .blocks import (
-    construct_embed_block,
     construct_image_block,
     construct_live_post_block,
     construct_text_block,
@@ -36,13 +37,12 @@ def is_embed(text):
         (bool) True if text corresponds to an embed link False else
     """
 
-    for provider in all_providers:
-        for url_pattern in provider.get("urls", []):
-            # Somehow Slack links start with `<` and end with `>`.
-            if bool(re.match(url_pattern, text)):
-                return True
-
-    return False
+    try:
+        embed = get_embed(text)
+    except EmbedException:
+        return
+    else:
+        return embed
 
 
 class BaseMessageReceiver:
@@ -168,7 +168,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_embed(self, text):
+    def get_embed_url_from_text(self, text):
         """Check if a text is an embed for this receiver and return embed URL if so.
 
         Args:
@@ -178,7 +178,7 @@ class BaseMessageReceiver:
             (str) URL of the embed if the text contains an embed, else "".
         """
 
-        return text if is_embed(text=text) else ""
+        return text
 
     def process_text(self, live_page, live_post, message_text):
         """Processes the text of a message.
@@ -200,15 +200,15 @@ class BaseMessageReceiver:
         for text in message_parts:
             block_type = ""
 
-            url = self.get_embed(text=text)
-            if url:
-                block = construct_embed_block(url=url)
-                block_type = EMBED
-
-            else:
+            try:
+                embed = get_embed(url=self.get_embed_url_from_text(text))
+            except EmbedException:
                 block = construct_text_block(text=text)
                 block_type = TEXT
-
+            else:
+                block = embed
+                block_type = EMBED
+                
             live_page.add_block_to_live_post(
                 block_type=block_type,
                 block=block,

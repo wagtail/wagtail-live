@@ -14,7 +14,7 @@ SLACK_SIGNING_SECRET = "your slack signing secret"
 And you are good to go! (Soon hopefully!)
 """
 
-from wagtail_live.receivers import BaseMessageReceiver, is_embed
+from wagtail_live.receivers import BaseMessageReceiver
 
 
 class SlackEventsAPIReceiver(BaseMessageReceiver):
@@ -70,12 +70,10 @@ class SlackEventsAPIReceiver(BaseMessageReceiver):
 
         return self.get_message_files(message=message["message"])
 
-    def get_embed(self, text):
-        """Strips leading `<` and trailing `>` from Slack urls."""
-
-        if is_embed(text=text[1:-1]):
-            # Not sure if it's the normal behavior, but have repeatedly received links
-            # from SLack API that looks like below:
-            # <https://twitter.com/lephoceen/status/139?s=20|https://twitter.com/lephoceen/status/139?s=20>'
-            return text[1:-1].split("|")[0]
-        return ""
+    def get_embed_url_from_text(self, text):
+        """ Strips leading `<` and trailing `>` from Slack urls."""
+        
+        # Not sure if it's the normal behavior, but have repeatedly received links
+        # from SLack API that looks like below:
+        # <https://twitter.com/lephoceen/status/139?s=20|https://twitter.com/lephoceen/status/139?s=20>'
+        return text[1:-1].split("|")[0]

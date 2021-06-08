@@ -65,20 +65,6 @@ def construct_image_block(image):
     return image_block.to_python(image.id)
 
 
-def construct_embed_block(url):
-    """Helper function to construct an embed block for a LivePostBlock content.
-
-    Args:
-        url (str): Url of the embed
-
-    Returns:
-        an EmbedBlock
-    """
-
-    embed_block = EmbedBlock()
-    return embed_block.to_python(url)
-
-
 def construct_live_post_block(message_id, created):
     """Helper function to construct a LivePostBlock .
 
