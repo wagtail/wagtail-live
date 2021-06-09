@@ -1,15 +1,4 @@
-""" Wagtail Live models.
-The LivePageMixin class embodies relevant properties to pages
-using Wagtail Live.
-
-    Typical usage example:
-
-    class LiveBlogPage(Page, LivePageMixin):
-        category = models.CharField(max_length=255)
-        content_panels = Page.content_panels + [
-            FieldPanel('category'),
-        ] + LivePageMixin.panels
-"""
+""" Wagtail Live models."""
 
 from django.db import models
 from django.utils.timezone import now
@@ -21,6 +10,7 @@ from .blocks import LivePostBlock
 
 class LivePageMixin(models.Model):
     """A helper class for pages using Wagtail Live.
+
     Attributes:
         channel_id (str):
             Id of the corresponding channel in a messaging app.
@@ -94,12 +84,12 @@ class LivePageMixin(models.Model):
         Returns:
             (LivePostBlock) The live post instance
         Raises:
-            (someException) if a live post with the given index doesn't exist.
+            (IndexError) if a live post with the given index doesn't exist.
         """
 
         try:
             live_post = self.live_posts[live_post_index]
-        except KeyError:
+        except IndexError:
             raise
         else:
             return live_post
@@ -116,43 +106,38 @@ class LivePageMixin(models.Model):
         """
 
         live_post_index = self.get_live_post_index(live_post_id=live_post_id)
-        return self.get_live_post_by_index(live_post_index)
-
-    def add_block_to_live_post(self, block_type, block, live_block):
-        """Adds a new content block to a live post.
-
-        Args:
-            block_type (str):
-                Type of the block to add
-            block (Block):
-                Block to add to the live post.
-            live_block (LivePostBlock):
-                Live post in which the new block will be added.
-        """
-
-        live_block["content"].append((block_type, block))
+        if live_post_index == -1:
+            raise KeyError
+        else:
+            return self.get_live_post_by_index(live_post_index)
 
     def add_live_post(self, live_post, live_post_id):
         """Adds a new live post to live page.
+
         Live posts are added with a custom ID to facilitate
         keeping their track.
         By default, the value of a live post's ID is
         the timestamp of the corresponding message creation.
         A check is also done to ensure that live posts are always
         sorted by time.
+
         Args:
             live_post (LivePostBlock):
                 live post to add
             live_post_id (str):
                 Id of the new live_post
+
+        Returns:
+            (None)
         """
 
         lp_index = len(self.live_posts)
-        post_id = float(live_post_id)
-        while self.live_posts and float(self.live_posts[lp_index - 1].id) > post_id:
+        post_created_at = live_post["created"]
+        while lp_index > 0:
+            if self.live_posts[lp_index - 1].value["created"] < post_created_at:
+                break
             lp_index -= 1
 
-        # Insert to keep posts sorted by time
         self.live_posts.insert(lp_index, ("live_post", live_post, live_post_id))
 
         self.last_update_at = now()
@@ -164,28 +149,23 @@ class LivePageMixin(models.Model):
         Args:
             live_post_id (str): Id of the live post to delete.
         Raises:
-            (someException) if live post with the given ID doesn't exist.
+            (KeyError) if live post with the given ID doesn't exist.
         """
 
         live_post_index = self.get_live_post_index(live_post_id=live_post_id)
         if live_post_index == -1:
-            return
+            raise KeyError
         del self.live_posts[live_post_index]
         self.last_update_at = now()
         self.save()
 
-    def clear_live_post_content(self, live_post):
-        """Clears the content of a live post.
-        Args:
-            live_post (livePostBlock): Live post which content will be cleared.
-        """
-
-        live_post.value["content"].clear()
-
     def update_live_post(self, live_post):
         """Updates a live post when it has been edited.
+
         Args:
             live_post (livePostBlock): Live post to update.
+        Returns:
+            (None)
         """
 
         live_post.value["modified"] = now()

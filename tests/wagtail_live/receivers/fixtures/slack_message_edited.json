@@ -1,0 +1,116 @@
+{
+    "token": "MSMdGErNtNSnZfhz6Nh3TOxd",
+    "team_id": "T023G8L63FS",
+    "api_app_id": "A022SGNS4AE",
+    "event": {
+        "type": "message",
+        "subtype": "message_changed",
+        "hidden": true,
+        "message": {
+            "client_msg_id": "c67f2a70-d341-4c41-b395-cea97a826d43",
+            "type": "message",
+            "text": "This is another test post that has been edited.\nThis post contains an embed.\n<https://www.youtube.com/watch?v=Cq3LOsf2kSY>\nIt also contains emojis :white_check_mark::pray:",
+            "user": "U022BM5C0JK",
+            "team": "T023G8L63FS",
+            "edited": {
+                "user": "U022BM5C0JK",
+                "ts": "1623319716.000000"
+            },
+            "blocks": [
+                {
+                    "type": "rich_text",
+                    "block_id": "t=i",
+                    "elements": [
+                        {
+                            "type": "rich_text_section",
+                            "elements": [
+                                {
+                                    "type": "text",
+                                    "text": "This is another test post that has been edited.\nThis post contains an embed.\n"
+                                },
+                                {
+                                    "type": "link",
+                                    "url": "https://www.youtube.com/watch?v=Cq3LOsf2kSY"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "\nIt also contains emojis "
+                                },
+                                {
+                                    "type": "emoji",
+                                    "name": "white_check_mark"
+                                },
+                                {
+                                    "type": "emoji",
+                                    "name": "pray"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "ts": "1623319472.003700",
+            "source_team": "T023G8L63FS",
+            "user_team": "T023G8L63FS"
+        },
+        "channel": "12345",
+        "previous_message": {
+            "client_msg_id": "c67f2a70-d341-4c41-b395-cea97a826d43",
+            "type": "message",
+            "text": "This is another test post.\nThis post contains an embed.\n<https://www.youtube.com/watch?v=Cq3LOsf2kSY>\nIt also contains emojis :white_check_mark::pray:",
+            "user": "U022BM5C0JK",
+            "ts": "1623319472.003700",
+            "team": "T023G8L63FS",
+            "blocks": [
+                {
+                    "type": "rich_text",
+                    "block_id": "SR0oE",
+                    "elements": [
+                        {
+                            "type": "rich_text_section",
+                            "elements": [
+                                {
+                                    "type": "text",
+                                    "text": "This is another test post.\nThis post contains an embed.\n"
+                                },
+                                {
+                                    "type": "link",
+                                    "url": "https://www.youtube.com/watch?v=Cq3LOsf2kSY"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "\nIt also contains emojis "
+                                },
+                                {
+                                    "type": "emoji",
+                                    "name": "white_check_mark"
+                                },
+                                {
+                                    "type": "emoji",
+                                    "name": "pray"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "event_ts": "1623319716.004600",
+        "ts": "1623319716.004600",
+        "channel_type": "channel"
+    },
+    "type": "event_callback",
+    "event_id": "Ev024EJWV75L",
+    "event_time": 1623319716,
+    "authorizations": [
+        {
+            "enterprise_id": null,
+            "team_id": "T023G8L63FS",
+            "user_id": "U023GAXGAGY",
+            "is_bot": true,
+            "is_enterprise_install": false
+        }
+    ],
+    "is_ext_shared_channel": false,
+    "event_context": "2-message-T023G8L63FS-A022SGNS4AE-12345"
+}

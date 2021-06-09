@@ -1,0 +1,187 @@
+{
+    "token": "MSMdGErNtNSnZfhz6Nh3TOxd",
+    "team_id": "T023G8L63FS",
+    "api_app_id": "A022SGNS4AE",
+    "event": {
+        "type": "message",
+        "subtype": "message_changed",
+        "hidden": true,
+        "message": {
+            "type": "message",
+            "text": "This is another test post.\nThis post contains an image. It's been edited.",
+            "files": [
+                {
+                    "id": "F024TH04SN8",
+                    "created": 1623319567,
+                    "timestamp": 1623319567,
+                    "name": "banner1.png",
+                    "title": "banner1.png",
+                    "mimetype": "image/png",
+                    "filetype": "png",
+                    "pretty_type": "PNG",
+                    "user": "U022BM5C0JK",
+                    "editable": false,
+                    "size": 1024203,
+                    "mode": "hosted",
+                    "is_external": false,
+                    "external_type": "",
+                    "is_public": true,
+                    "public_url_shared": false,
+                    "display_as_bot": false,
+                    "username": "",
+                    "url_private": "https://files.slack.com/files-pri/T023G8L63FS-F024TH04SN8/banner1.png",
+                    "url_private_download": "https://files.slack.com/files-pri/T023G8L63FS-F024TH04SN8/download/banner1.png",
+                    "thumb_64": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_64.png",
+                    "thumb_80": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_80.png",
+                    "thumb_360": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_360.png",
+                    "thumb_360_w": 360,
+                    "thumb_360_h": 120,
+                    "thumb_480": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_480.png",
+                    "thumb_480_w": 480,
+                    "thumb_480_h": 160,
+                    "thumb_160": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_160.png",
+                    "thumb_720": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_720.png",
+                    "thumb_720_w": 720,
+                    "thumb_720_h": 240,
+                    "thumb_800": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_800.png",
+                    "thumb_800_w": 800,
+                    "thumb_800_h": 267,
+                    "thumb_960": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_960.png",
+                    "thumb_960_w": 960,
+                    "thumb_960_h": 320,
+                    "thumb_1024": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_1024.png",
+                    "thumb_1024_w": 1024,
+                    "thumb_1024_h": 341,
+                    "original_w": 3000,
+                    "original_h": 1000,
+                    "thumb_tiny": "AwAQADC6aaacaaasBppppxppoAaaaacaaaYH/9k=",
+                    "permalink": "https://wagtaillive.slack.com/files/U022BM5C0JK/F024TH04SN8/banner1.png",
+                    "permalink_public": "https://slack-files.com/T023G8L63FS-F024TH04SN8-024420f8bb",
+                    "has_rich_preview": false
+                }
+            ],
+            "upload": false,
+            "blocks": [
+                {
+                    "type": "rich_text",
+                    "block_id": "mC8",
+                    "elements": [
+                        {
+                            "type": "rich_text_section",
+                            "elements": [
+                                {
+                                    "type": "text",
+                                    "text": "This is another test post.\nThis post contains an image. It's been edited."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "user": "U022BM5C0JK",
+            "display_as_bot": false,
+            "edited": {
+                "user": "U022BM5C0JK",
+                "ts": "1623326006.000000"
+            },
+            "ts": "1623319579.004300",
+            "source_team": "T023G8L63FS",
+            "user_team": "T023G8L63FS"
+        },
+        "channel": "12345",
+        "previous_message": {
+            "type": "message",
+            "text": "This is another test post.\nThis post contains an image.",
+            "files": [
+                {
+                    "id": "F024TH04SN8",
+                    "created": 1623319567,
+                    "timestamp": 1623319567,
+                    "name": "banner1.png",
+                    "title": "banner1.png",
+                    "mimetype": "image/png",
+                    "filetype": "png",
+                    "pretty_type": "PNG",
+                    "user": "U022BM5C0JK",
+                    "editable": false,
+                    "size": 1024203,
+                    "mode": "hosted",
+                    "is_external": false,
+                    "external_type": "",
+                    "is_public": true,
+                    "public_url_shared": false,
+                    "display_as_bot": false,
+                    "username": "",
+                    "url_private": "https://files.slack.com/files-pri/T023G8L63FS-F024TH04SN8/banner1.png",
+                    "url_private_download": "https://files.slack.com/files-pri/T023G8L63FS-F024TH04SN8/download/banner1.png",
+                    "thumb_64": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_64.png",
+                    "thumb_80": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_80.png",
+                    "thumb_360": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_360.png",
+                    "thumb_360_w": 360,
+                    "thumb_360_h": 120,
+                    "thumb_480": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_480.png",
+                    "thumb_480_w": 480,
+                    "thumb_480_h": 160,
+                    "thumb_160": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_160.png",
+                    "thumb_720": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_720.png",
+                    "thumb_720_w": 720,
+                    "thumb_720_h": 240,
+                    "thumb_800": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_800.png",
+                    "thumb_800_w": 800,
+                    "thumb_800_h": 267,
+                    "thumb_960": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_960.png",
+                    "thumb_960_w": 960,
+                    "thumb_960_h": 320,
+                    "thumb_1024": "https://files.slack.com/files-tmb/T023G8L63FS-F024TH04SN8-f3792c7d47/banner1_1024.png",
+                    "thumb_1024_w": 1024,
+                    "thumb_1024_h": 341,
+                    "original_w": 3000,
+                    "original_h": 1000,
+                    "thumb_tiny": "AwAQADC6aaacaaasBppppxppoAaaaacaaaYH/9k=",
+                    "permalink": "https://wagtaillive.slack.com/files/U022BM5C0JK/F024TH04SN8/banner1.png",
+                    "permalink_public": "https://slack-files.com/T023G8L63FS-F024TH04SN8-024420f8bb",
+                    "is_starred": false,
+                    "has_rich_preview": false
+                }
+            ],
+            "upload": false,
+            "blocks": [
+                {
+                    "type": "rich_text",
+                    "block_id": "H18",
+                    "elements": [
+                        {
+                            "type": "rich_text_section",
+                            "elements": [
+                                {
+                                    "type": "text",
+                                    "text": "This is another test post.\nThis post contains an image."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "user": "U022BM5C0JK",
+            "display_as_bot": false,
+            "ts": "1623319579.004300"
+        },
+        "event_ts": "1623326006.004800",
+        "ts": "1623326006.004800",
+        "channel_type": "channel"
+    },
+    "type": "event_callback",
+    "event_id": "Ev024EUE74NA",
+    "event_time": 1623326006,
+    "authorizations": [
+        {
+            "enterprise_id": null,
+            "team_id": "T023G8L63FS",
+            "user_id": "U023GAXGAGY",
+            "is_bot": true,
+            "is_enterprise_install": false
+        }
+    ],
+    "is_ext_shared_channel": false,
+    "event_context": "2-message-T023G8L63FS-A022SGNS4AE-12345"
+}

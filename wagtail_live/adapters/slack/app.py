@@ -17,5 +17,6 @@ slack_receiver = SlackEventsAPIReceiver(
 
 @app.event("message")
 def handle_message_events(body, ack):
-    slack_receiver.dispatch(body["event"])
+    message_body = slack_receiver.get_message_body(body)
+    slack_receiver.dispatch(message_body)
     ack()

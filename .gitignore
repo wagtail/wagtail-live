@@ -68,3 +68,7 @@ local_settings.py
 db.sqlite3
 
 .pytest_cache/
+
+# Images
+images/
+original_images/

@@ -6,6 +6,7 @@ from wagtail.core.blocks import (
     DateTimeBlock,
     StreamBlock,
     StructBlock,
+    StructValue,
     TextBlock,
 )
 from wagtail.embeds.blocks import EmbedBlock
@@ -51,6 +52,18 @@ def construct_text_block(text):
     return text_block.to_python(text)
 
 
+def construct_embed_block(url):
+    """Helper function to construct an embed block for a LivePostBlock content.
+    Args:
+        url (str): Url of the embed
+    Returns:
+        an EmbedBlock
+    """
+
+    embed_block = EmbedBlock()
+    return embed_block.to_python(url)
+
+
 def construct_image_block(image):
     """Helper function to construct an image block for a LivePostBlock content.
 
@@ -85,3 +98,36 @@ def construct_live_post_block(message_id, created):
             "created": created,
         }
     )
+
+
+def add_block_to_live_post(block_type, block, live_block):
+    """Adds a new content block to a live post.
+
+    Args:
+        block_type (str):
+            Type of the block to add
+        block (Block):
+            Block to add to the live post.
+        live_block (LivePostBlock):
+            Live post in which the new block will be added.
+    """
+
+    if isinstance(live_block, StructValue):
+        live_block["content"].append((block_type, block))
+    else:
+        live_block.value["content"].append((block_type, block))
+
+
+def clear_live_post_content(live_post):
+    """Clears the content of a live post.
+
+    Args:
+        live_post (livePostBlock): Live post which content will be cleared.
+    Returns:
+        (None)
+    """
+
+    if isinstance(live_post, StructValue):
+        live_post["content"].clear()
+    else:
+        live_post.value["content"].clear()

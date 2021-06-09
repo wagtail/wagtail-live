@@ -1,0 +1,47 @@
+{
+    "token": "MSMdGErNtNSnZfhz6Nh3TOxd",
+    "team_id": "T023G8L63FS",
+    "api_app_id": "A022SGNS4AE",
+    "event": {
+        "client_msg_id": "501d8cb0-2a45-4459-ad78-c23b4f0b376c",
+        "type": "message",
+        "text": "This a test post.\nSome content here but not much...\nAnd some other content.\nThis post contains only text.",
+        "user": "U022BM5C0JK",
+        "ts": "1623319199.002300",
+        "team": "T023G8L63FS",
+        "blocks": [
+            {
+                "type": "rich_text",
+                "block_id": "e882",
+                "elements": [
+                    {
+                        "type": "rich_text_section",
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": "This a test post.\nSome content here but not much...\nAnd some other content.\nThis post contains only text."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "channel": "12345",
+        "event_ts": "1623319199.002300",
+        "channel_type": "channel"
+    },
+    "type": "event_callback",
+    "event_id": "Ev024MBEK6F4",
+    "event_time": 1623319199,
+    "authorizations": [
+        {
+            "enterprise_id": null,
+            "team_id": "T023G8L63FS",
+            "user_id": "U023GAXGAGY",
+            "is_bot": true,
+            "is_enterprise_install": false
+        }
+    ],
+    "is_ext_shared_channel": false,
+    "event_context": "2-message-T023G8L63FS-A022SGNS4AE-12345"
+}

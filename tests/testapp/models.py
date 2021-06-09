@@ -1,3 +1,7 @@
-# from django.db import models
+from wagtail.core.models import Page
 
-# Create your models here.
+from wagtail_live.models import LivePageMixin
+
+
+class SimpleLivePage(Page, LivePageMixin):
+    content_panels = Page.content_panels + LivePageMixin.panels

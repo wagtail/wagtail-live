@@ -10,12 +10,13 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from django.utils.timezone import now
-from wagtail.embeds.embeds import get_embed
-from wagtail.embeds.exceptions import EmbedException
 from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
 
 from .blocks import (
+    add_block_to_live_post,
+    clear_live_post_content,
+    construct_embed_block,
     construct_image_block,
     construct_live_post_block,
     construct_text_block,
@@ -29,20 +30,19 @@ LivePost = "live_post"
 
 def is_embed(text):
     """Checks if a text is a link to embed.
-
     Args:
         text (str): Text to check
-
     Returns:
         (bool) True if text corresponds to an embed link False else
     """
 
-    try:
-        embed = get_embed(text)
-    except EmbedException:
-        return
-    else:
-        return embed
+    for provider in all_providers:
+        for url_pattern in provider.get("urls", []):
+            # Somehow Slack links start with `<` and end with `>`.
+            if bool(re.match(url_pattern, text)):
+                return True
+
+    return False
 
 
 class BaseMessageReceiver:
@@ -56,11 +56,11 @@ class BaseMessageReceiver:
 
         self.model = apps.get_model(app_name, model_name)
 
-    def dispatch(self, event):
-        """Dispatch an event to find corresponding handler.
+    def dispatch(self, message):
+        """Dispatches a message to find corresponding handler.
 
         Args:
-            event: New event from a messaging app.
+            mesage: Body of a message from a new event from a messaging app.
         """
 
         raise NotImplementedError
@@ -168,19 +168,18 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_embed_url_from_text(self, text):
+    def get_embed_url(self, text):
         """Check if a text is an embed for this receiver and return embed URL if so.
 
         Args:
             text (str): Text to check
-
         Returns:
             (str) URL of the embed if the text contains an embed, else "".
         """
 
-        return text
+        return text if is_embed(text=text) else ""
 
-    def process_text(self, live_page, live_post, message_text):
+    def process_text(self, live_post, message_text):
         """Processes the text of a message.
 
         Parses the message, constructs corresponding block types
@@ -200,30 +199,28 @@ class BaseMessageReceiver:
         for text in message_parts:
             block_type = ""
 
-            try:
-                embed = get_embed(url=self.get_embed_url_from_text(text))
-            except EmbedException:
+            url = self.get_embed_url(text=text)
+            if url:
+                block = construct_embed_block(url=url)
+                block_type = EMBED
+
+            else:
                 block = construct_text_block(text=text)
                 block_type = TEXT
-            else:
-                block = embed
-                block_type = EMBED
-                
-            live_page.add_block_to_live_post(
+
+            add_block_to_live_post(
                 block_type=block_type,
                 block=block,
                 live_block=live_post,
             )
 
-    def process_files(self, live_page, live_post, files):
+    def process_files(self, live_post, files):
         """Processes the files of a message.
 
         Creates the corresponding block for any file and add it
         to the given live post.
 
         Args:
-            live_page (LivePageMixin):
-                Live page to update
             live_post (LivePostBlock):
                 Live post to update
             files (list):
@@ -248,7 +245,7 @@ class BaseMessageReceiver:
                 )
                 img.save()
                 block = construct_image_block(image=img)
-                live_page.add_block_to_live_post(
+                add_block_to_live_post(
                     block_type=IMAGE,
                     block=block,
                     live_block=live_post,
@@ -263,6 +260,7 @@ class BaseMessageReceiver:
 
         message_id = self.get_message_id_from_message(message=message)
         channel_id = self.get_channel_id_from_message(message=message)
+
         try:
             live_page = self.get_live_page_from_channel_id(channel_id=channel_id)
         except Http404:
@@ -272,12 +270,10 @@ class BaseMessageReceiver:
         live_post = construct_live_post_block(message_id=message_id, created=now())
 
         message_text = self.get_message_text(message=message)
-        self.process_text(
-            live_page=live_page, live_post=live_post, message_text=message_text
-        )
+        self.process_text(live_post=live_post, message_text=message_text)
 
         files = self.get_message_files(message=message)
-        self.process_files(live_page=live_page, live_post=live_post, files=files)
+        self.process_files(live_post=live_post, files=files)
 
         live_page.add_live_post(live_post=live_post, live_post_id=message_id)
 
@@ -296,15 +292,13 @@ class BaseMessageReceiver:
             return
 
         live_post = live_page.get_live_post_by_id(live_post_id=message_id)
-        live_page.clear_live_post_content(live_post=live_post)
+        clear_live_post_content(live_post=live_post)
 
         message_text = self.get_message_text_from_edited_message(message=message)
-        self.process_text(
-            live_page=live_page, live_post=live_post.value, message_text=message_text
-        )
+        self.process_text(live_post=live_post, message_text=message_text)
 
         files = self.get_message_files_from_edited_message(message=message)
-        self.process_files(live_page=live_page, live_post=live_post.value, files=files)
+        self.process_files(live_post=live_post, files=files)
 
         live_page.update_live_post(live_post=live_post)
 

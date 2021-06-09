@@ -14,16 +14,18 @@ SLACK_SIGNING_SECRET = "your slack signing secret"
 And you are good to go! (Soon hopefully!)
 """
 
-from wagtail_live.receivers import BaseMessageReceiver
+from wagtail_live.receivers import BaseMessageReceiver, is_embed
 
 
 class SlackEventsAPIReceiver(BaseMessageReceiver):
     """Slack Events API receiver."""
 
-    def dispatch(self, event):
+    def get_message_body(self, event):
+        return event["event"]
+
+    def dispatch(self, message):
         """See base class."""
 
-        message = event
         if "subtype" in message and message["subtype"] == "message_changed":
             self.change_message(message=message)
             return
@@ -70,10 +72,8 @@ class SlackEventsAPIReceiver(BaseMessageReceiver):
 
         return self.get_message_files(message=message["message"])
 
-    def get_embed_url_from_text(self, text):
-        """ Strips leading `<` and trailing `>` from Slack urls."""
-        
-        # Not sure if it's the normal behavior, but have repeatedly received links
-        # from SLack API that looks like below:
-        # <https://twitter.com/lephoceen/status/139?s=20|https://twitter.com/lephoceen/status/139?s=20>'
-        return text[1:-1].split("|")[0]
+    def get_embed_url(self, text):
+        """Strips leading `<` and trailing `>` from Slack urls."""
+
+        url = text[1:-1]
+        return url if is_embed(text=url) else ""

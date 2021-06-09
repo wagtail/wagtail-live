@@ -1,0 +1,63 @@
+{
+    "token": "MSMdGErNtNSnZfhz6Nh3TOxd",
+    "team_id": "T023G8L63FS",
+    "api_app_id": "A022SGNS4AE",
+    "event": {
+        "client_msg_id": "c67f2a70-d341-4c41-b395-cea97a826d43",
+        "type": "message",
+        "text": "This is another test post.\nThis post contains an embed.\n<https://www.youtube.com/watch?v=Cq3LOsf2kSY>\nIt also contains emojis :white_check_mark::pray:",
+        "user": "U022BM5C0JK",
+        "ts": "1623319472.003700",
+        "team": "T023G8L63FS",
+        "blocks": [
+            {
+                "type": "rich_text",
+                "block_id": "SR0oE",
+                "elements": [
+                    {
+                        "type": "rich_text_section",
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": "This is another test post.\nThis post contains an embed.\n"
+                            },
+                            {
+                                "type": "link",
+                                "url": "https://www.youtube.com/watch?v=Cq3LOsf2kSY"
+                            },
+                            {
+                                "type": "text",
+                                "text": "\nIt also contains emojis "
+                            },
+                            {
+                                "type": "emoji",
+                                "name": "white_check_mark"
+                            },
+                            {
+                                "type": "emoji",
+                                "name": "pray"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "channel": "12345",
+        "event_ts": "1623319472.003700",
+        "channel_type": "channel"
+    },
+    "type": "event_callback",
+    "event_id": "Ev024MJ8PQHH",
+    "event_time": 1623319472,
+    "authorizations": [
+        {
+            "enterprise_id": null,
+            "team_id": "T023G8L63FS",
+            "user_id": "U023GAXGAGY",
+            "is_bot": true,
+            "is_enterprise_install": false
+        }
+    ],
+    "is_ext_shared_channel": false,
+    "event_context": "2-message-T023G8L63FS-A022SGNS4AE-C024931MDK3"
+}

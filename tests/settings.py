@@ -82,3 +82,10 @@ STATIC_URL = "/static/"
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "Wagtail Live Test Suite"
+
+# Wagtail Live settings
+
+SLACK_SIGNING_SECRET = "some-secret"
+SLACK_BOT_TOKEN = "some-token"
+LIVE_APP = "testapp"
+LIVE_PAGE_MODEL = "SimpleLivePage"
