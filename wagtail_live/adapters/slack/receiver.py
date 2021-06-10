@@ -71,7 +71,7 @@ class SlackEventsAPIReceiver(BaseMessageReceiver):
         return self.get_message_files(message=message["message"])
 
     def get_embed(self, text):
-        """ Strips leading `<` and trailing `>` from Slack urls."""
+        """Strips leading `<` and trailing `>` from Slack urls."""
 
         if is_embed(text=text[1:-1]):
             # Not sure if it's the normal behavior, but have repeatedly received links
