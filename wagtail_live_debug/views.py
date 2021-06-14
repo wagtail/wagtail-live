@@ -1,14 +1,21 @@
 """ Wagtail Live debug views """
 
-from django.http import Http404
-from django.utils.timezone import now
+from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
 from django.views.generic import DetailView, ListView
 from rest_framework import generics, status
 from rest_framework.response import Response
 
 from .models import DummyChannel, Message
+from .publisher import WagtailLiveInterfacePublisher
+from .receiver import MESSAGE_CREATED, MESSAGE_DELETED, MESSAGE_EDITED
 from .serializers import DummyChannelSerializer, MessageSerializer
+
+LIVE_PUBLISHER = WagtailLiveInterfacePublisher(
+    settings.LIVE_APP,
+    settings.LIVE_PAGE_MODEL,
+)
 
 
 class DummyChannelListView(ListView):
@@ -84,6 +91,9 @@ class MessageListAPIView(generics.GenericAPIView):
         serializer = MessageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            LIVE_PUBLISHER.send_update(
+                update_type=MESSAGE_CREATED, data=serializer.data
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -108,6 +118,7 @@ class MessageDetailAPIView(generics.GenericAPIView):
         if serializer.is_valid():
             serializer.validated_data["modified"] = now()
             serializer.save()
+            LIVE_PUBLISHER.send_update(update_type=MESSAGE_EDITED, data=serializer.data)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -115,5 +126,10 @@ class MessageDetailAPIView(generics.GenericAPIView):
         """API endpoint: delete a message by its ID"""
 
         message = get_object_or_404(Message, pk=pk)
+        data = {
+            "channel": message.channel.channel_name,
+            "id": pk,
+        }
         message.delete()
+        LIVE_PUBLISHER.send_update(update_type=MESSAGE_DELETED, data=data)
         return Response(status=status.HTTP_204_NO_CONTENT)
