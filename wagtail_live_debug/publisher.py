@@ -25,7 +25,7 @@ class WagtailLiveInterfacePublisher:
         self.receiver.dispatch(message=update)
 
     def send_update(self, update_type, data):
-        """Formats the update to send and starts a new daemon thread to deliver it.
+        """Formats the update to send and starts a new thread to deliver it.
         
             update_type (int):
                 Type of update: 1:CREATED, 2:EDITED or 3:DELETED
@@ -34,7 +34,5 @@ class WagtailLiveInterfacePublisher:
         """
 
         data["update_type"] = update_type
-        publisher = threading.Thread(
-            target=self.deliver, kwargs={"update": data}, daemon=True,
-        )
+        publisher = threading.Thread(target=self.deliver, kwargs={"update": data})
         publisher.start()
