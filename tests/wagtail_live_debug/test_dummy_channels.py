@@ -19,6 +19,12 @@ class DummyChannelTestCaseSetUp(TestCase):
 
 
 class DummyChannelViewsTests(DummyChannelTestCaseSetUp):
+    def test_channel_str(self):
+        """Channel representation."""
+
+        first_channel = DummyChannel.objects.get(channel_name="channel_1")
+        self.assertEqual(str(first_channel), "#channel_1")
+
     def test_channels_listing_status_code(self):
         """Response is 200 OK."""
 

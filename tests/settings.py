@@ -82,3 +82,11 @@ STATIC_URL = "/static/"
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "Wagtail Live Test Suite"
+
+
+# Wagtail Live settings
+
+SLACK_BOT_TOKEN = "some-token"  # os.environ['SLACK_BOT_TOKEN']
+SLACK_SIGNING_SECRET = "some-token"  # os.environ['SLACK_SIGNING_SECRET']
+LIVE_PAGE_MODEL = "SimpleLivePage"
+LIVE_APP = "testapp"

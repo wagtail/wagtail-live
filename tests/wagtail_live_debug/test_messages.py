@@ -1,5 +1,7 @@
 """ Live debug view Message test suite """
 
+from unittest.mock import patch
+
 from django.test import TestCase
 from rest_framework import serializers
 
@@ -22,6 +24,15 @@ class MessageAPITests(TestCase):
                 channel=cls.channel,
                 content=f"Message {i}",
             )
+
+    def setUp(self):
+        """Mock publisher to avoid sending new updates."""
+
+        self.patcher = patch(
+            "wagtail_live_debug.publisher.WagtailLiveInterfacePublisher"
+        )
+        self.publisher_mock = self.patcher.start()
+        self.addCleanup(self.patcher.stop)
 
     def create_message(self, content="Some content"):
         """Helper to create a new message in self.channel.
@@ -192,6 +203,19 @@ class MessageAPITests(TestCase):
 
         response = self.edit_message(message_id=6)
         self.assertEqual(response.status_code, 404)
+
+    def test_edit_message_bad_channel(self):
+        """Response is 400 Bad Request."""
+
+        response = self.client.put(
+            "/wagtail_live_debug/api/messages/3/",
+            {
+                "channel": "wrong_channel",
+                "content": "Some content",
+            },
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
 
     def test_delete_message_status_code(self):
         """Response is 204 DELETED."""

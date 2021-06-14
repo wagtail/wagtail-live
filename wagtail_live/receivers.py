@@ -170,7 +170,7 @@ class BaseMessageReceiver:
 
     def get_embed(self, text):
         """Check if a text is an embed for this receiver and return embed URL if so.
-        
+
         Args:
             text (str): Text to check
 
