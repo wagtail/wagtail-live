@@ -8,11 +8,11 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from .models import DummyChannel, Message
-from .publisher import WagtailLiveInterfacePublisher
+from .receiver import WagtailLiveInterfaceReceiver
 from .receiver import MESSAGE_CREATED, MESSAGE_DELETED, MESSAGE_EDITED
 from .serializers import DummyChannelSerializer, MessageSerializer
 
-LIVE_PUBLISHER = WagtailLiveInterfacePublisher(
+LIVE_RECEIVER = WagtailLiveInterfaceReceiver(
     settings.LIVE_APP,
     settings.LIVE_PAGE_MODEL,
 )
@@ -91,9 +91,9 @@ class MessageListAPIView(generics.GenericAPIView):
         serializer = MessageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            LIVE_PUBLISHER.send_update(
-                update_type=MESSAGE_CREATED, data=serializer.data
-            )
+            update = serializer.data
+            update["update_type"] = MESSAGE_CREATED
+            LIVE_RECEIVER.dispatch(message=update)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -118,7 +118,9 @@ class MessageDetailAPIView(generics.GenericAPIView):
         if serializer.is_valid():
             serializer.validated_data["modified"] = now()
             serializer.save()
-            LIVE_PUBLISHER.send_update(update_type=MESSAGE_EDITED, data=serializer.data)
+            update = serializer.data
+            update["update_type"] = MESSAGE_EDITED
+            LIVE_RECEIVER.dispatch(message=update)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -126,10 +128,11 @@ class MessageDetailAPIView(generics.GenericAPIView):
         """API endpoint: delete a message by its ID"""
 
         message = get_object_or_404(Message, pk=pk)
-        data = {
+        update = {
             "channel": message.channel.channel_name,
             "id": pk,
+            "update_type": MESSAGE_DELETED,
         }
         message.delete()
-        LIVE_PUBLISHER.send_update(update_type=MESSAGE_DELETED, data=data)
+        LIVE_RECEIVER.dispatch(message=update)
         return Response(status=status.HTTP_204_NO_CONTENT)

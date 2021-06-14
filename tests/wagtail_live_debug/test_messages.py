@@ -26,12 +26,10 @@ class MessageAPITests(TestCase):
             )
 
     def setUp(self):
-        """Mock publisher to avoid sending new updates."""
+        """Mock receiver to avoid sending new updates."""
 
-        self.patcher = patch(
-            "wagtail_live_debug.publisher.WagtailLiveInterfacePublisher"
-        )
-        self.publisher_mock = self.patcher.start()
+        self.patcher = patch("wagtail_live_debug.receiver.WagtailLiveInterfaceReceiver")
+        self.receiver_mock = self.patcher.start()
         self.addCleanup(self.patcher.stop)
 
     def create_message(self, content="Some content"):
