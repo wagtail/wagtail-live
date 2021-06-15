@@ -26,27 +26,27 @@ def edited_message(message):
 def test_interface_receiver_dispatch_new_msg(mocker, message, interface_receiver):
     """Dispatches new message to add_message."""
 
-    mocker.patch.object(WagtailLiveInterfaceReceiver, "add_message")
+    mocker.patch.object(interface_receiver, "add_message")
     message["update_type"] = MESSAGE_CREATED
     interface_receiver.dispatch(message)
 
-    WagtailLiveInterfaceReceiver.add_message.assert_called_once_with(message=message)
+    interface_receiver.add_message.assert_called_once_with(message=message)
 
 
 def test_interface_receiver_dispatch_edit_msg(mocker, message, interface_receiver):
     """Dispatches edited message to change_message."""
 
-    mocker.patch.object(WagtailLiveInterfaceReceiver, "change_message")
+    mocker.patch.object(interface_receiver, "change_message")
     message["update_type"] = MESSAGE_EDITED
     interface_receiver.dispatch(message)
 
-    WagtailLiveInterfaceReceiver.change_message.assert_called_once_with(message=message)
+    interface_receiver.change_message.assert_called_once_with(message=message)
 
 
 def test_interface_receiver_dispatch_delete_msg(mocker, interface_receiver):
     """Dispatches deleted message to delete_message."""
 
-    mocker.patch.object(WagtailLiveInterfaceReceiver, "delete_message")
+    mocker.patch.object(interface_receiver, "delete_message")
     message = {
         "id": 1,
         "channel": "test_channel",
@@ -54,7 +54,7 @@ def test_interface_receiver_dispatch_delete_msg(mocker, interface_receiver):
     }
     interface_receiver.dispatch(message)
 
-    WagtailLiveInterfaceReceiver.delete_message.assert_called_once_with(message=message)
+    interface_receiver.delete_message.assert_called_once_with(message=message)
 
 
 def test_get_channel_id_from_message(interface_receiver, message):
