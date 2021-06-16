@@ -63,7 +63,7 @@ class LivePageMixin(models.Model):
 
     def save(self, *args, **kwargs):
         """Updates last_update_at when page is saved."""
-        
+
         self.last_update_at = now()
         super().save(*args, **kwargs)
 

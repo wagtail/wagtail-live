@@ -11,15 +11,15 @@ test('initiliazes tracker to empty set', () => {
 
 test('sets live posts properly', () => {
     let tracker = new LivePostsTracker();
-    tracker.setLivePosts(livePost=[8, 15, 27, 867]);
+    tracker.setLivePosts(livePosts=[8, 15, 27, 867]);
     expect(tracker.livePosts.size).toEqual(4);
     expect(tracker.livePosts).toContain(27);
     expect(tracker.livePosts).not.toContain(866);
 })
 
 test('returns correct posts to delete', () => {
-    let tracker = new LivePostsTracker;
-    tracker.setLivePosts(livePost=[1, 2, 3, 4]);
+    let tracker = new LivePostsTracker();
+    tracker.setLivePosts(livePosts=[1, 2, 3, 4]);
 
     let newLivePosts = [2, 3, 4, 5, 6];
     let postsToDelete = tracker.getLivePostsToDelete(newLivePosts=newLivePosts);

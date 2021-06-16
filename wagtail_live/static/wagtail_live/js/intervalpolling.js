@@ -22,12 +22,11 @@
     }
 
     /**
-     * Retrieves the live posts to delete.
-     * @param {Array} newLivePosts - Represents the current live posts on this page 
-     *  (some of which may not appear in the DOM yet).
+     * Updates the current live posts and returns the live posts to delete.
+     * @param {Array} newLivePosts - Represents the current live posts on this page.
      * @returns {Array} containing the IDs of the live posts to delete.
      */
-    getLivePostsToDelete(newLivePosts) {
+    updateLivePosts(newLivePosts) {
         let postsToDelete = [];
 
         /** A live post has been deleted if it's in currentLivePosts and not in newLivePosts */
@@ -64,9 +63,10 @@ async function shake() {
     if (response.status != 200) {
         setTimeout(async () => await shake(), SHAKING_INTERVAL);
     } else {
-        let [livePosts, lastUpdateTs, pollingInterval] = await response.json();
+        const {livePosts, lastUpdateTimestamp, pollingInterval} = await response.json();
         livePostsTracker.setLivePosts(livePosts);
-        [lastUpdateReceivedAt, POLLING_INTERVAL] = [lastUpdateTs, pollingInterval];
+        [lastUpdateReceivedAt, POLLING_INTERVAL] = [lastUpdateTimestamp, pollingInterval];
+    
         setTimeout(async () => await getUpdates(), POLLING_INTERVAL);
     }
 }
@@ -78,38 +78,40 @@ async function shake() {
 async function getUpdates() {
     /** Retrieve timestamp of the last update of this page. */
     let response = await fetchLastUpdateAt();
+
     if (response.status != 200) {
         setTimeout(async () => await getUpdates(), POLLING_INTERVAL);
+        return;
     }
-    else {
-        /** Check if new updates are available. */
-        if (newUpdate(response)) {
-            /** If yes, try to get those updates. */
-            let newResponse = await fetchUpdates();
-
-            if (newResponse.status != 200) {
-                setTimeout(async () => await getUpdates(), POLLING_INTERVAL);
-            } else {
-                let [updates, currentPosts, lastUpdateTS] = await newResponse.json();
-
-                /** Processe new updates */
-                for (let i in updates) {process(i, updates[i])};
-
-                /** Retrieve and remove posts to remove. */
-                let postsToDelete = livePostsTracker.getLivePostsToDelete(currentPosts);
-                postsToDelete.forEach(post => removeLivePost(post));
-
-                /** Update the timestamp of the last update received. */
-                lastUpdateReceivedAt = lastUpdateTS["last_update_timestamp"];
-                
-                setTimeout(async () => await getUpdates(), POLLING_INTERVAL);
-            }
-
-        } else {
-            /** No updates are available, wait for the polling interval duration and call getUpdates. */
-            setTimeout(async () => await getUpdates(), POLLING_INTERVAL)
-        };
+    
+    /** Check if new updates are available. */
+    if (!newUpdate(response)) {
+        /** No updates are available, wait for the polling interval duration and call getUpdates. */
+        setTimeout(async () => await getUpdates(), POLLING_INTERVAL);
+        return;
     }
+
+    /** If yes, try to get those updates. */
+    let response = await fetchUpdates();
+
+    if (response.status != 200) {
+        setTimeout(async () => await getUpdates(), POLLING_INTERVAL);
+        return;
+    }
+
+    const {updates, currentPosts, lastUpdateTimestamp} = await response.json();
+
+    /** Process new updates */
+    for (let i in updates) {process(i, updates[i])};
+
+    /** Retrieve and remove posts to remove. */
+    let postsToDelete = livePostsTracker.updateLivePosts(currentPosts);
+    postsToDelete.forEach(post => removeLivePost(post));
+
+    /** Update the timestamp of the last update received. */
+    lastUpdateReceivedAt = lastUpdateTimestamp;
+    
+    setTimeout(async () => await getUpdates(), POLLING_INTERVAL);
 }
 
 /**
@@ -180,9 +182,9 @@ function process(updateID, value) {
  */
 function removeLivePost(livePostID) {
     let post = getPostByID(livePostID);
-    if (post == null) {
-        /** Problematic! */
-    } else {post.parentElement.remove()};
+    if (!post == null) {
+        post.parentElement.remove();
+    } else {return;} /** Apparently it's already gone! */
 }
 
 /**

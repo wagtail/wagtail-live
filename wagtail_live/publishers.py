@@ -53,11 +53,12 @@ class IntervalPollingPublisherView(View):
         """
 
         live_page = get_object_or_404(self.model, channel_id=channel_id)
-        live_posts_id = [live_post.id for live_post in live_page.live_posts]
-        last_update_timestamp = live_page.last_update_timestamp
-        polling_interval = getattr(settings, "POLLING_INTERVAL", 3000)
         return JsonResponse(
-            [live_posts_id, last_update_timestamp, polling_interval], safe=False
+            {
+                "livePosts": [live_post.id for live_post in live_page.live_posts],
+                "lastUpdateTimestamp": live_page.last_update_timestamp,
+                "pollingInterval": getattr(settings, "POLLING_INTERVAL", 3000),
+            }
         )
 
     def head(self, request, channel_id, *args, **kwargs):
@@ -116,27 +117,23 @@ class IntervalPollingPublisherView(View):
         updated_posts = {}
         live_posts = live_page.live_posts
         for post in live_posts:
-            post_value = post.value
             post_id = post.id
             current_posts.append(post_id)
 
-            created = post_value["created"]
+            created = post.value["created"]
             if created > last_update_client:  # This is a new post
                 updated_posts[post_id] = post.render(context={"block_id": post_id})
                 continue
 
-            last_modified = post_value["modified"]
-            if (
-                last_modified and last_modified > last_update_client
-            ):  # This is an edited post
+            last_modified = post.value["modified"]
+            if last_modified and last_modified > last_update_client:
+                # This is an edited post
                 updated_posts[post_id] = post.render(context={"block_id": post_id})
 
-            else:
-                continue
-
-        last_update_timestamp = {
-            "last_update_timestamp": live_page.last_update_timestamp
-        }
         return JsonResponse(
-            [updated_posts, current_posts, last_update_timestamp], safe=False
+            {
+                "updates": updated_posts,
+                "currentPosts": current_posts,
+                "lastUpdateTimestamp": live_page.last_update_timestamp,
+            }
         )
