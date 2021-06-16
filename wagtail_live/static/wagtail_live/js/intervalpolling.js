@@ -199,4 +199,3 @@ function createLivePostWrapper(value) {
 }
 
 document.addEventListener('DOMContentLoaded', shake);
-module.exports = LivePostsTracker; /** For jest tests. */
