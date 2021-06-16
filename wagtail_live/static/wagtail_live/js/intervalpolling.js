@@ -22,20 +22,16 @@
     }
 
     /**
-     * Updates the current live posts and returns the live posts to delete.
+     * Retrieves the live posts to delete.
      * @param {Array} newLivePosts - Represents the current live posts on this page.
      * @returns {Array} containing the IDs of the live posts to delete.
      */
-    updateLivePosts(newLivePosts) {
-        let postsToDelete = [];
-
+    getLivePostsToDelete(newLivePosts) {
         /** A live post has been deleted if it's in currentLivePosts and not in newLivePosts */
+        let postsToDelete = [];
         this.currentLivePosts.forEach(post => {
             if (!newLivePosts.includes(post)) {postsToDelete.push(post)};
         });
-
-        /** Set current live posts to new live posts. */
-        this.setLivePosts(newLivePosts);
 
         return postsToDelete;
     }
@@ -105,8 +101,11 @@ async function getUpdates() {
     for (let i in updates) {process(i, updates[i])};
 
     /** Retrieve and remove posts to remove. */
-    let postsToDelete = livePostsTracker.updateLivePosts(currentPosts);
+    let postsToDelete = livePostsTracker.getLivePostsToDelete(currentPosts);
     postsToDelete.forEach(post => removeLivePost(post));
+
+    /** Set current live posts to new live posts. */
+    livePostsTracker.setLivePosts(currentPosts);
 
     /** Update the timestamp of the last update received. */
     lastUpdateReceivedAt = lastUpdateTimestamp;
