@@ -56,15 +56,17 @@ async function shake() {
         headers: {'X-CSRFToken': csrftoken},
         method: 'POST',
     });
+
     if (response.status != 200) {
         setTimeout(async () => await shake(), SHAKING_INTERVAL);
-    } else {
-        const {livePosts, lastUpdateTimestamp, pollingInterval} = await response.json();
-        livePostsTracker.setLivePosts(livePosts);
-        [lastUpdateReceivedAt, POLLING_INTERVAL] = [lastUpdateTimestamp, pollingInterval];
-    
-        setTimeout(async () => await getUpdates(), POLLING_INTERVAL);
-    }
+        return;
+    } 
+
+    const {livePosts, lastUpdateTimestamp, pollingInterval} = await response.json();
+    livePostsTracker.setLivePosts(livePosts);
+    [lastUpdateReceivedAt, POLLING_INTERVAL] = [lastUpdateTimestamp, pollingInterval];
+
+    setTimeout(async () => await getUpdates(), POLLING_INTERVAL);
 }
 
 /**
