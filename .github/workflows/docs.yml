@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-  # Only deploy when the relevant files have changed
-  paths:
-    - "**.md"
-    - "mkdocs.yml"
-    - "setup.py"
+    # Only deploy when the relevant files have changed
+    paths:
+      - "**.md"
+      - "mkdocs.yml"
+      - "setup.py"
   workflow_dispatch:
 
 jobs:
