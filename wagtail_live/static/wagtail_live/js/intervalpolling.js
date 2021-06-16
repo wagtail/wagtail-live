@@ -182,7 +182,7 @@ function process(updateID, value) {
  */
 function removeLivePost(livePostID) {
     let post = getPostByID(livePostID);
-    if (!post == null) {
+    if (post != null) {
         post.parentElement.remove();
     } else {return;} /** Apparently it's already gone! */
 }
