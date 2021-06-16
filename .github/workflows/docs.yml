@@ -10,6 +10,7 @@ on:
     - "mkdocs.yml"
     - "setup.py"
   workflow_dispatch:
+
 jobs:
   docs:
     name: Build documentation
