@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}{% endblock title %}</title>
-    <link href="{% static 'wagtail_live_debug/css/main.css' %}" rel="stylesheet">
+    <link href="{% static 'wagtail_live_interface/css/main.css' %}" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet"> 
   </head>
@@ -50,7 +50,7 @@
       };
 
       async function fetchHelper(path, method, body) {
-        let fullPath = "/wagtail_live_debug/api/" + path;
+        let fullPath = "/wagtail_live_interface/api/" + path;
         return fetch(fullPath, {
           method: method,
           headers: {

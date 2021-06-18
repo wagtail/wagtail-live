@@ -1,4 +1,4 @@
-{% extends 'wagtail_live_debug/base.html' %}
+{% extends 'wagtail_live_interface/base.html' %}
 {% load static %}
 
 {% block title %} Dummy Channels {% endblock title %}
@@ -45,5 +45,5 @@
 <script>
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 </script>
-<script src="{% static 'wagtail_live_debug/js/channels.js' %}"></script>
+<script src="{% static 'wagtail_live_interface/js/channels.js' %}"></script>
 {% endblock extra_js %}
