@@ -1,29 +1,76 @@
-""" How to use it?
-To create an app, register your URL to slack, get a token plus all additional infrastucture, see:
-https://github.com/slackapi/bolt-python/tree/main/examples/django
-Then do something like this in your url_patterns:
-from wagtail_live.slack.views import slack_events_handler
-url_patterns += [
-    path("slack/events", slack_events_handler, name="slack_events_handler"),
-]
-Add the following to your settings.py file:
-LIVE_PAGE_MODEL = "model name"
-LIVE_APP = "app name"
-SLACK_BOT_TOKEN = "your slack bot token"
-SLACK_SIGNING_SECRET = "your slack signing secret"
-And you are good to go! (Soon hopefully!)
-"""
+"""Slack receivers."""
 
-from wagtail_live.receivers import BaseMessageReceiver, is_embed
+import time
+from hmac import compare_digest
+
+from django.http import HttpResponse
+
+from wagtail_live.exceptions import RequestVerificationError
+from wagtail_live.receivers import BaseMessageReceiver, WebhookReceiverMixin
+from wagtail_live.utils import is_embed, sign_slack_request
 
 
-class SlackEventsAPIReceiver(BaseMessageReceiver):
+class SlackWebhookMixin(WebhookReceiverMixin):
+    """Slack WebhookMixin."""
+
+    url_path = "slack/events"
+    url_name = "slack_events_handler"
+
+    def pre_check_request(self, request, body, payload):
+        """Checks if Slack is trying to verify our Request URL.
+
+        Returns:
+            (HttpResponse) containing the challenge string if Slack
+            is trying to verify our request URL.
+        """
+
+        if payload["type"] == "url_verification":
+            return HttpResponse(payload["challenge"])
+
+    def verify_request(self, request, body, payload):
+        """Verifies Slack requests.
+        See https://api.slack.com/authentication/verifying-requests-from-slack.
+
+        Args:
+            request (HttpRequest): from Slack
+
+        Raises:
+            (RequestVerificationError) if request failed to be verified.
+        """
+
+        timestamp = request.headers["X-Slack-Request-Timestamp"]
+        if abs(time.time() - float(timestamp)) > 60 * 5:
+            # The request timestamp is more than five minutes from local time.
+            # It could be a replay attack, so let's ignore it.
+            raise RequestVerificationError
+
+        sig_basestring = "v0:" + timestamp + ":" + body
+        my_signature = "v0=" + sign_slack_request(sig_basestring)
+        slack_signature = request.headers["X-Slack-Signature"]
+
+        if not compare_digest(slack_signature, my_signature):
+            raise RequestVerificationError
+
+    @classmethod
+    def set_webhook(cls):
+        """This is done in Slack UI."""
+
+        pass
+
+    @classmethod
+    def webhook_connection_set(cls):
+        """Assume that it's true."""
+
+        return True
+
+
+class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
     """Slack Events API receiver."""
 
-    def dispatch(self, event):
+    def dispatch_event(self, event):
         """See base class."""
 
-        message = event
+        message = event["event"]
         if "subtype" in message and message["subtype"] == "message_changed":
             self.change_message(message=message)
             return
