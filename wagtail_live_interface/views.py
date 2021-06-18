@@ -1,8 +1,7 @@
-""" Wagtail Live debug views """
+""" Wagtail Live Interface views """
 
-from django.http import Http404
-from django.utils.timezone import now
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
 from django.views.generic import DetailView, ListView
 from rest_framework import generics, status
 from rest_framework.response import Response

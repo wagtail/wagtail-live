@@ -1,4 +1,4 @@
-""" Wagtail Live debug models."""
+""" Wagtail Live Interface models."""
 
 from django.db import models
 

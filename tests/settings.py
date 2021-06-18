@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     "tests.testapp",
     # This package
     "wagtail_live",
-    "wagtail_live_debug",
+    "wagtail_live_interface",
 ]
 
 MIDDLEWARE = [
