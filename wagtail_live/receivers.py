@@ -1,16 +1,21 @@
 """Wagtail Live receiver classes."""
 
-import re
+import json
+from abc import ABC, abstractmethod
+from functools import cached_property
 
 import requests
 from django.apps import apps
 from django.conf import settings
 from django.core.files.base import ContentFile
-from django.http import Http404
+from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
+from django.urls import path
+from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.utils.timezone import now
-from wagtail.embeds.oembed_providers import all_providers
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from wagtail.images import get_image_model
 
 from .blocks import (
@@ -19,6 +24,8 @@ from .blocks import (
     construct_live_post_block,
     construct_text_block,
 )
+from .exceptions import RequestVerificationError, WebhookSetupError
+from .utils import is_embed
 
 TEXT = "message"
 IMAGE = "image"
@@ -26,38 +33,22 @@ EMBED = "embed"
 LivePost = "live_post"
 
 
-def is_embed(text):
-    """Checks if a text is a link to embed.
-
-    Args:
-        text (str): Text to check
-
-    Returns:
-        (bool) True if text corresponds to an embed link False else
-    """
-
-    for provider in all_providers:
-        for url_pattern in provider.get("urls", []):
-            # Somehow Slack links start with `<` and end with `>`.
-            if bool(re.match(url_pattern, text)):
-                return True
-
-    return False
-
-
 class BaseMessageReceiver:
     """Base Receiver class."""
 
-    def __init__(self, app_name, model_name):
+    @cached_property
+    def model(self):
         """
         LivePageMixin is an abstract class, so we can't make queries directly
-        We have to get the actual page which subclasses it to perform queries.
+        We have to get the actual model which subclasses it to perform queries.
         """
 
-        self.model = apps.get_model(app_name, model_name)
+        app_name = getattr(settings, "LIVE_APP", "")
+        model_name = getattr(settings, "LIVE_PAGE_MODEL", "")
+        return apps.get_model(app_name, model_name)
 
-    def dispatch(self, event):
-        """Dispatch an event to find corresponding handler.
+    def dispatch_event(self, event):
+        """Dispatches an event to find corresponding handler.
 
         Args:
             event: New event from a messaging app.
@@ -323,3 +314,119 @@ class BaseMessageReceiver:
             return
 
         live_page.delete_live_post(live_post_id=message_id)
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class WebhookReceiverMixin(ABC, View):
+    """Mixin for receivers using the webhook technique.
+
+    Attributes:
+        url_path (str):
+            Path of the URL used by a messaging app to send new updates to this receiver.
+        url_name (str):
+            Name of the URL for reversing/resolving.
+    """
+
+    url_path = ""
+    url_name = ""
+
+    def pre_check_request(self, request, body, *args, **kwargs):
+        """This method allows doing work outside of the receiving/publishing cycle.
+        It's used for challenge verification with SLack API for example.
+        """
+
+        pass
+
+    @abstractmethod
+    def verify_request(self, request):
+        """Ensures that the incoming request comes from the messaging app expected.
+
+        Raises:
+            (RequestVerificationError) if the request verification failed
+        """
+
+        raise NotImplementedError
+
+    def post(self, request, *args, **kwargs):
+        """This is the main method for Webhook receivers.
+        It handles new updates from messaging apps in these 4 steps:
+
+        1- Call the pre_check_request hook.
+        2- Verify the request.
+        3- Process the updates received.
+        4- Acknowledge the request.
+
+        Args:
+            request (HttpRequest): Http request
+
+        Returns:
+            (HttpResponseForbidden) if the request couldn't be verified.
+            (HttpResponse) OK if the request is verified and updates have been processed
+            succesfully.
+        """
+
+        body = request.body.decode("utf-8")
+        payload = json.loads(body)
+
+        pre_check_result = self.pre_check_request(request, body, payload)
+        if pre_check_result:
+            return pre_check_result
+
+        try:
+            self.verify_request(request, body, payload)
+        except RequestVerificationError:
+            return HttpResponseForbidden("Request verification failed.")
+
+        self.dispatch_event(event=payload)
+        return HttpResponse("OK")
+
+    @classmethod
+    @abstractmethod
+    def webhook_connection_set(cls):
+        """Checks if webhook connection is set.
+        We call this method before calling the set_webhook method in order to avoid sending
+        unneccesary requests to the messaging app server.
+
+        Returns:
+            (bool) True if webhook connection is set else False
+        """
+
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def set_webhook(cls):
+        """Sets a webhook connection with the messaging app chosen.
+        This method may be trivial for messaging apps which propose
+        setting a webhook in their UI like SLack.
+
+        Raises:
+            (WebhookSetupError) if the webhook connection with the messaging app
+            chosen failed.
+        """
+
+        raise NotImplementedError
+
+    @classmethod
+    def get_urls(cls):
+        """Retrieves webhook urls after having ensured that a webhook connection
+        is enabled with the corresponding messaging app.
+
+        Returns:
+            (URLPattern) corresponding to the URL which messaging apps use
+            to send new updates.
+
+        Raises:
+            (WebhookSetupError): if the webhook connection with the messaging app
+            didn't succeed.
+        """
+
+        if not cls.webhook_connection_set():
+            try:
+                cls.set_webhook()
+            except WebhookSetupError:
+                raise
+
+        return [
+            path(cls.url_path, cls.as_view(), name=cls.url_name),
+        ]
