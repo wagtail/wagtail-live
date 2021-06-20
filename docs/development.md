@@ -28,6 +28,12 @@ python -m pip install tox
 tox
 ```
 
+Show test coverage:
+
+```shell
+make showcov
+```
+
 ## Code style linting
 
 Check code style of all files (requires GNU Make to be installed)

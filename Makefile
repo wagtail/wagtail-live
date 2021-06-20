@@ -22,3 +22,7 @@ test:
 
 docs:
 	mkdocs serve -a 127.0.0.1:8080
+
+showcov:
+	@echo "http://127.0.0.1:9000"
+	python -m http.server --directory htmlcov 9000
