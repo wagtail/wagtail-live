@@ -69,8 +69,8 @@ db.sqlite3
 
 .pytest_cache/
 
-# Images
-images/
-original_images/
+# User uploaded content
+media/
+static/
 
 .envrc
