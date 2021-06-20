@@ -1,17 +1,22 @@
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from pathlib import Path
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR = os.path.dirname(PROJECT_DIR)
-
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-2%2hup1&(r-6(88=)txivii25r^o%4-&00u5vgs#n93r#t8+y0"
 
-DEBUG = False
+DEBUG = True
 
 # Application definition
 
 INSTALLED_APPS = [
+    # Apps used for testing this package
+    "tests.testapp",
+    # This package
+    "wagtail_live",
+    "wagtail_live_interface",
+    # Third party / Wagtail / Django
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -32,11 +37,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    # Apps used for testing this package
-    "tests.testapp",
-    # This package
-    "wagtail_live",
-    "wagtail_live_interface",
 ]
 
 MIDDLEWARE = [
