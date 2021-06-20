@@ -1,3 +1,6 @@
-# from django.db import models
+from wagtail_live.models import LivePageMixin
+from wagtail.core.models import Page
 
-# Create your models here.
+
+class BlogPage(LivePageMixin, Page):
+    content_panels = Page.content_panels + LivePageMixin.panels
