@@ -8,7 +8,12 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from .models import DummyChannel, Message
-from .receiver import WagtailLiveInterfaceReceiver, MESSAGE_CREATED, MESSAGE_DELETED, MESSAGE_EDITED
+from .receiver import (
+    MESSAGE_CREATED,
+    MESSAGE_DELETED,
+    MESSAGE_EDITED,
+    WagtailLiveInterfaceReceiver,
+)
 from .serializers import DummyChannelSerializer, MessageSerializer
 
 LIVE_RECEIVER = WagtailLiveInterfaceReceiver(
