@@ -19,6 +19,8 @@ test_requires = [
     "pytest>=6.2,<6.3",
     "pytest-cov>=2.12,<3",
     "pytest-django>=4.3.0,<5",
+    "mock>=4.0.3,<5",
+    "pytest-mock>=3.6.1,<4",
 ]
 
 setup(

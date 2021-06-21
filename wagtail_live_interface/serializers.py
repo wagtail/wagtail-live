@@ -1,5 +1,4 @@
-
-"""Wagtail Live debug serializers."""
+"""Wagtail Live Interface serializers."""
 
 from rest_framework import serializers
 
