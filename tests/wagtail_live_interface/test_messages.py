@@ -28,7 +28,7 @@ class MessageAPITests(TestCase):
     def setUp(self):
         """Mock receiver to avoid sending new updates."""
 
-        self.patcher = patch("wagtail_live_debug.receiver.WagtailLiveInterfaceReceiver")
+        self.patcher = patch("wagtail_live_interface.receiver.WagtailLiveInterfaceReceiver")
         self.receiver_mock = self.patcher.start()
         self.addCleanup(self.patcher.stop)
 
@@ -206,7 +206,7 @@ class MessageAPITests(TestCase):
         """Response is 400 Bad Request."""
 
         response = self.client.put(
-            "/wagtail_live_debug/api/messages/3/",
+            "/wagtail_live_interface/api/messages/3/",
             {
                 "channel": "wrong_channel",
                 "content": "Some content",
