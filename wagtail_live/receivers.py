@@ -1,6 +1,5 @@
 """Wagtail Live receiver classes."""
 
-import logging
 import re
 from functools import cached_property
 
@@ -22,8 +21,6 @@ from .blocks import (
     construct_live_post_block,
     construct_text_block,
 )
-
-logger = logging.getLogger(__name__)
 
 TEXT = "message"
 IMAGE = "image"
