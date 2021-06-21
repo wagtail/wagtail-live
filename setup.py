@@ -19,7 +19,7 @@ test_requires = [
     "pytest>=6.2,<6.3",
     "pytest-cov>=2.12,<3",
     "pytest-django>=4.3.0,<5",
-    "pytest_factoryboy>=2.1.0,3",
+    "pytest_factoryboy>=2.1.0,<3",
     "wagtail-factories>=2.0.1,<3",
 ]
 
