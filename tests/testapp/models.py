@@ -1,5 +1,6 @@
-from wagtail_live.models import LivePageMixin
 from wagtail.core.models import Page
+
+from src.wagtail_live.models import LivePageMixin
 
 
 class BlogPage(LivePageMixin, Page):
