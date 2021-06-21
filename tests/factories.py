@@ -1,7 +1,7 @@
 import json
 
-import wagtail_factories
 import factory
+import wagtail_factories
 
 from tests.testapp.models import BlogPage
 
