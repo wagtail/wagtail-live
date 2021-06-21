@@ -7,6 +7,7 @@ from functools import cached_property
 import requests
 from django.apps import apps
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
 from django.http import Http404
 from django.shortcuts import get_object_or_404
@@ -61,17 +62,15 @@ class BaseMessageReceiver:
 
         app_name = getattr(settings, "LIVE_APP", "")
         if not app_name:
-            logger.warning(
+            raise ImproperlyConfigured(
                 "You haven't specified a live app in your settings" + error_msg,
             )
-            return
 
         model_name = getattr(settings, "LIVE_PAGE_MODEL", "")
         if not model_name:
-            logger.warning(
+            raise ImproperlyConfigured(
                 "You haven't specified a live page model in your settings" + error_msg,
             )
-            return
 
         return apps.get_model(app_name, model_name)
 
