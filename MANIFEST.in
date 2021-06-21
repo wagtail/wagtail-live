@@ -8,5 +8,5 @@ include README.md
 include setup.cfg
 include setup.py
 
-recursive-include wagtail_live *.html *.py
+recursive-include src/wagtail_live *.html *.py
 recursive-include wagtail_live_interface *.html *.py

@@ -6,16 +6,17 @@ clean:
 	find . -name '*.pyc' -exec rm -rf {} +
 	find . -name '__pycache__' -exec rm -rf {} +
 	find . -name '*.egg-info' -exec rm -rf {} +
+	rm -rf dist/ build/
 
 format:
-	isort wagtail_live wagtail_live_interface tests setup.py
-	black wagtail_live wagtail_live_interface tests setup.py
-	flake8 wagtail_live wagtail_live_interface tests setup.py
+	isort src/wagtail_live wagtail_live_interface tests setup.py
+	black src/wagtail_live wagtail_live_interface tests setup.py
+	flake8 src/wagtail_live wagtail_live_interface tests setup.py
 
 lint:
-	isort --check-only --diff wagtail_live wagtail_live_interface tests setup.py
-	black --check --diff wagtail_live wagtail_live_interface tests setup.py
-	flake8 wagtail_live wagtail_live_interface tests setup.py
+	isort --check-only --diff src/wagtail_live wagtail_live_interface tests setup.py
+	black --check --diff src/wagtail_live wagtail_live_interface tests setup.py
+	flake8 src/wagtail_live wagtail_live_interface tests setup.py
 
 test:
 	pytest
