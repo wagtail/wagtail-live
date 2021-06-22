@@ -55,7 +55,7 @@ class LivePageMixin(models.Model):
                 break
             index -= 1
 
-        return index
+        return index if index >= 0 else None
 
     def get_live_post_index(self, message_id):
         """Retrieves index of a livepost."""
@@ -92,7 +92,7 @@ class LivePageMixin(models.Model):
         """
 
         live_post_index = self.get_live_post_index(message_id=message_id)
-        if live_post_index == -1:
+        if live_post_index is None:
             raise KeyError
         return self.get_live_post_by_index(live_post_index)
 
@@ -128,7 +128,7 @@ class LivePageMixin(models.Model):
         """
 
         live_post_index = self.get_live_post_index(message_id=message_id)
-        if live_post_index == -1:
+        if live_post_index is None:
             raise KeyError
         del self.live_posts[live_post_index]
 
