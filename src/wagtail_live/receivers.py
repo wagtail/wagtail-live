@@ -1,6 +1,8 @@
 """Wagtail Live receiver classes."""
 
+import logging
 import re
+from functools import cached_property
 
 import requests
 from django.apps import apps
@@ -48,13 +50,30 @@ def is_embed(text):
 class BaseMessageReceiver:
     """Base Receiver class."""
 
-    def __init__(self, app_name, model_name):
+    @cached_property
+    def model(self):
         """
         LivePageMixin is an abstract class, so we can't make queries directly
-        We have to get the actual page which subclasses it to perform queries.
+        We have to get the actual model which subclasses it to perform queries.
         """
 
-        self.model = apps.get_model(app_name, model_name)
+        error_msg = "You won't be able to use Wagtail Live features without this setting defined."
+
+        app_name = getattr(settings, "LIVE_APP", "")
+        if not app_name:
+            logger.warning(
+                "You haven't specified a live app in your settings" + error_msg,
+            )
+            return
+
+        model_name = getattr(settings, "LIVE_PAGE_MODEL", "")
+        if not model_name:
+            logger.warning(
+                "You haven't specified a live page model in your settings" + error_msg,
+            )
+            return
+
+        return apps.get_model(app_name, model_name)
 
     def dispatch(self, event):
         """Dispatch an event to find corresponding handler.

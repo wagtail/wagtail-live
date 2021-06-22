@@ -9,10 +9,7 @@ app = App(
     token_verification_enabled=False,
 )
 
-slack_receiver = SlackEventsAPIReceiver(
-    settings.LIVE_APP,
-    settings.LIVE_PAGE_MODEL,
-)
+slack_receiver = SlackEventsAPIReceiver()
 
 
 @app.event("message")
