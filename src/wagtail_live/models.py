@@ -162,7 +162,7 @@ class LivePageMixin(models.Model):
         if live_post_index == -1:
             return
         del self.live_posts[live_post_index]
-        
+
         self.save_revision()
 
     def clear_live_post_content(self, live_post):
