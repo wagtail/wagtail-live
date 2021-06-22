@@ -24,8 +24,6 @@ class LivePageMixin(models.Model):
     Attributes:
         channel_id (str):
             Id of the corresponding channel in a messaging app.
-        last_update_at (DateTime):
-            Date and time of the last update for this channel/page.
         live_posts (StreamField):
             StreamField containing all the posts/messages published
             respectively on this page/channel.
@@ -34,12 +32,6 @@ class LivePageMixin(models.Model):
     channel_id = models.CharField(
         help_text="Channel ID",
         max_length=255,
-        blank=True,
-    )
-
-    last_update_at = models.DateTimeField(
-        help_text="Date and time of the last update for this channel/page",
-        null=True,
         blank=True,
     )
 
@@ -52,7 +44,6 @@ class LivePageMixin(models.Model):
 
     panels = [
         FieldPanel("channel_id"),
-        FieldPanel("last_update_at"),
         StreamFieldPanel("live_posts"),
     ]
 
@@ -156,8 +147,7 @@ class LivePageMixin(models.Model):
         # Insert to keep posts sorted by time
         self.live_posts.insert(lp_index, ("live_post", live_post, live_post_id))
 
-        self.last_update_at = now()
-        self.save()
+        self.save_revision()
 
     def delete_live_post(self, live_post_id):
         """Deletes a live post by its ID.
@@ -172,8 +162,8 @@ class LivePageMixin(models.Model):
         if live_post_index == -1:
             return
         del self.live_posts[live_post_index]
-        self.last_update_at = now()
-        self.save()
+        
+        self.save_revision()
 
     def clear_live_post_content(self, live_post):
         """Clears the content of a live post.
@@ -190,8 +180,7 @@ class LivePageMixin(models.Model):
         """
 
         live_post.value["modified"] = now()
-        self.last_update_at = now()
-        self.save()
+        self.save_revision()
 
     class Meta:
         abstract = True
