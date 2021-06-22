@@ -198,8 +198,8 @@ def test_live_page_mixin_add_live_post(blog_page_factory):
                 "id": "f6d17667-65f8-4202-9051-48f45d71bd2e",
                 "value": {
                     "message_id": message_id_1,
-                    "created": "2022-01-01T12:00:00",
-                    "modified": "2022-01-01T12:00:00",
+                    "created": "9999-01-01T12:00:00",
+                    "modified": "9999-01-01T12:00:00",
                     "show": True,
                     "content": [],
                 },
