@@ -33,6 +33,7 @@ class LivePostBlock(StructBlock):
     show = BooleanBlock(
         required=False,
         help_text="Indicates if this message is shown/hidden",
+        default=True,
     )
     content = ContentBlock()
 
