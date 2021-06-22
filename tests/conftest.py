@@ -1,8 +1,13 @@
-import os
+import pytest
+from pytest_factoryboy import register
+from wagtail.core.models import Site
 
-import django
+from .factories import BlogPageFactory
+
+register(BlogPageFactory)
 
 
-def pytest_configure():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tests.settings")
-    django.setup()
+@pytest.fixture
+def home():
+    # Root page is created by Wagtail migrations.
+    return Site.objects.first().root_page
