@@ -15,7 +15,7 @@ from wagtail.images.blocks import ImageChooserBlock
 class ContentBlock(StreamBlock):
     """A block that represents a live post content."""
 
-    message = TextBlock(help_text="Text of the message")
+    text = TextBlock(help_text="Text of the message")
     image = ImageChooserBlock(help_text="Image of the message")
     embed = EmbedBlock(help_text="URL of the embed message")
 
