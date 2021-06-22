@@ -1,6 +1,5 @@
 """Wagtail Live receiver classes."""
 
-import logging
 import re
 from functools import cached_property
 
