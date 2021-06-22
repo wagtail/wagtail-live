@@ -21,6 +21,7 @@ from .blocks import (
     construct_live_post_block,
     construct_text_block,
 )
+from .models import LivePageMixin
 
 TEXT = "message"
 IMAGE = "image"
@@ -71,7 +72,13 @@ class BaseMessageReceiver:
                 "You haven't specified a live page model in your settings" + error_msg,
             )
 
-        return apps.get_model(app_name, model_name)
+        model = apps.get_model(app_name, model_name)
+        if not isinstance(model, LivePageMixin):
+            raise ImproperlyConfigured(
+                "The live page model specified doesn't inherit from "
+                + "wagtail_live.models.LivePageMixin."
+            )
+        return model
 
     def dispatch(self, event):
         """Dispatch an event to find corresponding handler.
