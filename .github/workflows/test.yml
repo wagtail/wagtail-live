@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         python: ['3.8']
-        wagtail: ['2.11', '2.13']
+        wagtail: ['2.12', '2.13']
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python }}
