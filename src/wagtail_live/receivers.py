@@ -20,7 +20,7 @@ from .blocks import (
     construct_text_block,
 )
 
-TEXT = "message"
+TEXT = "text"
 IMAGE = "image"
 EMBED = "embed"
 LivePost = "live_post"
