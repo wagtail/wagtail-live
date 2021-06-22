@@ -48,8 +48,7 @@ def construct_text_block(text):
         a TextBlock
     """
 
-    text_block = TextBlock()
-    return text_block.to_python(text)
+    return TextBlock().to_python(text)
 
 
 def construct_image_block(image):
@@ -62,8 +61,7 @@ def construct_image_block(image):
         an ImageBlock
     """
 
-    image_block = ImageChooserBlock()
-    return image_block.to_python(image.id)
+    return ImageChooserBlock().to_python(image.id)
 
 
 def construct_embed_block(url):
@@ -76,8 +74,7 @@ def construct_embed_block(url):
         an EmbedBlock
     """
 
-    embed_block = EmbedBlock()
-    return embed_block.to_python(url)
+    return EmbedBlock().to_python(url)
 
 
 def construct_live_post_block(message_id, created):
@@ -93,10 +90,34 @@ def construct_live_post_block(message_id, created):
         a LivePostBlock
     """
 
-    live_post = LivePostBlock()
-    return live_post.to_python(
+    return LivePostBlock().to_python(
         {
             "message_id": message_id,
             "created": created,
         }
     )
+
+
+def add_block_to_live_post(block_type, block, live_block):
+    """Adds a new content block to a live post.
+
+    Args:
+        block_type (str):
+            Type of the block to add
+        block (Block):
+            Block to add to the live post.
+        live_block (LivePostBlock):
+            Live post in which the new block will be added.
+    """
+
+    live_block["content"].append((block_type, block))
+
+
+def clear_live_post_content(live_post):
+    """Clears the content of a live post.
+
+    Args:
+        live_post (livePostBlock): Live post which content will be cleared.
+    """
+
+    live_post.value["content"].clear()
