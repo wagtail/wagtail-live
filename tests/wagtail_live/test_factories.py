@@ -15,7 +15,7 @@ def test_blog_page_factory_instance(blog_page):
     assert isinstance(blog_page, BlogPage)
     assert isinstance(blog_page, LivePageMixin)
     assert blog_page.title.startswith("Page ")
-    assert blog_page.channel_id.startswith("channel-")
+    assert blog_page.channel_id == ""
 
 
 @pytest.mark.django_db
