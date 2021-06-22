@@ -34,6 +34,8 @@ class LivePageMixin(models.Model):
     channel_id = models.CharField(
         help_text="Channel ID",
         max_length=255,
+        null=True,
+        blank=True,
     )
 
     last_update_at = models.DateTimeField(
