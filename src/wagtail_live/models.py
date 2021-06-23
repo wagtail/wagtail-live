@@ -115,7 +115,7 @@ class LivePageMixin(models.Model):
         # Insert to keep posts sorted by time
         self.live_posts.insert(lp_index, ("live_post", live_post))
 
-        self.save_revision()
+        self.save_revision().publish()
 
     def delete_live_post(self, message_id):
         """Deletes the live post corresponding to message_id.
@@ -132,7 +132,7 @@ class LivePageMixin(models.Model):
             raise KeyError
         del self.live_posts[live_post_index]
 
-        self.save_revision()
+        self.save_revision().publish()
 
     def update_live_post(self, live_post):
         """Updates a live post when it has been edited.
@@ -141,7 +141,7 @@ class LivePageMixin(models.Model):
         """
 
         live_post.value["modified"] = now()
-        self.save_revision()
+        self.save_revision().publish()
 
     class Meta:
         abstract = True
