@@ -1,5 +1,7 @@
 """ Wagtail Live Interface Message test suite """
 
+from unittest.mock import patch
+
 from django.test import TestCase
 from rest_framework import serializers
 
@@ -7,6 +9,13 @@ from wagtail_live_interface.models import DummyChannel, Message
 
 
 class MessageAPITests(TestCase):
+    def setUp(self):
+        """Mock receiver to avoid sending new updates."""
+
+        self.patcher = patch("wagtail_live_interface.views.LIVE_RECEIVER.dispatch")
+        self.receiver_mock = self.patcher.start()
+        self.addCleanup(self.patcher.stop)
+
     @classmethod
     def setUpTestData(cls):
         """Set up data for the whole TestCase"""
@@ -37,6 +46,20 @@ class MessageAPITests(TestCase):
         )
         return response
 
+    def test_new_update_sent_on_message_created(self):
+        response = self.create_message()
+        self.receiver_mock.assert_called_once_with(
+            event={
+                "id": 6,
+                "channel": "Test channel",
+                "created": response.json()["created"],
+                "modified": None,
+                "show": False,  # TODO Must be True
+                "content": "Some content",
+                "update_type": 1,
+            }
+        )
+
     def edit_message(self, message_id, new_content="Some content"):
         """Helper to edit a message in self.channel.
         A default value is provided for the new content of the message.
@@ -52,6 +75,23 @@ class MessageAPITests(TestCase):
         )
         return response
 
+    def test_new_update_sent_on_message_edited(self):
+        response = self.edit_message(
+            message_id=3,
+            new_content="Edited content",
+        )
+        self.receiver_mock.assert_called_once_with(
+            event={
+                "id": 3,
+                "channel": "Test channel",
+                "created": response.json()["created"],
+                "modified": response.json()["modified"],
+                "show": True,
+                "content": "Edited content",
+                "update_type": 2,
+            }
+        )
+
     def delete_message(self, message_id):
         """Helper to delete a message."""
 
@@ -59,6 +99,16 @@ class MessageAPITests(TestCase):
             f"/wagtail_live_interface/api/messages/{message_id}/",
         )
         return response
+
+    def test_new_update_sent_on_message_deleted(self):
+        self.delete_message(message_id=2)
+        self.receiver_mock.assert_called_once_with(
+            event={
+                "channel": "Test channel",
+                "id": 2,
+                "update_type": 3,
+            }
+        )
 
     def test_retrieve_messages_from_api_status_code(self):
         """Response is 200 OK."""

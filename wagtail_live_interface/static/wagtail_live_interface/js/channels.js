@@ -85,7 +85,7 @@ async function deleteChannel(event) {
 
 function constructChannelLink(channelName){
     let baseURL = window.location.protocol + "//" + window.location.host + "/";
-    return baseURL + "wagtail_live_debug/channels/" + channelName + "/";
+    return baseURL + "wagtail_live_interface/channels/" + channelName + "/";
 }
 
 function createChannelDiv(channel){

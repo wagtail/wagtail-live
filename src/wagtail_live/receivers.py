@@ -288,7 +288,7 @@ class BaseMessageReceiver:
         channel_id = self.get_channel_id_from_message(message=message)
         try:
             live_page = self.get_live_page_from_channel_id(channel_id=channel_id)
-        except Http404:
+        except self.model.DoesNotExist:
             return
 
         message_id = self.get_message_id_from_message(message=message)
@@ -314,7 +314,7 @@ class BaseMessageReceiver:
         channel_id = self.get_channel_id_from_message(message=message)
         try:
             live_page = self.get_live_page_from_channel_id(channel_id=channel_id)
-        except Http404:
+        except self.model.DoesNotExist:
             return
 
         message_id = self.get_message_id_from_edited_message(message=message)
@@ -340,7 +340,7 @@ class BaseMessageReceiver:
         channel_id = self.get_channel_id_from_message(message=message)
         try:
             live_page = self.get_live_page_from_channel_id(channel_id=channel_id)
-        except Http404:
+        except self.model.DoesNotExist:
             return
 
         message_id = self.get_message_id_from_edited_message(message=message)

@@ -7,7 +7,15 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from .models import DummyChannel, Message
+from .receiver import (
+    MESSAGE_CREATED,
+    MESSAGE_DELETED,
+    MESSAGE_EDITED,
+    WagtailLiveInterfaceReceiver,
+)
 from .serializers import DummyChannelSerializer, MessageSerializer
+
+LIVE_RECEIVER = WagtailLiveInterfaceReceiver()
 
 
 class DummyChannelListView(ListView):
@@ -83,6 +91,9 @@ class MessageListAPIView(generics.GenericAPIView):
         serializer = MessageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            update = serializer.data
+            update["update_type"] = MESSAGE_CREATED
+            LIVE_RECEIVER.dispatch(event=update)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -107,6 +118,9 @@ class MessageDetailAPIView(generics.GenericAPIView):
         if serializer.is_valid():
             serializer.validated_data["modified"] = now()
             serializer.save()
+            update = serializer.data
+            update["update_type"] = MESSAGE_EDITED
+            LIVE_RECEIVER.dispatch(event=update)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -114,5 +128,11 @@ class MessageDetailAPIView(generics.GenericAPIView):
         """API endpoint: delete a message by its ID"""
 
         message = get_object_or_404(Message, pk=pk)
+        update = {
+            "channel": message.channel.channel_name,
+            "id": pk,
+            "update_type": MESSAGE_DELETED,
+        }
         message.delete()
+        LIVE_RECEIVER.dispatch(event=update)
         return Response(status=status.HTTP_204_NO_CONTENT)
