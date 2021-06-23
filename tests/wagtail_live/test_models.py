@@ -315,12 +315,21 @@ def test_live_mixin_update_live_posts_creates_revisions(blog_page_factory):
     live_post = construct_live_post_block(message_id="some-id", created=now())
     page.add_live_post(live_post=live_post)
     assert page.revisions.count() == 1
+    # The revision is published
+    page.refresh_from_db()
+    assert page.get_latest_revision() == page.live_revision
 
     # EDIT
     live_post = page.get_live_post_by_index(live_post_index=0)
     page.update_live_post(live_post=live_post)
     assert page.revisions.count() == 2
+    # The revision is published
+    page.refresh_from_db()
+    assert page.get_latest_revision() == page.live_revision
 
     # DELETE
     page.delete_live_post(message_id="some-id")
     assert page.revisions.count() == 3
+    # The revision is published
+    page.refresh_from_db()
+    assert page.get_latest_revision() == page.live_revision
