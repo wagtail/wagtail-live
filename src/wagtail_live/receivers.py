@@ -16,6 +16,8 @@ from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
 
 from .blocks import (
+    add_block_to_live_post,
+    clear_live_post_content,
     construct_embed_block,
     construct_image_block,
     construct_live_post_block,
@@ -204,7 +206,7 @@ class BaseMessageReceiver:
 
         return text if is_embed(text=text) else ""
 
-    def process_text(self, live_page, live_post, message_text):
+    def process_text(self, live_post, message_text):
         """Processes the text of a message.
 
         Parses the message, constructs corresponding block types
@@ -212,8 +214,6 @@ class BaseMessageReceiver:
         live post.
 
         Args:
-            live_page (LivePageMixin):
-                Live page to update
             live_post (LivePostBlock):
                 Live post to update
             message_text (str):
@@ -233,21 +233,19 @@ class BaseMessageReceiver:
                 block = construct_text_block(text=text)
                 block_type = TEXT
 
-            live_page.add_block_to_live_post(
+            add_block_to_live_post(
                 block_type=block_type,
                 block=block,
                 live_block=live_post,
             )
 
-    def process_files(self, live_page, live_post, files):
+    def process_files(self, live_post, files):
         """Processes the files of a message.
 
         Creates the corresponding block for any file and add it
         to the given live post.
 
         Args:
-            live_page (LivePageMixin):
-                Live page to update
             live_post (LivePostBlock):
                 Live post to update
             files (list):
@@ -272,78 +270,78 @@ class BaseMessageReceiver:
                 )
                 img.save()
                 block = construct_image_block(image=img)
-                live_page.add_block_to_live_post(
+                add_block_to_live_post(
                     block_type=IMAGE,
                     block=block,
                     live_block=live_post,
                 )
 
     def add_message(self, message):
-        """Adds a received message from a messaging app to the corresponding channel.
+        """Adds a received message from a messaging app to the
+        live page corresponding to the channel where the
+        message was posted if such a page exists.
 
         Args:
             message: A message received from a messaging app
         """
 
-        message_id = self.get_message_id_from_message(message=message)
         channel_id = self.get_channel_id_from_message(message=message)
         try:
             live_page = self.get_live_page_from_channel_id(channel_id=channel_id)
         except Http404:
-            # maybe create the LivePage here?
             return
 
+        message_id = self.get_message_id_from_message(message=message)
         live_post = construct_live_post_block(message_id=message_id, created=now())
 
         message_text = self.get_message_text(message=message)
-        self.process_text(
-            live_page=live_page, live_post=live_post, message_text=message_text
-        )
+        self.process_text(live_post=live_post, message_text=message_text)
 
         files = self.get_message_files(message=message)
-        self.process_files(live_page=live_page, live_post=live_post, files=files)
+        self.process_files(live_post=live_post, files=files)
 
-        live_page.add_live_post(live_post=live_post, live_post_id=message_id)
+        live_page.add_live_post(live_post=live_post)
 
     def change_message(self, message):
-        """Changes a message when it's edited from a messaging app.
+        """Changes an edited message in a messaging app in the
+        live page corresponding to the channel where the
+        message was posted if such a page exists.
 
         Args:
             message: A message edited from a messaging app
         """
 
-        message_id = self.get_message_id_from_edited_message(message=message)
         channel_id = self.get_channel_id_from_message(message=message)
         try:
             live_page = self.get_live_page_from_channel_id(channel_id=channel_id)
         except Http404:
             return
 
-        live_post = live_page.get_live_post_by_id(live_post_id=message_id)
-        live_page.clear_live_post_content(live_post=live_post)
+        message_id = self.get_message_id_from_edited_message(message=message)
+        live_post = live_page.get_live_post_by_message_id(message_id=message_id)
+        clear_live_post_content(live_post=live_post)
 
         message_text = self.get_message_text_from_edited_message(message=message)
-        self.process_text(
-            live_page=live_page, live_post=live_post.value, message_text=message_text
-        )
+        self.process_text(live_post=live_post.value, message_text=message_text)
 
         files = self.get_message_files_from_edited_message(message=message)
-        self.process_files(live_page=live_page, live_post=live_post.value, files=files)
+        self.process_files(live_post=live_post.value, files=files)
 
         live_page.update_live_post(live_post=live_post)
 
     def delete_message(self, message):
-        """Deletes a message when it's deleted from a messaging app.
+        """Deletes a message in the live page corresponding to
+        the channel where the message was posted if such a page exists.
 
         Args:
             message: A message deleted from a messaging app
         """
 
-        message_id = self.get_message_id_from_edited_message(message=message)
         channel_id = self.get_channel_id_from_message(message=message)
         try:
             live_page = self.get_live_page_from_channel_id(channel_id=channel_id)
         except Http404:
             return
 
-        live_page.delete_live_post(live_post_id=message_id)
+        message_id = self.get_message_id_from_edited_message(message=message)
+        live_page.delete_live_post(message_id=message_id)
