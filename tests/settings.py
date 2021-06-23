@@ -80,3 +80,6 @@ STATIC_URL = "/static/"
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "Wagtail Live Test Suite"
+
+LIVE_APP = "testapp"
+LIVE_PAGE_MODEL = "BlogPage"

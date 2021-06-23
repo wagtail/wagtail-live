@@ -9,7 +9,6 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
 from django.http import Http404
-from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from django.utils.timezone import now
 from wagtail.embeds.oembed_providers import all_providers
@@ -65,17 +64,18 @@ class BaseMessageReceiver:
         app_name = getattr(settings, "LIVE_APP", "")
         if not app_name:
             raise ImproperlyConfigured(
-                "You haven't specified a live app in your settings" + error_msg,
+                "You haven't specified a live app in your settings. " + error_msg,
             )
 
         model_name = getattr(settings, "LIVE_PAGE_MODEL", "")
         if not model_name:
             raise ImproperlyConfigured(
-                "You haven't specified a live page model in your settings" + error_msg,
+                "You haven't specified a live page model in your settings. "
+                + error_msg,
             )
 
         model = apps.get_model(app_name, model_name)
-        if not isinstance(model, LivePageMixin):
+        if not issubclass(model, LivePageMixin):
             raise ImproperlyConfigured(
                 "The live page model specified doesn't inherit from "
                 + "wagtail_live.models.LivePageMixin."
@@ -116,7 +116,7 @@ class BaseMessageReceiver:
             Http404 if a page with the given channel ID doesn't exist.
         """
 
-        return get_object_or_404(self.model, channel_id=channel_id)
+        return self.model.objects.get(channel_id=channel_id)
 
     def get_message_id_from_message(self, message):
         """Retrieves message's ID.
