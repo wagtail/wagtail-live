@@ -81,5 +81,7 @@ STATIC_URL = "/static/"
 
 WAGTAIL_SITE_NAME = "Wagtail Live Test Suite"
 
-LIVE_APP = "testapp"
-LIVE_PAGE_MODEL = "BlogPage"
+
+# Wagtail Live settings
+
+WAGTAIL_LIVE_PAGE_MODEL = "tests.testapp.models.BlogPage"

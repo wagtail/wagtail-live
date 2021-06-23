@@ -2,9 +2,9 @@
 
 import re
 from functools import cached_property
+from importlib import import_module
 
 import requests
-from django.apps import apps
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
@@ -59,22 +59,16 @@ class BaseMessageReceiver:
         We have to get the actual model which subclasses it to perform queries.
         """
 
-        error_msg = "You won't be able to use Wagtail Live features without this setting defined."
-
-        app_name = getattr(settings, "LIVE_APP", "")
-        if not app_name:
+        live_model = getattr(settings, "WAGTAIL_LIVE_PAGE_MODEL", "")
+        if not live_model:
             raise ImproperlyConfigured(
-                "You haven't specified a live app in your settings. " + error_msg,
+                "You haven't specified a live page model in your settings."
             )
 
-        model_name = getattr(settings, "LIVE_PAGE_MODEL", "")
-        if not model_name:
-            raise ImproperlyConfigured(
-                "You haven't specified a live page model in your settings. "
-                + error_msg,
-            )
+        dotted_path, model_name = live_model.rsplit(".", 1)
+        module = import_module(dotted_path)
+        model = getattr(module, model_name)
 
-        model = apps.get_model(app_name, model_name)
         if not issubclass(model, LivePageMixin):
             raise ImproperlyConfigured(
                 "The live page model specified doesn't inherit from "

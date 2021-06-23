@@ -18,21 +18,14 @@ def test_base_receiver_model(base_receiver):
 
 
 def test_receiver_model_live_app_setting_missing(base_receiver, settings):
-    settings.LIVE_APP = ""
-    expected_err = "You haven't specified a live app in your settings."
-    with pytest.raises(ImproperlyConfigured, match=expected_err):
-        base_receiver.model
-
-
-def test_receiver_model_live_page_model_setting_missing(base_receiver, settings):
-    settings.LIVE_PAGE_MODEL = ""
+    settings.WAGTAIL_LIVE_PAGE_MODEL = ""
     expected_err = "You haven't specified a live page model in your settings."
     with pytest.raises(ImproperlyConfigured, match=expected_err):
         base_receiver.model
 
 
 def test_receiver_model_bad_model(base_receiver, settings):
-    settings.LIVE_PAGE_MODEL = "RegularPage"
+    settings.WAGTAIL_LIVE_PAGE_MODEL = "tests.testapp.models.RegularPage"
     expected_err = (
         "The live page model specified doesn't inherit from "
         "wagtail_live.models.LivePageMixin."
