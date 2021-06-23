@@ -29,7 +29,7 @@ async function editMessage(event) {
     let form = event.target;
     let pk = form.dataset.id;
     let payload = JSON.stringify({
-        channel: document.querySelector("#channel-name").innerText.slice(1),
+        channel: document.querySelector("#channel-name"),
         content: form["content"].value,
     })
 
@@ -91,7 +91,7 @@ async function createMessage(event) {
 
     let form = event.target;
     let payload = JSON.stringify({
-        channel: document.querySelector("#channel-name").innerText.slice(1),
+        channel: document.querySelector("#channel-name"),
         content: form["content"].value,
     });
 
