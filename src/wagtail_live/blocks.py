@@ -101,7 +101,6 @@ def construct_live_post_block(message_id, created):
 
 def add_block_to_live_post(block_type, block, live_block):
     """Adds a new content block to a live post.
-
     Args:
         block_type (str):
             Type of the block to add
@@ -119,7 +118,6 @@ def add_block_to_live_post(block_type, block, live_block):
 
 def clear_live_post_content(live_post):
     """Clears the content of a live post.
-
     Args:
         live_post (livePostBlock): Live post which content will be cleared.
     """
