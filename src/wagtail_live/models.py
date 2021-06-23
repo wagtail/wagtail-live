@@ -1,4 +1,5 @@
 """ Wagtail Live models."""
+from typing import Optional
 
 from django.db import models
 from django.utils.timezone import now
@@ -36,7 +37,7 @@ class LivePageMixin(models.Model):
         StreamFieldPanel("live_posts"),
     ]
 
-    def _get_live_post_index(self, message_id):
+    def _get_live_post_index(self, message_id: str) -> Optional[int]:
         """Retrieves the index of a live post.
         Searches backwards.
 
@@ -57,12 +58,12 @@ class LivePageMixin(models.Model):
 
         return index if index >= 0 else None
 
-    def get_live_post_index(self, message_id):
+    def get_live_post_index(self, message_id: str) -> Optional[int]:
         """Retrieves index of a livepost."""
 
         return self._get_live_post_index(message_id=message_id)
 
-    def get_live_post_by_index(self, live_post_index):
+    def get_live_post_by_index(self, live_post_index: int) -> LivePostBlock:
         """Retrieves a live post by its index.
 
         Args:
@@ -77,7 +78,7 @@ class LivePageMixin(models.Model):
 
         return self.live_posts[live_post_index]
 
-    def get_live_post_by_message_id(self, message_id):
+    def get_live_post_by_message_id(self, message_id: str) -> LivePostBlock:
         """Retrieves a live post by its ID.
 
         Args:
@@ -96,7 +97,7 @@ class LivePageMixin(models.Model):
             raise KeyError
         return self.get_live_post_by_index(live_post_index)
 
-    def add_live_post(self, live_post):
+    def add_live_post(self, live_post: LivePostBlock) -> None:
         """Adds a new live post to live page.
 
         Args:
@@ -117,7 +118,7 @@ class LivePageMixin(models.Model):
 
         self.save_revision().publish()
 
-    def delete_live_post(self, message_id):
+    def delete_live_post(self, message_id: str) -> None:
         """Deletes the live post corresponding to message_id.
 
         Args:
@@ -134,7 +135,7 @@ class LivePageMixin(models.Model):
 
         self.save_revision().publish()
 
-    def update_live_post(self, live_post):
+    def update_live_post(self, live_post: LivePostBlock) -> None:
         """Updates a live post when it has been edited.
         Args:
             live_post (livePostBlock): Live post to update.

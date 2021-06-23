@@ -3,6 +3,7 @@
 import re
 from functools import cached_property
 from importlib import import_module
+from typing import Type, List, Dict
 
 import requests
 from django.conf import settings
@@ -21,6 +22,7 @@ from .blocks import (
     construct_image_block,
     construct_live_post_block,
     construct_text_block,
+    LivePostBlock,
 )
 from .models import LivePageMixin
 
@@ -30,7 +32,7 @@ EMBED = "embed"
 LivePost = "live_post"
 
 
-def is_embed(text):
+def is_embed(text: str) -> bool:
     """Checks if a text is a link to embed.
 
     Args:
@@ -53,7 +55,7 @@ class BaseMessageReceiver:
     """Base Receiver class."""
 
     @cached_property
-    def model(self):
+    def model(self) -> Type[LivePageMixin]:
         """
         LivePageMixin is an abstract class, so we can't make queries directly
         We have to get the actual model which subclasses it to perform queries.
@@ -97,7 +99,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_live_page_from_channel_id(self, channel_id):
+    def get_live_page_from_channel_id(self, channel_id: str) -> LivePageMixin:
         """Retrieves the live page with a given channel ID.
 
         Args:
@@ -124,7 +126,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_message_text(self, message):
+    def get_message_text(self, message) -> str:
         """Retrieves the text of a message.
 
         A message is made of text and files.
@@ -138,7 +140,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_message_files(self, message):
+    def get_message_files(self, message) -> List[Dict]:
         """Retrieves the files of a message.
 
         A message is made of text and files.
@@ -164,7 +166,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_message_text_from_edited_message(self, message):
+    def get_message_text_from_edited_message(self, message) -> str:
         """Retrieves the text an edited message
 
         Args:
@@ -176,7 +178,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_message_files_from_edited_message(self, message):
+    def get_message_files_from_edited_message(self, message) -> List[Dict]:
         """Retrieves the files  from an edited message
 
         Args:
@@ -188,7 +190,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_embed(self, text):
+    def get_embed(self, text: str) -> str:
         """Check if a text is an embed for this receiver and return embed URL if so.
 
         Args:
@@ -200,7 +202,7 @@ class BaseMessageReceiver:
 
         return text if is_embed(text=text) else ""
 
-    def process_text(self, live_post, message_text):
+    def process_text(self, live_post: LivePostBlock, message_text: str) -> None:
         """Processes the text of a message.
 
         Parses the message, constructs corresponding block types
@@ -233,7 +235,7 @@ class BaseMessageReceiver:
                 live_block=live_post,
             )
 
-    def process_files(self, live_post, files):
+    def process_files(self, live_post: LivePostBlock, files: List[Dict]) -> None:
         """Processes the files of a message.
 
         Creates the corresponding block for any file and add it
@@ -270,7 +272,7 @@ class BaseMessageReceiver:
                     live_block=live_post,
                 )
 
-    def add_message(self, message):
+    def add_message(self, message) -> None:
         """Adds a received message from a messaging app to the
         live page corresponding to the channel where the
         message was posted if such a page exists.
@@ -296,7 +298,7 @@ class BaseMessageReceiver:
 
         live_page.add_live_post(live_post=live_post)
 
-    def change_message(self, message):
+    def change_message(self, message) -> None:
         """Changes an edited message in a messaging app in the
         live page corresponding to the channel where the
         message was posted if such a page exists.

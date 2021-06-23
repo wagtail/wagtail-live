@@ -1,4 +1,6 @@
 """ Block types and block constructors are defined in this module."""
+from datetime import datetime
+from typing import Optional
 
 from wagtail.core.blocks import (
     BooleanBlock,
@@ -8,9 +10,11 @@ from wagtail.core.blocks import (
     StructBlock,
     StructValue,
     TextBlock,
+    Block,
 )
-from wagtail.embeds.blocks import EmbedBlock
+from wagtail.embeds.blocks import EmbedBlock, EmbedValue
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.images.models import AbstractImage
 
 
 class ContentBlock(StreamBlock):
@@ -39,7 +43,7 @@ class LivePostBlock(StructBlock):
     content = ContentBlock()
 
 
-def construct_text_block(text):
+def construct_text_block(text: str) -> str:
     """Helper function to construct a text block for a LivePostBlock content.
 
     Args:
@@ -52,7 +56,7 @@ def construct_text_block(text):
     return TextBlock().to_python(text)
 
 
-def construct_image_block(image):
+def construct_image_block(image: AbstractImage) -> Optional[AbstractImage]:
     """Helper function to construct an image block for a LivePostBlock content.
 
     Args:
@@ -65,7 +69,7 @@ def construct_image_block(image):
     return ImageChooserBlock().to_python(image.id)
 
 
-def construct_embed_block(url):
+def construct_embed_block(url: str) -> Optional[EmbedValue]:
     """Helper function to construct an embed block for a LivePostBlock content.
 
     Args:
@@ -78,7 +82,7 @@ def construct_embed_block(url):
     return EmbedBlock().to_python(url)
 
 
-def construct_live_post_block(message_id, created):
+def construct_live_post_block(message_id: str, created: datetime) -> StructValue:
     """Helper function to construct a LivePostBlock .
 
     Args:
@@ -99,7 +103,9 @@ def construct_live_post_block(message_id, created):
     )
 
 
-def add_block_to_live_post(block_type, block, live_block):
+def add_block_to_live_post(
+    block_type: str, block: Block, live_block: LivePostBlock
+) -> None:
     """Adds a new content block to a live post.
     Args:
         block_type (str):
@@ -116,7 +122,7 @@ def add_block_to_live_post(block_type, block, live_block):
         live_block.value["content"].append((block_type, block))
 
 
-def clear_live_post_content(live_post):
+def clear_live_post_content(live_post: LivePostBlock) -> None:
     """Clears the content of a live post.
     Args:
         live_post (livePostBlock): Live post which content will be cleared.
