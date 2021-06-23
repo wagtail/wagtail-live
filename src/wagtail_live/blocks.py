@@ -6,6 +6,7 @@ from wagtail.core.blocks import (
     DateTimeBlock,
     StreamBlock,
     StructBlock,
+    StructValue,
     TextBlock,
 )
 from wagtail.embeds.blocks import EmbedBlock
@@ -110,7 +111,10 @@ def add_block_to_live_post(block_type, block, live_block):
             Live post in which the new block will be added.
     """
 
-    live_block["content"].append((block_type, block))
+    if isinstance(live_block, StructValue):
+        live_block["content"].append((block_type, block))
+    else:
+        live_block.value["content"].append((block_type, block))
 
 
 def clear_live_post_content(live_post):
@@ -120,4 +124,7 @@ def clear_live_post_content(live_post):
         live_post (livePostBlock): Live post which content will be cleared.
     """
 
-    live_post.value["content"].clear()
+    if isinstance(live_post, StructValue):
+        live_post["content"].clear()
+    else:
+        live_post.value["content"].clear()

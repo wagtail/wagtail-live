@@ -80,3 +80,8 @@ STATIC_URL = "/static/"
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "Wagtail Live Test Suite"
+
+
+# Wagtail Live settings
+
+WAGTAIL_LIVE_PAGE_MODEL = "tests.testapp.models.BlogPage"
