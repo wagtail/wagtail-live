@@ -3,7 +3,7 @@
 import re
 from functools import cached_property
 from importlib import import_module
-from typing import Type, List, Dict
+from typing import Dict, List, Type
 
 import requests
 from django.conf import settings
@@ -16,13 +16,13 @@ from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
 
 from .blocks import (
+    LivePostBlock,
     add_block_to_live_post,
     clear_live_post_content,
     construct_embed_block,
     construct_image_block,
     construct_live_post_block,
     construct_text_block,
-    LivePostBlock,
 )
 from .models import LivePageMixin
 

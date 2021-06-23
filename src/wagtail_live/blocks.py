@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional
 
 from wagtail.core.blocks import (
+    Block,
     BooleanBlock,
     CharBlock,
     DateTimeBlock,
@@ -10,7 +11,6 @@ from wagtail.core.blocks import (
     StructBlock,
     StructValue,
     TextBlock,
-    Block,
 )
 from wagtail.embeds.blocks import EmbedBlock, EmbedValue
 from wagtail.images.blocks import ImageChooserBlock
