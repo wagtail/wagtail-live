@@ -1,5 +1,6 @@
 """Wagtail Live receiver classes."""
 
+import json
 import re
 from functools import cached_property
 from importlib import import_module
@@ -8,9 +9,13 @@ import requests
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
-from django.http import Http404
+from django.http import Http404, HttpResponse, HttpResponseForbidden
+from django.urls import path
+from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.utils.timezone import now
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
 
@@ -22,6 +27,7 @@ from .blocks import (
     construct_live_post_block,
     construct_text_block,
 )
+from .exceptions import RequestVerificationError, WebhookSetupError
 from .models import LivePageMixin
 
 TEXT = "text"
@@ -339,3 +345,103 @@ class BaseMessageReceiver:
 
         message_id = self.get_message_id_from_edited_message(message=message)
         live_page.delete_live_post(message_id=message_id)
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class WebhookReceiverMixin(View):
+    """Mixin for receivers using the webhook technique.
+
+    Attributes:
+        url_path (str):
+            Path of the URL used by a messaging app to send new updates to this receiver.
+        url_name (str):
+            Name of the URL for reversing/resolving.
+    """
+
+    url_path = ""
+    url_name = ""
+
+    def verify_request(self, request):
+        """Ensures that the incoming request comes from the messaging app expected.
+
+        Args:
+            request (HttpRequest): Http request
+
+        Raises:
+            (RequestVerificationError) if the request verification failed
+        """
+
+        raise NotImplementedError
+
+    def post(self, request, *args, **kwargs):
+        """This is the main method for Webhook receivers.
+        It handles new updates from messaging apps in these 3 steps:
+        1- Verify the request.
+        2- Process the updates received.
+        3- Acknowledge the request.
+
+        Args:
+            request (HttpRequest): Http request
+        Returns:
+            (HttpResponseForbidden) if the request couldn't be verified.
+            (HttpResponse) OK if the request is verified and updates have been processed
+            succesfully.
+        """
+
+        body = request.body.decode("utf-8")
+        try:
+            self.verify_request(request, body, *args, **kwargs)
+        except RequestVerificationError:
+            return HttpResponseForbidden("Request verification failed.")
+
+        self.dispatch_event(event=json.loads(body))
+        return HttpResponse("OK")
+
+    @classmethod
+    def webhook_connection_set(cls):
+        """Checks if webhook connection is set.
+        We call this method before calling the set_webhook method in order to avoid sending
+        unneccesary requests to the messaging app server.
+
+        Returns:
+            (bool) True if webhook connection is set else False
+        """
+
+        raise NotImplementedError
+
+    @classmethod
+    def set_webhook(cls):
+        """Sets a webhook connection with the messaging app chosen
+        This method may be trivial for messaging apps which propose
+        setting a webhook in their UI like SLack.
+
+        Raises:
+            (WebhookSetupError) if the webhook connection with the messaging app
+            chosen failed.
+        """
+
+        raise NotImplementedError
+
+    @classmethod
+    def get_urls(cls):
+        """Retrieves webhook urls after having ensured that a webhook connection
+        is enabled with the corresponding messaging app.
+
+        Returns:
+            (URLPattern) corresponding to the URL which messaging apps use
+            to send new updates.
+
+        Raises:
+            (WebhookSetupError): if the webhook connection with the messaging app
+            didn't succeed.
+        """
+
+        if not cls.webhook_connection_set():
+            try:
+                cls.set_webhook()
+            except WebhookSetupError:
+                raise
+
+        return [
+            path(cls.url_path, cls.as_view(), name=cls.url_name),
+        ]
