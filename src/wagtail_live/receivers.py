@@ -1,10 +1,12 @@
 """Wagtail Live receiver classes."""
 
 import re
+from functools import cached_property
 
 import requests
 from django.apps import apps
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
 from django.http import Http404
 from django.shortcuts import get_object_or_404
@@ -19,6 +21,7 @@ from .blocks import (
     construct_live_post_block,
     construct_text_block,
 )
+from .models import LivePageMixin
 
 TEXT = "text"
 IMAGE = "image"
@@ -48,13 +51,34 @@ def is_embed(text):
 class BaseMessageReceiver:
     """Base Receiver class."""
 
-    def __init__(self, app_name, model_name):
+    @cached_property
+    def model(self):
         """
         LivePageMixin is an abstract class, so we can't make queries directly
-        We have to get the actual page which subclasses it to perform queries.
+        We have to get the actual model which subclasses it to perform queries.
         """
 
-        self.model = apps.get_model(app_name, model_name)
+        error_msg = "You won't be able to use Wagtail Live features without this setting defined."
+
+        app_name = getattr(settings, "LIVE_APP", "")
+        if not app_name:
+            raise ImproperlyConfigured(
+                "You haven't specified a live app in your settings" + error_msg,
+            )
+
+        model_name = getattr(settings, "LIVE_PAGE_MODEL", "")
+        if not model_name:
+            raise ImproperlyConfigured(
+                "You haven't specified a live page model in your settings" + error_msg,
+            )
+
+        model = apps.get_model(app_name, model_name)
+        if not isinstance(model, LivePageMixin):
+            raise ImproperlyConfigured(
+                "The live page model specified doesn't inherit from "
+                + "wagtail_live.models.LivePageMixin."
+            )
+        return model
 
     def dispatch(self, event):
         """Dispatch an event to find corresponding handler.
