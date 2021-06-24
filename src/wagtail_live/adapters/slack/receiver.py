@@ -14,7 +14,8 @@ SLACK_SIGNING_SECRET = "your slack signing secret"
 And you are good to go! (Soon hopefully!)
 """
 
-from wagtail_live.receivers import BaseMessageReceiver, is_embed
+from wagtail_live.receivers import BaseMessageReceiver
+from wagtail_live.utils import is_embed
 
 
 class SlackEventsAPIReceiver(BaseMessageReceiver):

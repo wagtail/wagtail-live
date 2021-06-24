@@ -1,7 +1,9 @@
+import re
 from importlib import import_module
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from wagtail.embeds.oembed_providers import all_providers
 
 from .models import LivePageMixin
 
@@ -38,3 +40,22 @@ def get_publisher():
     publisher = getattr(module, publisher_name)
 
     return publisher
+
+
+def is_embed(text):
+    """Checks if a text is a link to embed.
+
+    Args:
+        text (str): Text to check
+
+    Returns:
+        (bool) True if text corresponds to an embed link False else
+    """
+
+    for provider in all_providers:
+        for url_pattern in provider.get("urls", []):
+            # Somehow Slack links start with `<` and end with `>`.
+            if bool(re.match(url_pattern, text)):
+                return True
+
+    return False

@@ -1,6 +1,5 @@
 """Wagtail Live receiver classes."""
 
-import re
 from functools import cached_property
 
 import requests
@@ -8,7 +7,6 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 from django.utils.timezone import now
-from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
 
 from .blocks import (
@@ -19,31 +17,12 @@ from .blocks import (
     construct_live_post_block,
     construct_text_block,
 )
-from .utils import get_live_page_model
+from .utils import get_live_page_model, is_embed
 
 TEXT = "text"
 IMAGE = "image"
 EMBED = "embed"
 LivePost = "live_post"
-
-
-def is_embed(text):
-    """Checks if a text is a link to embed.
-
-    Args:
-        text (str): Text to check
-
-    Returns:
-        (bool) True if text corresponds to an embed link False else
-    """
-
-    for provider in all_providers:
-        for url_pattern in provider.get("urls", []):
-            # Somehow Slack links start with `<` and end with `>`.
-            if bool(re.match(url_pattern, text)):
-                return True
-
-    return False
 
 
 class BaseMessageReceiver:
