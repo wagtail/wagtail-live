@@ -37,14 +37,14 @@ def message():
 def test_interface_receiver_dispatch_new_msg(mocker, message, interface_receiver):
     mocker.patch.object(WagtailLiveInterfaceReceiver, "add_message")
     message["update_type"] = MESSAGE_CREATED
-    interface_receiver.dispatch(event=message)
+    interface_receiver.dispatch_event(event=message)
     WagtailLiveInterfaceReceiver.add_message.assert_called_once_with(message=message)
 
 
 def test_interface_receiver_dispatch_edit_msg(mocker, message, interface_receiver):
     mocker.patch.object(WagtailLiveInterfaceReceiver, "change_message")
     message["update_type"] = MESSAGE_EDITED
-    interface_receiver.dispatch(event=message)
+    interface_receiver.dispatch_event(event=message)
     WagtailLiveInterfaceReceiver.change_message.assert_called_once_with(message=message)
 
 
@@ -55,7 +55,7 @@ def test_interface_receiver_dispatch_delete_msg(mocker, interface_receiver):
         "channel": "test_channel",
         "update_type": MESSAGE_DELETED,
     }
-    interface_receiver.dispatch(event=message)
+    interface_receiver.dispatch_event(event=message)
     WagtailLiveInterfaceReceiver.delete_message.assert_called_once_with(message=message)
 
 

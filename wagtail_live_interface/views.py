@@ -93,7 +93,7 @@ class MessageListAPIView(generics.GenericAPIView):
             serializer.save()
             update = serializer.data
             update["update_type"] = MESSAGE_CREATED
-            LIVE_RECEIVER.dispatch(event=update)
+            LIVE_RECEIVER.dispatch_event(event=update)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -120,7 +120,7 @@ class MessageDetailAPIView(generics.GenericAPIView):
             serializer.save()
             update = serializer.data
             update["update_type"] = MESSAGE_EDITED
-            LIVE_RECEIVER.dispatch(event=update)
+            LIVE_RECEIVER.dispatch_event(event=update)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -134,5 +134,5 @@ class MessageDetailAPIView(generics.GenericAPIView):
             "update_type": MESSAGE_DELETED,
         }
         message.delete()
-        LIVE_RECEIVER.dispatch(event=update)
+        LIVE_RECEIVER.dispatch_event(event=update)
         return Response(status=status.HTTP_204_NO_CONTENT)
