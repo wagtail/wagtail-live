@@ -25,14 +25,18 @@ def test_slack_receiver_instance(slack_receiver):
 
 def test_verify_request_raises_error_if_no_timestampp(slack_receiver, rf):
     request = rf.post("wagtail_live/slack/events")
-    with pytest.raises(RequestVerificationError):
+
+    expected_err = "X-Slack-Request-Timestamp not found in request's headers."
+    with pytest.raises(RequestVerificationError, match=expected_err):
         slack_receiver.verify_request(request, body="")
 
 
 def test_verify_request_raises_timestamp_error(slack_receiver, rf):
     headers = {"HTTP_X-Slack-Request-Timestamp": f"{time.time() - 60 * 6}"}
     request = rf.post("wagtail_live/slack/events", **headers)
-    with pytest.raises(RequestVerificationError):
+
+    expected_err = "The request timestamp is more than five minutes from local time."
+    with pytest.raises(RequestVerificationError, match=expected_err):
         slack_receiver.verify_request(request, body="")
 
 
@@ -43,7 +47,9 @@ def test_verify_request_raises_signature_error(slack_receiver, rf, settings):
         "HTTP_X-Slack-Signature": "random",
     }
     request = rf.post("wagtail_live/slack/events", **headers)
-    with pytest.raises(RequestVerificationError):
+
+    expected_err = "Slack signature couldn't be verified."
+    with pytest.raises(RequestVerificationError, match=expected_err):
         slack_receiver.verify_request(request, body="")
 
 
