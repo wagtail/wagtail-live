@@ -1,6 +1,7 @@
 import time
 
 import pytest
+from django.urls.resolvers import URLPattern
 
 from wagtail_live.adapters.slack.receiver import (
     SlackEventsAPIReceiver,
@@ -21,6 +22,17 @@ def test_slack_receiver_instance(slack_receiver):
 
 
 # SlackWebhookMixin methods
+
+
+def test_get_urls():
+    patterns = SlackEventsAPIReceiver.get_urls()
+    assert len(patterns) == 1
+
+    pattern = patterns[0]
+    assert isinstance(pattern, URLPattern)
+    assert pattern.pattern._route == "slack/events"
+    assert pattern.callback.view_class == SlackEventsAPIReceiver
+    assert pattern.name == "slack_events_handler"
 
 
 def test_verify_request_raises_error_if_no_timestampp(slack_receiver, rf):
@@ -63,6 +75,7 @@ def test_verify_request(slack_receiver, rf, settings):
         + slack_receiver.sign_slack_request(content="v0:" + timestamp + ":" + body),
     }
     request = rf.post("wagtail_live/slack/events", **headers)
+
     assert slack_receiver.verify_request(request, body=body) is None
 
 
@@ -79,6 +92,17 @@ def test_post_url_verification(slack_receiver, rf):
     response = slack_receiver.post(request)
     assert response.status_code == 200
     assert challenge in response.content.decode()
+
+
+def test_post_request_verification_error(slack_receiver, rf):
+    data = {"type": "some-type"}
+    request = rf.post(
+        "wagtail_live/slack/events", content_type="application/json", data=data
+    )
+
+    response = slack_receiver.post(request)
+    assert response.status_code == 403
+    assert "Request verification failed." in response.content.decode()
 
 
 def test_post(slack_receiver, rf, mocker):
@@ -100,7 +124,6 @@ def test_post(slack_receiver, rf, mocker):
 
     response = slack_receiver.post(request)
     slack_receiver.dispatch_event.assert_called_once_with(event=data)
-
     assert response.status_code == 200
     assert "OK" in response.content.decode()
 
@@ -111,13 +134,3 @@ def test_set_webhook(slack_receiver):
 
 def test_webhook_connection_set(slack_receiver):
     assert slack_receiver.webhook_connection_set()
-
-
-def test_get_urls():
-    patterns = SlackEventsAPIReceiver.get_urls()
-    assert len(patterns) == 1
-
-    pattern = patterns[0]
-    assert pattern.pattern._route == "slack/events"
-    assert pattern.callback.view_class == SlackEventsAPIReceiver
-    assert pattern.name == "slack_events_handler"
