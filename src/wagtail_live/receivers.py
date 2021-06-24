@@ -9,7 +9,7 @@ import requests
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
-from django.http import Http404, HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden
 from django.urls import path
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
@@ -82,7 +82,7 @@ class BaseMessageReceiver:
             )
         return model
 
-    def dispatch(self, event):
+    def dispatch_event(self, event):
         """Dispatch an event to find corresponding handler.
 
         Args:
@@ -361,11 +361,12 @@ class WebhookReceiverMixin(View):
     url_path = ""
     url_name = ""
 
-    def verify_request(self, request):
+    def verify_request(self, request, body, *args, **kwargs):
         """Ensures that the incoming request comes from the messaging app expected.
 
         Args:
             request (HttpRequest): Http request
+            body (str): Body of the request
 
         Raises:
             (RequestVerificationError) if the request verification failed
@@ -377,11 +378,12 @@ class WebhookReceiverMixin(View):
         """This is the main method for Webhook receivers.
         It handles new updates from messaging apps in these 3 steps:
         1- Verify the request.
-        2- Process the updates received.
+        2- Dispatch the new event and process the updates received.
         3- Acknowledge the request.
 
         Args:
             request (HttpRequest): Http request
+
         Returns:
             (HttpResponseForbidden) if the request couldn't be verified.
             (HttpResponse) OK if the request is verified and updates have been processed
@@ -411,9 +413,11 @@ class WebhookReceiverMixin(View):
 
     @classmethod
     def set_webhook(cls):
-        """Sets a webhook connection with the messaging app chosen
+        """Sets a webhook connection with the messaging app chosen.
         This method may be trivial for messaging apps which propose
-        setting a webhook in their UI like SLack.
+        setting a webhook in their UI like Slack.
+        It may also be the main method if we have to set up 
+        the webhook ourselves; like with Telegram for example.
 
         Raises:
             (WebhookSetupError) if the webhook connection with the messaging app
