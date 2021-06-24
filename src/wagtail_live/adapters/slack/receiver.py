@@ -52,18 +52,22 @@ class SlackWebhookMixin(WebhookReceiverMixin):
 
         timestamp = request.headers.get("X-Slack-Request-Timestamp")
         if not timestamp:
-            raise RequestVerificationError
+            raise RequestVerificationError(
+                "X-Slack-Request-Timestamp not found in request's headers."
+            )
+
         if abs(time.time() - float(timestamp)) > 60 * 5:
             # The request timestamp is more than five minutes from local time.
             # It could be a replay attack, so let's ignore it.
-            raise RequestVerificationError
+            raise RequestVerificationError(
+                "The request timestamp is more than five minutes from local time."
+            )
 
         sig_basestring = "v0:" + timestamp + ":" + body
         my_signature = "v0=" + self.sign_slack_request(content=sig_basestring)
         slack_signature = request.headers["X-Slack-Signature"]
-
         if not hmac.compare_digest(slack_signature, my_signature):
-            raise RequestVerificationError
+            raise RequestVerificationError("Slack signature couldn't be verified.")
 
     @classmethod
     def set_webhook(cls):
