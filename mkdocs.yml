@@ -18,3 +18,14 @@ nav:
     - Setup long polling publisher: getting_started/setup_long_polling.md
     - Setup a local web server with ngrok: getting_started/setup_ngrok.md
   - Development: development.md
+  - Reference: reference.md
+  - Development: development.md
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          setup_commands:
+            - import os
+            - import django
+            - os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tests.settings")
+            - django.setup()
