@@ -12,7 +12,9 @@ class MessageAPITests(TestCase):
     def setUp(self):
         """Mock receiver to avoid sending new updates."""
 
-        self.patcher = patch("wagtail_live_interface.views.LIVE_RECEIVER.dispatch")
+        self.patcher = patch(
+            "wagtail_live_interface.views.LIVE_RECEIVER.dispatch_event"
+        )
         self.receiver_mock = self.patcher.start()
         self.addCleanup(self.patcher.stop)
 
