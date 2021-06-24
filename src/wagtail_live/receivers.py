@@ -2,11 +2,9 @@
 
 import re
 from functools import cached_property
-from importlib import import_module
 
 import requests
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 from django.utils.timezone import now
@@ -21,7 +19,7 @@ from .blocks import (
     construct_live_post_block,
     construct_text_block,
 )
-from .models import LivePageMixin
+from .utils import get_live_page_model
 
 TEXT = "text"
 IMAGE = "image"
@@ -58,22 +56,7 @@ class BaseMessageReceiver:
         We have to get the actual model which subclasses it to perform queries.
         """
 
-        live_model = getattr(settings, "WAGTAIL_LIVE_PAGE_MODEL", "")
-        if not live_model:
-            raise ImproperlyConfigured(
-                "You haven't specified a live page model in your settings."
-            )
-
-        dotted_path, model_name = live_model.rsplit(".", 1)
-        module = import_module(dotted_path)
-        model = getattr(module, model_name)
-
-        if not issubclass(model, LivePageMixin):
-            raise ImproperlyConfigured(
-                "The live page model specified doesn't inherit from "
-                + "wagtail_live.models.LivePageMixin."
-            )
-        return model
+        return get_live_page_model()
 
     def dispatch(self, event):
         """Dispatch an event to find corresponding handler.
