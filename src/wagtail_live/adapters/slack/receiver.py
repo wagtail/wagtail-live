@@ -50,7 +50,9 @@ class SlackWebhookMixin(WebhookReceiverMixin):
             (RequestVerificationError) if request failed to be verified.
         """
 
-        timestamp = request.headers["X-Slack-Request-Timestamp"]
+        timestamp = request.headers.get("X-Slack-Request-Timestamp")
+        if not timestamp:
+            raise RequestVerificationError
         if abs(time.time() - float(timestamp)) > 60 * 5:
             # The request timestamp is more than five minutes from local time.
             # It could be a replay attack, so let's ignore it.

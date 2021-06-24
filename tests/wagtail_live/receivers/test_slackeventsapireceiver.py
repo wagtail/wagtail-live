@@ -23,6 +23,12 @@ def test_slack_receiver_instance(slack_receiver):
 # SlackWebhookMixin methods
 
 
+def test_verify_request_raises_error_if_no_timestampp(slack_receiver, rf):
+    request = rf.post("wagtail_live/slack/events")
+    with pytest.raises(RequestVerificationError):
+        slack_receiver.verify_request(request, body="")
+
+
 def test_verify_request_raises_timestamp_error(slack_receiver, rf):
     headers = {"HTTP_X-Slack-Request-Timestamp": f"{time.time() - 60 * 6}"}
     request = rf.post("wagtail_live/slack/events", **headers)
