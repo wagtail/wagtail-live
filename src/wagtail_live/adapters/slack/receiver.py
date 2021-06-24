@@ -39,7 +39,7 @@ class SlackWebhookMixin(WebhookReceiverMixin):
         hasher.update(str.encode(content))
         return hasher.hexdigest()
 
-    def verify_request(self, request, body, payload):
+    def verify_request(self, request, body):
         """Verifies Slack requests.
         See https://api.slack.com/authentication/verifying-requests-from-slack.
 
