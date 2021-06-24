@@ -84,17 +84,16 @@ def test_post_url_verification(slack_receiver, client, settings):
     settings.WAGTAIL_LIVE_RECEIVER = (
         "wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
     )
-    challenge = "challenge_token"
     data = {
         "type": "url_verification",
-        "challenge": challenge,
+        "challenge": "challenge_token",
     }
     response = client.post(
         "/wagtail_live/slack/events", content_type="application/json", data=data
     )
 
     assert response.status_code == 200
-    assert challenge in response.content.decode()
+    assert "challenge_token" in response.content.decode()
 
 
 @pytest.mark.django_db
