@@ -15,28 +15,7 @@ Click the `Create App` button and you should see your app's **Basic Information*
 
 ### Retrieve your tokens
 
-Wagtail Live needs the following informations to communicate with your app:
-
-- `SLACK_BOT_TOKEN`
-
-    There are two token types available to a Slack app: user tokens and bot tokens.
-    However, we will only need bot tokens for our live blog.
-    > The bot token your app uses will be the same no matter which user performed the installation. 
-    > Bot tokens are the token type that most apps use.
-
-
-    In your app's **Basic Information** page, navigate to the **OAuth & Permissions** 
-    on the left sidebar and scroll down to the **Bot Token Scopes** section. Click `Add an OAuth Scope`.
-    Add the `channels:history` scope. This scope lets your app
-    > View messages and other content in public channels that your slack app has been added to.
-
-    Scroll up to the top of the **OAuth & Permissions** page and click `Install App to Workspace`. 
-    You’ll need to allow your app to be installed to your development workspace.
-
-    Once you authorize the installation, you’ll get back to the **OAuth & Permissions** page 
-    and see a **Bot User OAuth Access Token** which starts with `xoxb-`.
-
-    Grab the token and copy it somewhere. (Keep your token safe!)
+Wagtail Live needs the following information to communicate with your app:
 
 - `SLACK_SIGNING_SECRET`
 
@@ -74,20 +53,18 @@ $ source livesite/livesite/bin/activate
 
 ### Save tokens
 
-Let's save the bot token and signing secret as environment variables like this:
+Let's save the signing secret as an environment variable like this:
 
 **On Windows** (cmd.exe):
 
 ```doscon
 > SET SLACK_SIGNING_SECRET=<your-signing-secret>
-> SET SLACK_BOT_TOKEN=xoxb-<your-bot-token>
 ```
 
 **On GNU/Linux or MacOS** (bash):
 
 ```console
 $ export SLACK_SIGNING_SECRET=<your-signing-secret>
-$ export SLACK_BOT_TOKEN=xoxb-<your-bot-token>
 ```
 
 ### Install Wagtail Live and other dependencies
@@ -99,13 +76,6 @@ Use pip to install Wagtail and Wagtail Live:
 ```console
 $ pip install wagtail
 $ pip install wagtail-live
-```
-
-For this tutorial, we will also need [Bolt](https://github.com/slackapi/bolt-python). 
-Bolt is a framework that facilitates building Slack apps. To install it, run:
-
-```console
-$ pip install slack_bolt
 ```
 
 ### Generate your site
@@ -181,15 +151,13 @@ Add the following in your `settings.base` file:
 ```
     # Wagtail Live settings
 
-    SLACK_BOT_TOKEN = os.environ['SLACK_BOT_TOKEN']
     SLACK_SIGNING_SECRET = os.environ['SLACK_SIGNING_SECRET']
-    LIVE_PAGE_MODEL = "LiveBlogPage"
-    LIVE_APP = "liveblog"
+    WAGTAIL_LIVE_PAGE_MODEL = "liveblog.models.LiveBlogPage"
 ```
 
 ## Listening to Slack events
 
-In order to receive events like whan a message is sent in a channel, we need to hook a **Request URL** that
+In order to receive events like when a message is sent in a channel, we need to hook a **Request URL** that
 Slack uses to send HTTP POST requests corresponding to events we specify.
 This URL needs to be publicly accessible. However, running `./manage.py runserver` only provide us a locally
 accessible URL. We use a development proxy (ngrok) that will create a public URL and tunnel requests to our own 
@@ -226,16 +194,13 @@ development environment.
 
 ### Request URL verification
 
-Bolt uses the `/slack/events` endpoint to listen to all incoming requests from Slack. 
-Therefore, we must append `/slack/events` to all request URLs.
-
 In your `urls.py` file, add the following:
 ```
-    from wagtail_live.adapters.slack.views import slack_events_handler
+    from wagtail_live import urls as live_urls
 
 
     urlpatterns += [
-        path('slack/events', slack_events_handler, name='slack_events_handler'),
+        path('wagtail_live/', include(live_urls)),
     ]
 ```
 
@@ -248,17 +213,18 @@ $ python3 manage.py runserver
 
 Search for **Event Subscriptions** on your app's **Basic Information** page and toggle the `Enable events` button.
 You'll be asked to type a **Request URL**. Get the generated URL by ngrok (the one that that starts with https://)
-and append `/slack/events` to it. 
+and append `/wagtail_live/slack/events` to it. 
 For example, if your generated URL is something like https://e54acd3a20b3.ngrok.io. Then, the **Request URL** you
-should enter in Slack should be https://e54acd3a20b3.ngrok.io/slack/events.
+should enter in Slack should be 
+https://e54acd3a20b3.ngrok.io/wagtail_live/slack/events.
 
 As soon as you type the URL, Slack will send a POST request to verify the URL given with a challenge parameter.
-You don't have to bother about it, Bolt handles it.
+You don't have to bother about it, Wagtail Live handles it.
 
 ### Channel configuration
 
 After your request URL is verified, scroll down to **Subscribe to Bot Events** and click the `Add Bot User Event` button.
-Choose the `message.channels` event and hit the `Save Changes` button. This allow your bot to listen for messages in public channels that it is added to.
+Choose the `message.channels` event and hit the `Save Changes` button. This allow your bot to listen for messages in **public channels** that it is added to.
 
 In the workspace you installed the app, create a new channel.
 In the channel's page, look for the `Show channel details` icon at the top right of the page and click it.
