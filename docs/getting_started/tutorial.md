@@ -214,7 +214,7 @@ $ python3 manage.py runserver
 Search for **Event Subscriptions** on your app's **Basic Information** page and toggle the `Enable events` button.
 You'll be asked to type a **Request URL**. Get the generated URL by ngrok (the one that that starts with https://)
 and append `/wagtail_live/slack/events` to it. 
-For example, if your generated URL is something like https://e54acd3a20b3.ngrok.io. Then, the **Request URL** you
+For example, if your generated URL is something like https://e54acd3a20b3.ngrok.io, then the **Request URL** you
 should enter in Slack should be 
 https://e54acd3a20b3.ngrok.io/wagtail_live/slack/events.
 
