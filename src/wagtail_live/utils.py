@@ -26,7 +26,7 @@ def get_live_receiver():
 
     if not issubclass(receiver, BaseMessageReceiver):
         raise ImproperlyConfigured(
-            "The receiver specified doesn't inherit from "
+            f"The receiver {live_receiver} doesn't inherit from "
             + "wagtail_live.receivers.BaseMessageReceiver."
         )
     return receiver
