@@ -416,7 +416,7 @@ class WebhookReceiverMixin(View):
         """Sets a webhook connection with the messaging app chosen.
         This method may be trivial for messaging apps which propose
         setting a webhook in their UI like Slack.
-        It may also be the main method if we have to set up 
+        It may also be the main method if we have to set up
         the webhook ourselves; like with Telegram for example.
 
         Raises:
