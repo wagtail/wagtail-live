@@ -23,7 +23,7 @@ class SlackEventsAPIReceiver(BaseMessageReceiver):
     def dispatch(self, event):
         """See base class."""
 
-        message = event
+        message = event["event"]
         if "subtype" in message and message["subtype"] == "message_changed":
             self.change_message(message=message)
             return
