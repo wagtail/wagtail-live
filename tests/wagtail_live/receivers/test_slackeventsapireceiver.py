@@ -24,6 +24,14 @@ def test_slack_receiver_instance(slack_receiver):
 # SlackWebhookMixin methods
 
 
+def test_set_webhook(slack_receiver):
+    assert slack_receiver.set_webhook() is None
+
+
+def test_webhook_connection_set(slack_receiver):
+    assert slack_receiver.webhook_connection_set()
+
+
 def test_get_urls():
     patterns = SlackEventsAPIReceiver.get_urls()
     assert len(patterns) == 1
@@ -134,11 +142,3 @@ def test_post(client, mocker, settings):
     SlackEventsAPIReceiver.dispatch_event.assert_called_once_with(event=data)
     assert response.status_code == 200
     assert "OK" in response.content.decode()
-
-
-def test_set_webhook(slack_receiver):
-    assert slack_receiver.set_webhook() is None
-
-
-def test_webhook_connection_set(slack_receiver):
-    assert slack_receiver.webhook_connection_set()
