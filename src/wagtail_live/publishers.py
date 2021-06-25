@@ -215,7 +215,7 @@ class LongPollingPublisher(PollingPublisherMixin):
             last_update_ts = live_page.last_update_timestamp
             if last_update_ts > last_update_client:
                 updated_posts, current_posts = live_page.get_updates_since(
-                    last_update_ts=datetime.fromtimestamp(float(last_update_client)),
+                    last_update_ts=datetime.fromtimestamp(last_update_client),
                 )
 
                 return JsonResponse(
