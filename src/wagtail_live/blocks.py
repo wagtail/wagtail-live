@@ -38,6 +38,9 @@ class LivePostBlock(StructBlock):
     )
     content = ContentBlock()
 
+    class Meta:
+        template = "wagtail_live/blocks/live_post.html"
+
 
 def construct_text_block(text):
     """Helper function to construct a text block for a LivePostBlock content.
