@@ -11,6 +11,16 @@ from .models import LivePageMixin
 
 
 def get_live_page_model():
+    """Retrieves the live page model specified.
+
+    Returns:
+        (LivePageMixin) corresponding to the live page model specified.
+
+    Raises:
+        (ImproperlyConfigured) if no live page model is specified or the one
+        specified doesn't inherit from wagtail_live.models.LivePageMixin.
+    """
+
     live_model = getattr(settings, "WAGTAIL_LIVE_PAGE_MODEL", "")
     if not live_model:
         raise ImproperlyConfigured(
@@ -35,6 +45,10 @@ def get_live_receiver():
 
     Returns:
         (BaseMessageReceiver) corresponding to the live receiver specified if found else None.
+
+    Raises:
+        (ImproperlyConfigured) if the receiver specified doesn't inherit from
+        wagtail_live.receivers.BaseMessageReceiver.
     """
 
     from wagtail_live.receivers import BaseMessageReceiver
@@ -56,7 +70,16 @@ def get_live_receiver():
     return receiver
 
 
-def get_publisher():
+def get_live_publisher():
+    """Retrieves the live receiver chosen.
+
+    Returns:
+        (Publisher) corresponding to the live publisher specified.
+
+    Raises:
+        (ImproperlyConfigured) if no publisher class is specified.
+    """
+
     live_publisher = getattr(settings, "WAGTAIL_LIVE_PUBLISHER", "")
     if not live_publisher:
         raise ImproperlyConfigured(

@@ -5,18 +5,18 @@ import logging
 from django.core.exceptions import ImproperlyConfigured
 
 from .exceptions import WebhookSetupError
-from .utils import get_live_receiver, get_publisher
+from .utils import get_live_publisher, get_live_receiver
 
 logger = logging.getLogger(__name__)
 
 urlpatterns = []
 
 try:
-    publisher = get_publisher()
-except ImproperlyConfigured:
-    logger.error("No publisher defined.")
+    live_publisher = get_live_publisher()
+except ImproperlyConfigured as err:
+    logger.error(err)
 else:
-    urlpatterns += publisher.get_urls()
+    urlpatterns += live_publisher.get_urls()
 
 live_receiver = get_live_receiver()
 if live_receiver:
