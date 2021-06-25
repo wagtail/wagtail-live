@@ -8,7 +8,7 @@ MESSAGE_DELETED = 3
 class WagtailLiveInterfaceReceiver(BaseMessageReceiver):
     """Wagtail Live interface receiver."""
 
-    def dispatch(self, event):
+    def dispatch_event(self, event):
         """See base class."""
 
         message = event
