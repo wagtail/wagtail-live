@@ -54,7 +54,6 @@ def is_embed(text):
 
     for provider in all_providers:
         for url_pattern in provider.get("urls", []):
-            # Somehow Slack links start with `<` and end with `>`.
             if bool(re.match(url_pattern, text)):
                 return True
 

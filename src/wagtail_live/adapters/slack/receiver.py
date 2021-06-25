@@ -1,19 +1,3 @@
-""" How to use it?
-To create an app, register your URL to slack, get a token plus all additional infrastucture, see:
-https://github.com/slackapi/bolt-python/tree/main/examples/django
-Then do something like this in your url_patterns:
-from wagtail_live.slack.views import slack_events_handler
-url_patterns += [
-    path("slack/events", slack_events_handler, name="slack_events_handler"),
-]
-Add the following to your settings.py file:
-LIVE_PAGE_MODEL = "model name"
-LIVE_APP = "app name"
-SLACK_BOT_TOKEN = "your slack bot token"
-SLACK_SIGNING_SECRET = "your slack signing secret"
-And you are good to go! (Soon hopefully!)
-"""
-
 from wagtail_live.receivers import BaseMessageReceiver
 from wagtail_live.utils import is_embed
 
