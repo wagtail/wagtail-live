@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-2%2hup1&(r-6(88=)txivii25r^o%4-&00u5vgs#n93r#t8+y0"
 
-DEBUG = False
+DEBUG = True
 
 # Application definition
 
@@ -85,3 +85,4 @@ WAGTAIL_SITE_NAME = "Wagtail Live Test Suite"
 # Wagtail Live settings
 
 WAGTAIL_LIVE_PAGE_MODEL = "tests.testapp.models.BlogPage"
+WAGTAIL_LIVE_PUBLISHER = "wagtail_live.publishers.IntervalPollingPublisher"

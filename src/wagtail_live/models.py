@@ -150,6 +150,17 @@ class LivePageMixin(models.Model):
         self.save_revision().publish()
 
     def get_updates_since(self, last_update_ts):
+        """Retrieves new updates since a given timestamp value.
+
+        Args:
+            last_update_ts (DateTime):
+                Timestamp of the last update.
+
+        Returns:
+            (list, dict) a tuple containing the current live posts
+            and the updated posts since last_update_ts.
+        """
+
         current_posts, updated_posts = [], {}
         for post in self.live_posts:
             post_id = post.id
