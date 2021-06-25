@@ -105,7 +105,7 @@ def test_process_text(base_receiver, blog_page_factory):
 
 def test_dispatch_error_if_not_implemented(base_receiver):
     with pytest.raises(NotImplementedError):
-        base_receiver.dispatch(event={})
+        base_receiver.dispatch_event(event={})
 
 
 def test_get_channel_id_from_message_error_if_not_implemented(base_receiver):
