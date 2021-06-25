@@ -42,6 +42,32 @@ def get_publisher():
     return publisher
 
 
+def get_polling_timeout():
+    """Retrieves the duration for the polling timeout for the long polling technique.
+    The user can set this parameter in his settings by doing so:
+    WAGTAIL_LIVE_POLLING_TIMEOUT = (duration in seconds)
+    Defaults to 60(seconds).
+
+    Returns:
+        (int) the duration of the polling timeout if defined else 60.
+    """
+
+    return getattr(settings, "WAGTAIL_LIVE_POLLING_TIMEOUT", 60)
+
+
+def get_polling_interval():
+    """Retrieves the duration of the polling interval for the interval polling technique.
+    The user can set this parameter in his settings by doing so:
+    WAGTAIL_LIVE_POLLING_INTERVAL = (duration in ms)
+    Defaults to 3000(ms).
+
+    Returns:
+        (int) the duration of the polling interval if defined else 3000.
+    """
+
+    return getattr(settings, "WAGTAIL_LIVE_POLLING_INTERVAL", 3000)
+
+
 def is_embed(text):
     """Checks if a text is a link to embed.
 

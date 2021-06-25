@@ -4,13 +4,12 @@ import time
 from datetime import datetime
 from functools import cached_property
 
-from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import path
 from django.views import View
 
-from .utils import get_live_page_model
+from .utils import get_live_page_model, get_polling_interval, get_polling_timeout
 
 
 class PollingPublisherMixin(View):
@@ -122,17 +121,6 @@ class IntervalPollingPublisher(PollingPublisherMixin):
     3- If new updates are available, client side sends a GET request to get the new updates.
     """
 
-    def polling_interval(self):
-        """Retrieves the duration of the polling interval.
-        The user can set this parameter in his settings by doing so:
-        WAGTAIL_LIVE_POLLING_INTERVAL = (duration in ms)
-        Defaults to 3000(ms).
-
-        Returns:
-            (int) the duration of the polling interval if defined else 3000.
-        """
-        return getattr(settings, "WAGTAIL_LIVE_POLLING_INTERVAL", 3000)
-
     def post(self, request, channel_id, *ùargs, **kwargs):
         """See base class."""
 
@@ -141,7 +129,7 @@ class IntervalPollingPublisher(PollingPublisherMixin):
             {
                 "livePosts": [live_post.id for live_post in live_page.live_posts],
                 "lastUpdateTimestamp": live_page.last_update_timestamp,
-                "pollingInterval": self.polling_interval,
+                "pollingInterval": get_polling_interval(),
             }
         )
 
@@ -202,19 +190,6 @@ class LongPollingPublisher(PollingPublisherMixin):
         that there aren't updates available.
     """
 
-    @cached_property
-    def polling_timeout(self):
-        """Retrieves the duration for the polling timeout.
-        The user can set this parameter in his settings by doing so:
-        WAGTAIL_LIVE_POLLING_TIMEOUT = (duration in seconds)
-        Defaults to 60(seconds).
-
-        Returns:
-            (int) the duration of the polling timeout if defined else 60.
-        """
-
-        return getattr(settings, "WAGTAIL_LIVE_POLLING_TIMEOUT", 60)
-
     def post(self, request, channel_id, *args, **kwargs):
         """See base class."""
 
@@ -233,7 +208,9 @@ class LongPollingPublisher(PollingPublisherMixin):
 
         last_update_client = self.get_last_update_client_from_request(request=request)
         starting_time = time.time()
-        while time.time() - starting_time < self.polling_timeout:
+        polling_timeout = get_polling_timeout()
+
+        while time.time() - starting_time < polling_timeout:
             live_page = get_object_or_404(self.model, channel_id=channel_id)
             last_update_ts = live_page.last_update_timestamp
             if last_update_ts > last_update_client:
