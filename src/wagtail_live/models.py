@@ -36,6 +36,12 @@ class LivePageMixin(models.Model):
         StreamFieldPanel("live_posts"),
     ]
 
+    @property
+    def last_update_timestamp(self):
+        """Timestamp of the last update of this page."""
+
+        return self.latest_revision_created_at.timestamp()
+
     def _get_live_post_index(self, message_id):
         """Retrieves the index of a live post.
         Searches backwards.
@@ -142,6 +148,24 @@ class LivePageMixin(models.Model):
 
         live_post.value["modified"] = now()
         self.save_revision().publish()
+
+    def get_updates_since(self, last_update_ts):
+        current_posts, updated_posts = [], {}
+        for post in self.live_posts:
+            post_id = post.id
+            current_posts.append(post_id)
+
+            created = post.value["created"]
+            if created > last_update_ts:  # This is a new post
+                updated_posts[post_id] = post.render(context={"block_id": post_id})
+                continue
+
+            last_modified = post.value["modified"]
+            if last_modified and last_modified > last_update_ts:
+                # This is an edited post
+                updated_posts[post_id] = post.render(context={"block_id": post_id})
+
+        return (updated_posts, current_posts)
 
     class Meta:
         abstract = True
