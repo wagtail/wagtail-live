@@ -14,7 +14,7 @@ urlpatterns = []
 try:
     live_publisher = get_live_publisher()
 except ImproperlyConfigured as err:
-    logger.error(err)
+    logger.error(f"{err}")
 else:
     urlpatterns += live_publisher.get_urls()
 
