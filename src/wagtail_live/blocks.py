@@ -1,6 +1,6 @@
 """ Block types and block constructors are defined in this module."""
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from wagtail.core.blocks import (
     Block,
@@ -8,6 +8,7 @@ from wagtail.core.blocks import (
     CharBlock,
     DateTimeBlock,
     StreamBlock,
+    StreamValue,
     StructBlock,
     StructValue,
     TextBlock,
@@ -56,7 +57,7 @@ def construct_text_block(text: str) -> str:
     return TextBlock().to_python(text)
 
 
-def construct_image_block(image: AbstractImage) -> Optional[AbstractImage]:
+def construct_image_block(image: AbstractImage) -> AbstractImage:
     """Helper function to construct an image block for a LivePostBlock content.
 
     Args:
@@ -66,7 +67,7 @@ def construct_image_block(image: AbstractImage) -> Optional[AbstractImage]:
         an ImageBlock
     """
 
-    return ImageChooserBlock().to_python(image.id)
+    return ImageChooserBlock().to_python(image.pk)
 
 
 def construct_embed_block(url: str) -> Optional[EmbedValue]:
@@ -104,7 +105,7 @@ def construct_live_post_block(message_id: str, created: datetime) -> StructValue
 
 
 def add_block_to_live_post(
-    block_type: str, block: Block, live_block: LivePostBlock
+    block_type: str, block: Block, live_block: Union[StructValue, StreamValue.StreamChild]
 ) -> None:
     """Adds a new content block to a live post.
     Args:
@@ -122,7 +123,7 @@ def add_block_to_live_post(
         live_block.value["content"].append((block_type, block))
 
 
-def clear_live_post_content(live_post: LivePostBlock) -> None:
+def clear_live_post_content(live_post: Union[StructValue, StreamValue.StreamChild]) -> None:
     """Clears the content of a live post.
     Args:
         live_post (livePostBlock): Live post which content will be cleared.

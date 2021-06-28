@@ -1,6 +1,7 @@
 """Wagtail Live utils"""
 
 from importlib import import_module
+from typing import Optional, Type
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -8,7 +9,7 @@ from django.core.exceptions import ImproperlyConfigured
 from wagtail_live.receivers import BaseMessageReceiver
 
 
-def get_live_receiver():
+def get_live_receiver() -> Optional[Type[BaseMessageReceiver]]:
     """Retrieves the live receiver chosen.
 
     Returns:

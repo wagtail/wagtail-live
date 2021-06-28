@@ -46,14 +46,16 @@ class LivePageMixin(models.Model):
                 ID of the message corresponding to a live post.
 
         Returns:
-            (int) Index of the live post if found else -1
+            (int) Index of the live post if found else None
         """
 
         posts = self.live_posts
         index = len(posts) - 1
+
         while index >= 0:
             if posts[index].value["message_id"] == message_id:
                 break
+
             index -= 1
 
         return index if index >= 0 else None
@@ -108,9 +110,11 @@ class LivePageMixin(models.Model):
         posts = self.live_posts
         lp_index = len(posts)
         post_created_at = live_post["created"]
+
         while lp_index > 0:
             if posts[lp_index - 1].value["created"] < post_created_at:
                 break
+
             lp_index -= 1
 
         # Insert to keep posts sorted by time

@@ -4,7 +4,7 @@ import json
 import re
 from functools import cached_property
 from importlib import import_module
-from typing import Dict, List, Type
+from typing import Dict, List, Type, Any
 
 import requests
 from django.conf import settings
@@ -17,6 +17,7 @@ from django.utils.text import slugify
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from wagtail.core.blocks import StructValue
 from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
 
@@ -115,12 +116,12 @@ class BaseMessageReceiver:
             (LivePageMixin) The livepage corresponding to channel ID.
 
         Raises:
-            Http404 if a page with the given channel ID doesn't exist.
+            self.model.DoesNotExist if a page with the given channel ID doesn't exist.
         """
 
         return self.model.objects.get(channel_id=channel_id)
 
-    def get_message_id_from_message(self, message):
+    def get_message_id_from_message(self, message: Any):
         """Retrieves message's ID.
 
         Args:
@@ -132,7 +133,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_message_text(self, message) -> str:
+    def get_message_text(self, message: Any) -> str:
         """Retrieves the text of a message.
 
         A message is made of text and files.
@@ -146,7 +147,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_message_files(self, message) -> List[Dict]:
+    def get_message_files(self, message: Any) -> List[Dict]:
         """Retrieves the files of a message.
 
         A message is made of text and files.
@@ -160,7 +161,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_message_id_from_edited_message(self, message):
+    def get_message_id_from_edited_message(self, message: Any):
         """Retrieves the ID of the original message.
 
         Args:
@@ -172,7 +173,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_message_text_from_edited_message(self, message) -> str:
+    def get_message_text_from_edited_message(self, message: Any) -> str:
         """Retrieves the text an edited message
 
         Args:
@@ -184,7 +185,7 @@ class BaseMessageReceiver:
 
         raise NotImplementedError
 
-    def get_message_files_from_edited_message(self, message) -> List[Dict]:
+    def get_message_files_from_edited_message(self, message: Any) -> List[Dict]:
         """Retrieves the files  from an edited message
 
         Args:
@@ -208,7 +209,7 @@ class BaseMessageReceiver:
 
         return text if is_embed(text=text) else ""
 
-    def process_text(self, live_post: LivePostBlock, message_text: str) -> None:
+    def process_text(self, live_post: StructValue, message_text: str) -> None:
         """Processes the text of a message.
 
         Parses the message, constructs corresponding block types
@@ -241,7 +242,7 @@ class BaseMessageReceiver:
                 live_block=live_post,
             )
 
-    def process_files(self, live_post: LivePostBlock, files: List[Dict]) -> None:
+    def process_files(self, live_post: StructValue, files: List[Dict]) -> None:
         """Processes the files of a message.
 
         Creates the corresponding block for any file and add it
