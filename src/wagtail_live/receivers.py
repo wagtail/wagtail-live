@@ -4,7 +4,7 @@ import json
 import re
 from functools import cached_property
 from importlib import import_module
-from typing import Dict, List, Type, Any
+from typing import Any, Dict, List, Type
 
 import requests
 from django.conf import settings

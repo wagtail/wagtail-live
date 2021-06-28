@@ -105,7 +105,9 @@ def construct_live_post_block(message_id: str, created: datetime) -> StructValue
 
 
 def add_block_to_live_post(
-    block_type: str, block: Block, live_block: Union[StructValue, StreamValue.StreamChild]
+    block_type: str,
+    block: Block,
+    live_block: Union[StructValue, StreamValue.StreamChild],
 ) -> None:
     """Adds a new content block to a live post.
     Args:
@@ -123,7 +125,9 @@ def add_block_to_live_post(
         live_block.value["content"].append((block_type, block))
 
 
-def clear_live_post_content(live_post: Union[StructValue, StreamValue.StreamChild]) -> None:
+def clear_live_post_content(
+    live_post: Union[StructValue, StreamValue.StreamChild]
+) -> None:
     """Clears the content of a live post.
     Args:
         live_post (livePostBlock): Live post which content will be cleared.
