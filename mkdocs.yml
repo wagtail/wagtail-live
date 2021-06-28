@@ -11,5 +11,12 @@ markdown_extensions:
   - pymdownx.superfences
 nav:
   - Home: index.md
+  - Getting started:
+    - Tutorial: getting_started/tutorial.md
+    - Setup Slack Events API receiver: getting_started/setup_slack.md
+    - Setup a local web server with ngrok: getting_started/setup_ngrok.md
+  - Topics:
+    - Input sources and receivers: topics/input_source_and_receivers.md
+    - Wagtail Live Interface: topics/wagtail_live_interface.md
+    - Publishers: topics/publishers.md
   - Development: development.md
-  - Slack tutorial: getting_started/tutorial.md
