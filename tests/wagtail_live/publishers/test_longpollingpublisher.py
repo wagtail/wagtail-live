@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 
 import pytest
-from django.conf import settings
+from django.test import override_settings
 from django.urls import resolve
 
 from tests.utils import reload_urlconf
@@ -10,13 +10,14 @@ from wagtail_live.publishers import LongPollingPublisher, PollingPublisherMixin
 
 
 @pytest.fixture(scope="class")
+@override_settings(
+    WAGTAIL_LIVE_PUBLISHER="wagtail_live.publishers.LongPollingPublisher"
+)
 def reload_urls():
-    initial_value = getattr(settings, "WAGTAIL_LIVE_PUBLISHER", "")
-    settings.WAGTAIL_LIVE_PUBLISHER = "wagtail_live.publishers.LongPollingPublisher"
     reload_urlconf()
     resolved = resolve("/wagtail_live/get-updates/test_channel/")
+
     assert resolved.url_name == "long-polling"
-    settings.WAGTAIL_LIVE_PUBLISHER = initial_value
 
 
 @pytest.fixture
@@ -106,8 +107,8 @@ class TestLongPolling:
         )
         assert response.status_code == 404
 
-    def test_get_timeout_reached(self, live_page, client, settings):
-        settings.WAGTAIL_LIVE_POLLING_TIMEOUT = 1e-6
+    @override_settings(WAGTAIL_LIVE_POLLING_TIMEOUT=1e-6)
+    def test_get_timeout_reached(self, live_page, client):
         response = client.get(
             "/wagtail_live/get-updates/test_channel/",
             {"last_update_ts": live_page.last_update_timestamp + 5},

@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 
 import pytest
-from django.conf import settings
+from django.test import override_settings
 from django.urls import resolve
 
 from tests.utils import reload_urlconf
@@ -11,13 +11,14 @@ from wagtail_live.utils import get_polling_interval
 
 
 @pytest.fixture(scope="class")
+@override_settings(
+    WAGTAIL_LIVE_PUBLISHER="wagtail_live.publishers.IntervalPollingPublisher"
+)
 def reload_urls():
-    initial_value = getattr(settings, "WAGTAIL_LIVE_PUBLISHER", "")
-    settings.WAGTAIL_LIVE_PUBLISHER = "wagtail_live.publishers.IntervalPollingPublisher"
     reload_urlconf()
     resolved = resolve("/wagtail_live/get-updates/test_channel/")
+
     assert resolved.url_name == "interval-polling"
-    settings.WAGTAIL_LIVE_PUBLISHER = initial_value
 
 
 @pytest.fixture

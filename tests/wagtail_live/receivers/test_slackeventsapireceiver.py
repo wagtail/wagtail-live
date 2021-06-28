@@ -1,7 +1,7 @@
 import time
 
 import pytest
-from django.conf import settings
+from django.test import override_settings
 from django.urls import resolve
 from django.urls.resolvers import URLPattern
 
@@ -91,15 +91,14 @@ def test_verify_request(slack_receiver, rf, settings):
 
 
 @pytest.fixture(scope="class")
+@override_settings(
+    WAGTAIL_LIVE_RECEIVER="wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
+)
 def reload_urls():
-    initial_value = getattr(settings, "WAGTAIL_LIVE_RECEIVER", "")
-    settings.WAGTAIL_LIVE_RECEIVER = (
-        "wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
-    )
     reload_urlconf()
     resolved = resolve("/wagtail_live/slack/events")
+
     assert resolved.url_name == "slack_events_handler"
-    settings.WAGTAIL_LIVE_RECEIVER = initial_value
 
 
 @pytest.mark.django_db
