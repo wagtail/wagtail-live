@@ -90,9 +90,7 @@ async function fetchLastUpdateAt() {
  */
 function newUpdate(response) {
     let tsLastUpdateAt = response.headers.get('Last-Update-At');
-    if (parseFloat(tsLastUpdateAt) > parseFloat(lastUpdateReceivedAt)) {
-        return true;
-    } else {return false;}
+    return parseFloat(tsLastUpdateAt) > parseFloat(lastUpdateReceivedAt);
 }
 
 /**
