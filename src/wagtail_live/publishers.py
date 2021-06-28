@@ -123,7 +123,7 @@ class IntervalPollingPublisher(PollingPublisherMixin):
 
     url_name = "interval-polling"
 
-    def post(self, request, channel_id, *ùargs, **kwargs):
+    def post(self, request, channel_id, *args, **kwargs):
         """See base class."""
 
         live_page = get_object_or_404(self.model, channel_id=channel_id)
