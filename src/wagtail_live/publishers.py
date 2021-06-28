@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 from functools import cached_property
 
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import path
 from django.views import View
@@ -23,7 +23,7 @@ class PollingPublisherMixin(View):
     """
 
     url_path = "get-updates/<str:channel_id>/"
-    url_name = "get-updates"
+    url_name = ""
 
     @cached_property
     def model(self):
@@ -121,6 +121,8 @@ class IntervalPollingPublisher(PollingPublisherMixin):
     3- If new updates are available, client side sends a GET request to get the new updates.
     """
 
+    url_name = "interval-polling"
+
     def post(self, request, channel_id, *ùargs, **kwargs):
         """See base class."""
 
@@ -153,7 +155,9 @@ class IntervalPollingPublisher(PollingPublisherMixin):
         """
 
         live_page = get_object_or_404(self.model, channel_id=channel_id)
-        return HttpResponse(headers={"Last-Update-At": live_page.last_update_timestamp})
+        response = JsonResponse(data={}, status=200)
+        response["Last-Update-At"] = live_page.last_update_timestamp
+        return response
 
     def get(self, request, channel_id, *args, **kwargs):
         """See base class."""
@@ -189,6 +193,8 @@ class LongPollingPublisher(PollingPublisherMixin):
         containing a timeOutReached parameter which indicates the client side
         that there aren't updates available.
     """
+
+    url_name = "long-polling"
 
     def post(self, request, channel_id, *args, **kwargs):
         """See base class."""
