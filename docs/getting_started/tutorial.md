@@ -173,11 +173,11 @@ In order to use the long polling technique for the publishing part, add this to 
 WAGTAIL_LIVE_PUBLISHER = "wagtail_live.publishers.LongPollingPublisher"
 ```
 
-You can optionally set a polling interval by doing so:
+You can optionally set a polling timeout by doing so:
 ```python
-WAGTAIL_LIVE_POLLING_INTERVAL = value # in milliseconds
+WAGTAIL_LIVE_POLLING_TIMEOUT = value # in seconds
 ```
-The default value is **3000**(ms).
+The default value is **30**(s).
 
 ### Add publisher template
 
