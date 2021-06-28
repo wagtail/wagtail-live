@@ -1,8 +1,11 @@
 import time
 
 import pytest
+from django.conf import settings
+from django.urls import resolve
 from django.urls.resolvers import URLPattern
 
+from tests.utils import reload_urlconf
 from wagtail_live.adapters.slack.receiver import (
     SlackEventsAPIReceiver,
     SlackWebhookMixin,
@@ -87,58 +90,59 @@ def test_verify_request(slack_receiver, rf, settings):
     assert slack_receiver.verify_request(request, body=body) is None
 
 
-@pytest.mark.django_db
-def test_post_url_verification(slack_receiver, client, settings):
+@pytest.fixture(scope="class")
+def reload_urls():
+    initial_value = getattr(settings, "WAGTAIL_LIVE_RECEIVER", "")
     settings.WAGTAIL_LIVE_RECEIVER = (
         "wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
     )
-    data = {
-        "type": "url_verification",
-        "challenge": "challenge_token",
-    }
-    response = client.post(
-        "/wagtail_live/slack/events", content_type="application/json", data=data
-    )
-
-    assert response.status_code == 200
-    assert "challenge_token" in response.content.decode()
+    reload_urlconf()
+    resolved = resolve("/wagtail_live/slack/events")
+    assert resolved.url_name == "slack_events_handler"
+    settings.WAGTAIL_LIVE_RECEIVER = initial_value
 
 
 @pytest.mark.django_db
-def test_post_request_verification_error(slack_receiver, client, settings):
-    settings.WAGTAIL_LIVE_RECEIVER = (
-        "wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
-    )
-    data = {"type": "some-type"}
-    response = client.post(
-        "/wagtail_live/slack/events", content_type="application/json", data=data
-    )
+@pytest.mark.usefixtures("reload_urls")
+class TestPostSlackEventsAPIReceiver:
+    def test_post_url_verification(self, slack_receiver, client):
+        data = {
+            "type": "url_verification",
+            "challenge": "challenge_token",
+        }
+        response = client.post(
+            "/wagtail_live/slack/events", content_type="application/json", data=data
+        )
 
-    assert response.status_code == 403
-    assert "Request verification failed." in response.content.decode()
+        assert response.status_code == 200
+        assert "challenge_token" in response.content.decode()
 
+    def test_post_request_verification_error(self, slack_receiver, client):
+        data = {"type": "event_callback"}
+        response = client.post(
+            "/wagtail_live/slack/events", content_type="application/json", data=data
+        )
 
-@pytest.mark.django_db
-def test_post(client, mocker, settings):
-    settings.WAGTAIL_LIVE_RECEIVER = (
-        "wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
-    )
-    data = {
-        "token": "some-token",
-        "type": "event_callback",
-        "event": {
-            "type": "message",
-            "text": "This a test post.",
-            "user": "user1",
-            "ts": "1623319199.002300",
-        },
-    }
-    mocker.patch.object(SlackEventsAPIReceiver, "verify_request")
-    mocker.patch.object(SlackEventsAPIReceiver, "dispatch_event")
-    response = client.post(
-        "/wagtail_live/slack/events", content_type="application/json", data=data
-    )
+        assert response.status_code == 403
+        assert "Request verification failed." in response.content.decode()
 
-    SlackEventsAPIReceiver.dispatch_event.assert_called_once_with(event=data)
-    assert response.status_code == 200
-    assert "OK" in response.content.decode()
+    def test_post(self, client, mocker):
+        data = {
+            "token": "some-token",
+            "type": "event_callback",
+            "event": {
+                "type": "message",
+                "text": "This a test post.",
+                "user": "user1",
+                "ts": "1623319199.002300",
+            },
+        }
+        mocker.patch.object(SlackEventsAPIReceiver, "verify_request")
+        mocker.patch.object(SlackEventsAPIReceiver, "dispatch_event")
+        response = client.post(
+            "/wagtail_live/slack/events", content_type="application/json", data=data
+        )
+
+        SlackEventsAPIReceiver.dispatch_event.assert_called_once_with(event=data)
+        assert response.status_code == 200
+        assert "OK" in response.content.decode()
