@@ -11,27 +11,15 @@ Head to [ngrok](https://ngrok.com/download) and download the version that corres
 
 ## Installing ngrok
 
-To install ngrok, we need to extract the file into a folder and run it from there.
+To install ngrok, we only need to extract the file into a folder.
 
-You can extract it into the folder of your preference. In that configuration, you will need to navigate to the folder where you unzipped ngrok whenever you want to start it.
-
-If you want to run ngrok from any path on the command line, you will have to extract the ngrok file on your system's `$PATH` directory.
-
-To get your system's `$PATH`, type from the command line:
-```console
-$ echo $PATH
-```
+Extract the ngrok zip file into the folder of your preference. - in `downloads/ngrok_folder` for example -
 
 ## Start ngrok server
 
-if ngrok is on your `$PATH`, type:
+Navigate to the directory where you extracted ngrok - in our example `downloads/ngrok_folder` - and then start the server as following:
 ```console
-$ ngrok http 8000
-```
-
-If the above doesn't work or you extracted ngrok in another directory (like `home/downloads/ngrok_folder`), navigate to that directory and then start the server as following:
-```console
-$ cd home/downloads/ngrok_folder
+$ cd downloads/ngrok_folder
 $ ./ngrok http 8000
 ```
 
