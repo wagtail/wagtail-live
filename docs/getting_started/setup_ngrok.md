@@ -29,7 +29,7 @@ if ngrok is on your `$PATH`, type:
 $ ngrok http 8000
 ```
 
-If the above doesn't work or you extracted ngrok in another directory (like `home/downloads/ngrok_folder`), navigate to that directory and then start the server as following:
+If the above doesn't work or you extracted ngrok in another directory (like `home/downloads/ngrok_folder`), navigate to that directory and then start the server as follows:
 ```console
 $ cd home/downloads/ngrok_folder
 $ ./ngrok http 8000
