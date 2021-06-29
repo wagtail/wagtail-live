@@ -1,5 +1,3 @@
-"""Slack receivers."""
-
 import hmac
 import json
 import time
@@ -9,7 +7,8 @@ from django.conf import settings
 from django.http import HttpResponse
 
 from wagtail_live.exceptions import RequestVerificationError
-from wagtail_live.receivers import BaseMessageReceiver, WebhookReceiverMixin, is_embed
+from wagtail_live.receivers import BaseMessageReceiver, WebhookReceiverMixin
+from wagtail_live.utils import is_embed
 
 
 class SlackWebhookMixin(WebhookReceiverMixin):

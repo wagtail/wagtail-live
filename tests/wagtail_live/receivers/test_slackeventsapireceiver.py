@@ -1,9 +1,12 @@
 import time
 
 import pytest
+from django.test import override_settings
+from django.urls import resolve
 from django.urls.resolvers import URLPattern
 
 from tests.testapp.models import BlogPage
+from tests.utils import reload_urlconf
 from wagtail_live import blocks
 from wagtail_live.adapters.slack.receiver import (
     SlackEventsAPIReceiver,
@@ -46,37 +49,33 @@ def test_get_urls():
 
 
 def test_verify_request_raises_error_if_no_timestampp(slack_receiver, rf):
-    request = rf.post("/wagtail_live/slack/events")
-
     expected_err = "X-Slack-Request-Timestamp not found in request's headers."
     with pytest.raises(RequestVerificationError, match=expected_err):
-        slack_receiver.verify_request(request, body="")
+        slack_receiver.verify_request(request=rf.post("/"), body="")
 
 
 def test_verify_request_raises_timestamp_error(slack_receiver, rf):
     headers = {"HTTP_X-Slack-Request-Timestamp": f"{time.time() - 60 * 6}"}
-    request = rf.post("/wagtail_live/slack/events", **headers)
-
     expected_err = "The request timestamp is more than five minutes from local time."
+
     with pytest.raises(RequestVerificationError, match=expected_err):
-        slack_receiver.verify_request(request, body="")
+        slack_receiver.verify_request(request=rf.post("/", **headers), body="")
 
 
-def test_verify_request_raises_signature_error(slack_receiver, rf, settings):
-    settings.SLACK_SIGNING_SECRET = "some-secret-not-so-secret"
+@override_settings(SLACK_SIGNING_SECRET="some-secret-not-so-secret")
+def test_verify_request_raises_signature_error(slack_receiver, rf):
     headers = {
         "HTTP_X-Slack-Request-Timestamp": f"{time.time()}",
         "HTTP_X-Slack-Signature": "random",
     }
-    request = rf.post("/wagtail_live/slack/events", **headers)
-
     expected_err = "Slack signature couldn't be verified."
+
     with pytest.raises(RequestVerificationError, match=expected_err):
-        slack_receiver.verify_request(request, body="")
+        slack_receiver.verify_request(request=rf.post("/", **headers), body="")
 
 
+@override_settings(SLACK_SIGNING_SECRET="some-secret-not-so-secret")
 def test_verify_request(slack_receiver, rf, settings):
-    settings.SLACK_SIGNING_SECRET = "some-secret-not-so-secret"
     timestamp = f"{time.time()}"
     body = "body"
     headers = {
@@ -84,66 +83,65 @@ def test_verify_request(slack_receiver, rf, settings):
         "HTTP_X-Slack-Signature": "v0="
         + slack_receiver.sign_slack_request(content="v0:" + timestamp + ":" + body),
     }
-    request = rf.post("/wagtail_live/slack/events", **headers)
+    request = rf.post("/", **headers)
 
     assert slack_receiver.verify_request(request, body=body) is None
 
 
-@pytest.mark.django_db
-def test_post_url_verification(slack_receiver, client, settings):
-    settings.WAGTAIL_LIVE_RECEIVER = (
-        "wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
-    )
-    data = {
-        "type": "url_verification",
-        "challenge": "challenge_token",
-    }
-    response = client.post(
-        "/wagtail_live/slack/events", content_type="application/json", data=data
-    )
+@pytest.fixture(scope="class")
+@override_settings(
+    WAGTAIL_LIVE_RECEIVER="wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
+)
+def reload_urls():
+    reload_urlconf()
+    resolved = resolve("/wagtail_live/slack/events")
 
-    assert response.status_code == 200
-    assert "challenge_token" in response.content.decode()
+    assert resolved.url_name == "slack_events_handler"
 
 
-@pytest.mark.django_db
-def test_post_request_verification_error(slack_receiver, client, settings):
-    settings.WAGTAIL_LIVE_RECEIVER = (
-        "wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
-    )
-    data = {"type": "some-type"}
-    response = client.post(
-        "/wagtail_live/slack/events", content_type="application/json", data=data
-    )
+@pytest.mark.usefixtures("reload_urls")
+class TestPostSlackEventsAPIReceiver:
+    def test_post_url_verification(self, slack_receiver, client):
+        data = {
+            "type": "url_verification",
+            "challenge": "challenge_token",
+        }
+        response = client.post(
+            "/wagtail_live/slack/events", content_type="application/json", data=data
+        )
 
-    assert response.status_code == 403
-    assert "Request verification failed." in response.content.decode()
+        assert response.status_code == 200
+        assert "challenge_token" in response.content.decode()
 
+    def test_post_request_verification_error(self, slack_receiver, client):
+        data = {"type": "event_callback"}
+        response = client.post(
+            "/wagtail_live/slack/events", content_type="application/json", data=data
+        )
 
-@pytest.mark.django_db
-def test_post(client, mocker, settings):
-    settings.WAGTAIL_LIVE_RECEIVER = (
-        "wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
-    )
-    data = {
-        "token": "some-token",
-        "type": "event_callback",
-        "event": {
-            "type": "message",
-            "text": "This a test post.",
-            "user": "user1",
-            "ts": "1623319199.002300",
-        },
-    }
-    mocker.patch.object(SlackEventsAPIReceiver, "verify_request")
-    mocker.patch.object(SlackEventsAPIReceiver, "dispatch_event")
-    response = client.post(
-        "/wagtail_live/slack/events", content_type="application/json", data=data
-    )
+        assert response.status_code == 403
+        assert "Request verification failed." in response.content.decode()
 
-    SlackEventsAPIReceiver.dispatch_event.assert_called_once_with(event=data)
-    assert response.status_code == 200
-    assert "OK" in response.content.decode()
+    def test_post(self, client, mocker):
+        data = {
+            "token": "some-token",
+            "type": "event_callback",
+            "event": {
+                "type": "message",
+                "text": "This a test post.",
+                "user": "user1",
+                "ts": "1623319199.002300",
+            },
+        }
+        mocker.patch.object(SlackEventsAPIReceiver, "verify_request")
+        mocker.patch.object(SlackEventsAPIReceiver, "dispatch_event")
+        response = client.post(
+            "/wagtail_live/slack/events", content_type="application/json", data=data
+        )
+
+        SlackEventsAPIReceiver.dispatch_event.assert_called_once_with(event=data)
+        assert response.status_code == 200
+        assert "OK" in response.content.decode()
 
 
 # BaseMessageReceiver methods

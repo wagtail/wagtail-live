@@ -1,0 +1,9 @@
+<div class="live-post" data-post-id="{{block_id}}">
+    <div class="live-post-meta">
+      <div class="live-post-created">{{ value.created }}</div>
+      {% if value.modified %}
+        <div class="live-post-modified">Edited on: {{ value.modified }}</div>
+      {% endif %}
+    </div>
+    <div class="live-post-content">{{ value.content }}</div>
+</div>
