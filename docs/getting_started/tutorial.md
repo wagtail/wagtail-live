@@ -112,7 +112,7 @@ We need an input source for our live blog.
 
 An input source is a platform (often a messaging app but any other tool that allows content editing and offering an API can be used) where we edit the content that appears on the front-end/client side.
 
-We also need a receiver for our input source. The goal of a receiver is to receive/retrieve updates from an input source.You can learn more about input sources and receivers here: [Input sources and receivers](../topics/input_source_and_receivers.md)
+We also need a receiver for our input source. The goal of a receiver is to receive/retrieve updates from an input source. You can learn more about input sources and receivers here: [Input sources and receivers](../topics/input_source_and_receivers.md)
 
 
 For this tutorial, we will use the live interface as an input source and configure its corresponding receiver.

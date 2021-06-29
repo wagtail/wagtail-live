@@ -13,7 +13,7 @@ Fill out your app name and pick a workspace to develop your app in. Click the `C
 
 Slack signs all the requests it sends using a secret key.
 
-Wagtail Live needs that key to confirm that requests sent to the `wagtail_live/slack/events` endpoint  comes from Slack by verifying their unique signature. (You will learn more about this endpoint later)
+Wagtail Live needs that key to confirm that requests sent to the `wagtail_live/slack/events` endpoint come from Slack, by verifying their unique signature (you will learn more about this endpoint later).
 
 To find your secret key, go back to your app's page and navigate to the **Basic Information** section on the left sidebar. 
 
@@ -50,7 +50,7 @@ In order to receive events like when a message is sent in a channel, you need to
 
 In the development phase, you will need a development proxy that creates a public URL and tunnels requests to your local server when you run `python3 manage.py runserver` in order to receive events from Slack.
 
-If you are comfortable with ngrok, start ngrok on port 8000 otherwise you can see how to [Set up a local web server with ngrok](setup_ngrok.md).
+If you are comfortable with ngrok, start ngrok on port 8000. Otherwise you can see how to [Set up a local web server with ngrok](setup_ngrok.md).
 
 ### Configure `SlackEventsAPIReceiver`
 
