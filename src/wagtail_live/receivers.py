@@ -22,7 +22,6 @@ from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
 
 from .blocks import (
-    LivePostBlock,
     add_block_to_live_post,
     clear_live_post_content,
     construct_embed_block,
