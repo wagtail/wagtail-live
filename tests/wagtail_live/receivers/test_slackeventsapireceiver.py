@@ -222,7 +222,7 @@ def test_get_message_text_from_edited_message(slack_receiver, slack_edited_messa
     assert message_text == message["message"]["text"]
 
 
-def test_get__files_from_edited_message(slack_receiver, slack_edited_image_message):
+def test_get_files_from_edited_message(slack_receiver, slack_edited_image_message):
     message = slack_edited_image_message["event"]
     message_files = slack_receiver.get_message_files_from_edited_message(
         message=message
