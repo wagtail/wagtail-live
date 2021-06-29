@@ -50,7 +50,7 @@ In order to receive events like when a message is sent in a channel, you need to
 
 In the development phase, you will need a development proxy that creates a public URL and tunnels requests to your local server when you run `python3 manage.py runserver` in order to receive events from Slack.
 
-If you are comfortable with ngrok, start ngrok on port 8000 otherwise you can see how to [Set up a local web server with ngrok](setup_ngrok.md).
+If you are comfortable with ngrok, start ngrok on port 8000. Otherwise you can see how to [Set up a local web server with ngrok](setup_ngrok.md).
 
 ### Configure `SlackEventsAPIReceiver`
 
