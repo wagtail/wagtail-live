@@ -37,14 +37,10 @@ def test_get_last_update_client_from_request(polling_mixin, rf):
 
 
 def test_post_raise_not_implemented_error(polling_mixin, rf):
-    request = rf.post("/")
-
     with pytest.raises(NotImplementedError):
-        polling_mixin.post(request=request, channel_id=1)
+        polling_mixin.post(request=rf.post("/"), channel_id=1)
 
 
 def test_get_raise_not_implemented_error(polling_mixin, rf):
-    request = rf.get("/")
-
     with pytest.raises(NotImplementedError):
-        polling_mixin.get(request=request, channel_id=1)
+        polling_mixin.get(request=rf.get("/"), channel_id=1)

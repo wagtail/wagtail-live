@@ -47,37 +47,33 @@ def test_get_urls():
 
 
 def test_verify_request_raises_error_if_no_timestampp(slack_receiver, rf):
-    request = rf.post("/wagtail_live/slack/events")
-
     expected_err = "X-Slack-Request-Timestamp not found in request's headers."
     with pytest.raises(RequestVerificationError, match=expected_err):
-        slack_receiver.verify_request(request, body="")
+        slack_receiver.verify_request(request=rf.post("/"), body="")
 
 
 def test_verify_request_raises_timestamp_error(slack_receiver, rf):
     headers = {"HTTP_X-Slack-Request-Timestamp": f"{time.time() - 60 * 6}"}
-    request = rf.post("/wagtail_live/slack/events", **headers)
-
     expected_err = "The request timestamp is more than five minutes from local time."
+
     with pytest.raises(RequestVerificationError, match=expected_err):
-        slack_receiver.verify_request(request, body="")
+        slack_receiver.verify_request(request=rf.post("/", **headers), body="")
 
 
-def test_verify_request_raises_signature_error(slack_receiver, rf, settings):
-    settings.SLACK_SIGNING_SECRET = "some-secret-not-so-secret"
+@override_settings(SLACK_SIGNING_SECRET="some-secret-not-so-secret")
+def test_verify_request_raises_signature_error(slack_receiver, rf):
     headers = {
         "HTTP_X-Slack-Request-Timestamp": f"{time.time()}",
         "HTTP_X-Slack-Signature": "random",
     }
-    request = rf.post("/wagtail_live/slack/events", **headers)
-
     expected_err = "Slack signature couldn't be verified."
+
     with pytest.raises(RequestVerificationError, match=expected_err):
-        slack_receiver.verify_request(request, body="")
+        slack_receiver.verify_request(request=rf.post("/", **headers), body="")
 
 
+@override_settings(SLACK_SIGNING_SECRET="some-secret-not-so-secret")
 def test_verify_request(slack_receiver, rf, settings):
-    settings.SLACK_SIGNING_SECRET = "some-secret-not-so-secret"
     timestamp = f"{time.time()}"
     body = "body"
     headers = {
@@ -85,7 +81,7 @@ def test_verify_request(slack_receiver, rf, settings):
         "HTTP_X-Slack-Signature": "v0="
         + slack_receiver.sign_slack_request(content="v0:" + timestamp + ":" + body),
     }
-    request = rf.post("/wagtail_live/slack/events", **headers)
+    request = rf.post("/", **headers)
 
     assert slack_receiver.verify_request(request, body=body) is None
 
