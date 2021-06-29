@@ -26,10 +26,12 @@ def test_live_page_mixin():
     assert LivePageMixin._meta.abstract is True
 
 
-def test_live_page_mixin_channel_id_is_optional():
+@pytest.mark.django_db
+def test_live_page_mixin_channel_id_is_optional(blog_page_factory):
     """channel_id field is optional."""
 
-    assert LivePageMixin.channel_id.field.blank is True
+    page = blog_page_factory(channel_id="", live_posts=[])
+    assert page.channel_id == ""
 
 
 def test_live_page_mixin_live_posts_is_optional():
