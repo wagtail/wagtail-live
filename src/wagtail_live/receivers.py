@@ -1,13 +1,10 @@
 """Wagtail Live receiver classes."""
 
 import json
-import re
 from functools import cached_property
-from importlib import import_module
 
 import requests
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
 from django.http import HttpResponse, HttpResponseForbidden
 from django.urls import path
@@ -16,7 +13,6 @@ from django.utils.text import slugify
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from wagtail.embeds.oembed_providers import all_providers
 from wagtail.images import get_image_model
 
 from .blocks import (
@@ -28,31 +24,12 @@ from .blocks import (
     construct_text_block,
 )
 from .exceptions import RequestVerificationError, WebhookSetupError
-from .models import LivePageMixin
+from .utils import get_live_page_model, is_embed
 
 TEXT = "text"
 IMAGE = "image"
 EMBED = "embed"
 LivePost = "live_post"
-
-
-def is_embed(text):
-    """Checks if a text is a link to embed.
-
-    Args:
-        text (str): Text to check
-
-    Returns:
-        (bool) True if text corresponds to an embed link False else
-    """
-
-    for provider in all_providers:
-        for url_pattern in provider.get("urls", []):
-            # Somehow Slack links start with `<` and end with `>`.
-            if bool(re.match(url_pattern, text)):
-                return True
-
-    return False
 
 
 class BaseMessageReceiver:
@@ -65,22 +42,7 @@ class BaseMessageReceiver:
         We have to get the actual model which subclasses it to perform queries.
         """
 
-        live_model = getattr(settings, "WAGTAIL_LIVE_PAGE_MODEL", "")
-        if not live_model:
-            raise ImproperlyConfigured(
-                "You haven't specified a live page model in your settings."
-            )
-
-        dotted_path, model_name = live_model.rsplit(".", 1)
-        module = import_module(dotted_path)
-        model = getattr(module, model_name)
-
-        if not issubclass(model, LivePageMixin):
-            raise ImproperlyConfigured(
-                "The live page model specified doesn't inherit from "
-                + "wagtail_live.models.LivePageMixin."
-            )
-        return model
+        return get_live_page_model()
 
     def dispatch_event(self, event):
         """Dispatch an event to find corresponding handler.

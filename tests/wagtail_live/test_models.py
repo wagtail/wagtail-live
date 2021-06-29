@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 import pytest
 from django.utils.timezone import now
@@ -36,6 +37,14 @@ def test_live_page_mixin_live_posts_is_optional():
     """live_posts field is optional."""
 
     assert LivePageMixin.live_posts.field.blank is True
+
+
+@pytest.mark.django_db
+def test_last_update_timestamp(blog_page_factory):
+    page = blog_page_factory(channel_id="some-id")
+    page.save_revision().publish()
+
+    assert page.last_update_timestamp == page.latest_revision_created_at.timestamp()
 
 
 @pytest.mark.django_db
@@ -333,3 +342,53 @@ def test_live_mixin_update_live_posts_creates_revisions(blog_page_factory):
     # The revision is published
     page.refresh_from_db()
     assert page.get_latest_revision() == page.live_revision
+
+
+@pytest.mark.django_db
+def test_get_updates_since(blog_page_factory):
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "1",
+                "value": {
+                    "message_id": "1",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "2",
+                "value": {
+                    "message_id": "2",
+                    "created": "2022-01-01T12:00:00",
+                    "modified": "2022-01-01T12:00:00",
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "3",
+                "value": {
+                    "message_id": "3",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": "2022-01-01T12:00:00",
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
+    updated_posts, current_posts = page.get_updates_since(
+        last_update_ts=datetime(2021, 2, 1)
+    )
+
+    assert current_posts == ["1", "2", "3"]
+    assert "2" in updated_posts
+    assert "3" in updated_posts
+    assert "1" not in updated_posts
