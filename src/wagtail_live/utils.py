@@ -9,6 +9,8 @@ from wagtail.embeds.oembed_providers import all_providers
 
 from .models import LivePageMixin
 
+SUPPORTED_MIME_TYPES = ["png", "jpeg", "gif"]
+
 
 def get_live_page_model():
     """Retrieves the live page model specified.
