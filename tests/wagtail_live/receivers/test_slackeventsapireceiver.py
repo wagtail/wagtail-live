@@ -206,6 +206,43 @@ def test_get_message_files_if_files(slack_receiver, slack_image_message):
     assert message_files == message["files"]
 
 
+def test_get_image_title(slack_receiver, slack_image_message):
+    message = slack_image_message["event"]
+    image = slack_receiver.get_message_files(message=message)[0]
+    image_title = slack_receiver.get_image_title(image=image)
+
+    assert image_title == image["title"]
+
+
+def test_get_image_name(slack_receiver, slack_image_message):
+    message = slack_image_message["event"]
+    image = slack_receiver.get_message_files(message=message)[0]
+    image_name = slack_receiver.get_image_name(image=image)
+
+    assert image_name == image["name"]
+
+
+def test_get_image_mimetype(slack_receiver, slack_image_message):
+    message = slack_image_message["event"]
+    image = slack_receiver.get_message_files(message=message)[0]
+    image_mimetype = slack_receiver.get_image_mimetype(image=image)
+
+    assert image_mimetype == "png"
+
+
+def test_get_image_dimensions(slack_receiver, slack_image_message):
+    message = slack_image_message["event"]
+    image = slack_receiver.get_message_files(message=message)[0]
+    image_dimensions = slack_receiver.get_image_dimensions(image=image)
+
+    assert image_dimensions == (image["original_w"], image["original_h"])
+
+
+def test_get_image_dimensions_raises_value_error(slack_receiver):
+    with pytest.raises(ValueError):
+        slack_receiver.get_image_dimensions(image={})
+
+
 def test_get_message_id_from_edited_message(slack_receiver, slack_edited_message):
     message = slack_edited_message["event"]
     message_id = slack_receiver.get_message_id_from_edited_message(message=message)
