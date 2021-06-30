@@ -4,7 +4,7 @@ This document walks you through how to set up Slack as an input source for your 
 
 ## Create a Slack app
 
-First, you will need to create [a Slack app](https://api.slack.com/apps/new).
+First, you will need to [create a Slack app](https://api.slack.com/apps/new).
 You may be prompted to create it from scratch or from an App Manifest. For the purpose of this tutorial, you can create your app from scratch.
 
 Fill out your app name and pick a workspace to develop your app in. Click the `Create App` button and you should see your app's **Basic Information** page.
