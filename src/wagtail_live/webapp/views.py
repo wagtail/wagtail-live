@@ -1,4 +1,4 @@
-""" Wagtail Live Interface views """
+""" Webapp views """
 
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
@@ -7,15 +7,10 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from .models import DummyChannel, Message
-from .receiver import (
-    MESSAGE_CREATED,
-    MESSAGE_DELETED,
-    MESSAGE_EDITED,
-    WagtailLiveInterfaceReceiver,
-)
+from .receiver import MESSAGE_CREATED, MESSAGE_DELETED, MESSAGE_EDITED, WebAppReceiver
 from .serializers import DummyChannelSerializer, MessageSerializer
 
-LIVE_RECEIVER = WagtailLiveInterfaceReceiver()
+LIVE_RECEIVER = WebAppReceiver()
 
 
 class DummyChannelListView(ListView):

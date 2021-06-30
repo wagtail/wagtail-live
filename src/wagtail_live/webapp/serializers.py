@@ -1,4 +1,4 @@
-"""Wagtail Live Interface serializers."""
+"""Webapp serializers."""
 
 from rest_framework import serializers
 

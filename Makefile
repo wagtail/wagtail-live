@@ -9,14 +9,14 @@ clean:
 	rm -rf dist/ build/ .pytest_cache/
 
 format:
-	isort src/wagtail_live wagtail_live_interface tests setup.py
-	black src/wagtail_live wagtail_live_interface tests setup.py
-	flake8 src/wagtail_live wagtail_live_interface tests setup.py
+	isort src/wagtail_live tests setup.py
+	black src/wagtail_live tests setup.py
+	flake8 src/wagtail_live tests setup.py
 
 lint:
-	isort --check-only --diff src/wagtail_live wagtail_live_interface tests setup.py
-	black --check --diff src/wagtail_live wagtail_live_interface tests setup.py
-	flake8 src/wagtail_live wagtail_live_interface tests setup.py
+	isort --check-only --diff src/wagtail_live tests setup.py
+	black --check --diff src/wagtail_live tests setup.py
+	flake8 src/wagtail_live tests setup.py
 
 test:
 	pytest

@@ -1,20 +1,18 @@
-""" Wagtail Live Interface Message test suite """
+""" Webapp Message test suite """
 
 from unittest.mock import patch
 
 from django.test import TestCase
 from rest_framework import serializers
 
-from wagtail_live_interface.models import DummyChannel, Message
+from wagtail_live.webapp.models import DummyChannel, Message
 
 
 class MessageAPITests(TestCase):
     def setUp(self):
         """Mock receiver to avoid sending new updates."""
 
-        self.patcher = patch(
-            "wagtail_live_interface.views.LIVE_RECEIVER.dispatch_event"
-        )
+        self.patcher = patch("wagtail_live.webapp.views.LIVE_RECEIVER.dispatch_event")
         self.receiver_mock = self.patcher.start()
         self.addCleanup(self.patcher.stop)
 
@@ -40,7 +38,7 @@ class MessageAPITests(TestCase):
         """
 
         response = self.client.post(
-            "/wagtail_live_interface/api/messages/",
+            "/webapp/api/messages/",
             {
                 "channel": self.channel_name,
                 "content": content,
@@ -68,7 +66,7 @@ class MessageAPITests(TestCase):
         """
 
         response = self.client.put(
-            f"/wagtail_live_interface/api/messages/{message_id}/",
+            f"/webapp/api/messages/{message_id}/",
             {
                 "channel": self.channel_name,
                 "content": new_content,
@@ -98,7 +96,7 @@ class MessageAPITests(TestCase):
         """Helper to delete a message."""
 
         response = self.client.delete(
-            f"/wagtail_live_interface/api/messages/{message_id}/",
+            f"/webapp/api/messages/{message_id}/",
         )
         return response
 
@@ -115,13 +113,13 @@ class MessageAPITests(TestCase):
     def test_retrieve_messages_from_api_status_code(self):
         """Response is 200 OK."""
 
-        response = self.client.get("/wagtail_live_interface/api/messages/")
+        response = self.client.get("/webapp/api/messages/")
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_messages_from_api_count(self):
         """Response contains messages_count messages."""
 
-        response = self.client.get("/wagtail_live_interface/api/messages/")
+        response = self.client.get("/webapp/api/messages/")
         self.assertEqual(len(response.json()), self.messages_count)
 
     def test_queryset_order_is_reversed(self):
@@ -133,13 +131,13 @@ class MessageAPITests(TestCase):
     def test_retrieve_message_from_api_status_code(self):
         """Response is 200 OK."""
 
-        response = self.client.get("/wagtail_live_interface/api/messages/3/")
+        response = self.client.get("/webapp/api/messages/3/")
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_message_from_api(self):
         """Response contains expected message."""
 
-        response = self.client.get("/wagtail_live_interface/api/messages/5/")
+        response = self.client.get("/webapp/api/messages/5/")
 
         exp_message = Message.objects.get(id=5)
         exp = {
@@ -157,7 +155,7 @@ class MessageAPITests(TestCase):
     def test_retrieve_non_existent_message_from_api(self):
         """Response is 404 Not Found."""
 
-        response = self.client.get("/wagtail_live_interface/api/messages/23/")
+        response = self.client.get("/webapp/api/messages/23/")
         self.assertEqual(response.status_code, 404)
 
     def test_create_message_status_code(self):
@@ -194,7 +192,7 @@ class MessageAPITests(TestCase):
         """Message isn't created. 400 Bad Request"""
 
         response = self.client.post(
-            "/wagtail_live_interface/api/messages/",
+            "/webapp/api/messages/",
             {
                 "channel": "non-existent-channel",
                 "content": "some content",

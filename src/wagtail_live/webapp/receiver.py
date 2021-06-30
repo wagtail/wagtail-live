@@ -5,8 +5,8 @@ MESSAGE_EDITED = 2
 MESSAGE_DELETED = 3
 
 
-class WagtailLiveInterfaceReceiver(BaseMessageReceiver):
-    """Wagtail Live interface receiver."""
+class WebAppReceiver(BaseMessageReceiver):
+    """Webapp receiver."""
 
     def dispatch_event(self, event):
         """See base class."""

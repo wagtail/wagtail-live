@@ -1,9 +1,9 @@
-""" Wagtail Live Interface DummyChannel test suite """
+""" Webapp DummyChannel test suite """
 
 from django.test import TestCase
 from rest_framework import serializers
 
-from wagtail_live_interface.models import DummyChannel
+from wagtail_live.webapp.models import DummyChannel
 
 
 class DummyChannelTestCaseSetUp(TestCase):
@@ -22,25 +22,25 @@ class DummyChannelViewsTests(DummyChannelTestCaseSetUp):
     def test_channels_listing_status_code(self):
         """Response is 200 OK."""
 
-        response = self.client.get("/wagtail_live_interface/channels/")
+        response = self.client.get("/webapp/channels/")
         self.assertEqual(response.status_code, 200)
 
     def test_channels_listing_count(self):
         """Rendered context contains channels_count channels."""
 
-        response = self.client.get("/wagtail_live_interface/channels/")
+        response = self.client.get("/webapp/channels/")
         self.assertEqual(len(response.context["dummy_channels"]), self.channels_count)
 
     def test_dummy_channel_listing_status_code(self):
         """Response is 200 OK."""
 
-        response = self.client.get("/wagtail_live_interface/channels/channel_3/")
+        response = self.client.get("/webapp/channels/channel_3/")
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_dummy_channel(self):
         """Response contains expected channel."""
 
-        response = self.client.get("/wagtail_live_interface/channels/channel_1/")
+        response = self.client.get("/webapp/channels/channel_1/")
 
         channel_exp = DummyChannel.objects.get(channel_name="channel_1")
         channel_got = response.context["dummy_channel"]
@@ -49,7 +49,7 @@ class DummyChannelViewsTests(DummyChannelTestCaseSetUp):
     def test_retrieve_non_existent_dummy_channel(self):
         """Response is 404 Not Found."""
 
-        response = self.client.get("/wagtail_live_interface/channels/non_existent/")
+        response = self.client.get("/webapp/channels/non_existent/")
         self.assertEqual(response.status_code, 404)
 
 
@@ -58,7 +58,7 @@ class DummyChannelAPITests(DummyChannelTestCaseSetUp):
         """Helpêr to create a new channel."""
 
         response = self.client.post(
-            "/wagtail_live_interface/api/channels/",
+            "/webapp/api/channels/",
             {"channel_name": channel_name},
         )
         return response
@@ -67,20 +67,20 @@ class DummyChannelAPITests(DummyChannelTestCaseSetUp):
         """Helpêr to delete a channel."""
 
         response = self.client.delete(
-            f"/wagtail_live_interface/api/channels/{channel_name}/",
+            f"/webapp/api/channels/{channel_name}/",
         )
         return response
 
     def test_retrieve_channels_from_api_status_code(self):
         """Response is 200 OK."""
 
-        response = self.client.get("/wagtail_live_interface/api/channels/")
+        response = self.client.get("/webapp/api/channels/")
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_channels_from_api_count(self):
         """Response contains channels_count channels."""
 
-        response = self.client.get("/wagtail_live_interface/api/channels/")
+        response = self.client.get("/webapp/api/channels/")
         self.assertEqual(len(response.json()), self.channels_count)
 
     def test_queryset_order_is_reversed(self):
@@ -92,13 +92,13 @@ class DummyChannelAPITests(DummyChannelTestCaseSetUp):
     def test_retrieve_dummy_channel_from_api_status_code(self):
         """Response is 200 OK."""
 
-        response = self.client.get("/wagtail_live_interface/api/channels/channel_2/")
+        response = self.client.get("/webapp/api/channels/channel_2/")
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_dummy_channel_from_api(self):
         """Response contains expected channel."""
 
-        response = self.client.get("/wagtail_live_interface/api/channels/channel_5/")
+        response = self.client.get("/webapp/api/channels/channel_5/")
 
         exp_channel = DummyChannel.objects.get(channel_name="channel_5")
         exp = {
@@ -112,7 +112,7 @@ class DummyChannelAPITests(DummyChannelTestCaseSetUp):
     def test_retrieve_non_existent_dummy_channel_from_api(self):
         """Response is 404 Not Found."""
 
-        response = self.client.get("/wagtail_live_interface/api/channels/non_existent/")
+        response = self.client.get("/webapp/api/channels/non_existent/")
         self.assertEqual(response.status_code, 404)
 
     def test_create_channel_status_code(self):
