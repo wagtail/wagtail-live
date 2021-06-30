@@ -1,4 +1,4 @@
-{% extends 'wagtail_live_interface/base.html' %}
+{% extends 'webapp/base.html' %}
 {% load static %}
 
 {% block title %} #{{ channel }} {% endblock title %}
@@ -55,5 +55,5 @@
 <script>
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 </script>
-<script src="{% static 'wagtail_live_interface/js/messages.js' %}"></script>
+<script src="{% static 'webapp/js/messages.js' %}"></script>
 {% endblock extra_js %}

@@ -37,7 +37,7 @@ async function createChannel(event) {
             return 
         } else {
             let channel = await response.json();
-            showNotif(`Dummy channel ${channel["channel_name"]} created.`)
+            showNotif(`Channel ${channel["channel_name"]} created.`)
             let channelDiv = createChannelDiv(channel);
             document.querySelector("ul").insertAdjacentElement("afterbegin", channelDiv);
             // Clear out composition fields
@@ -71,7 +71,7 @@ async function deleteChannel(event) {
             showNotif(errorMsg["detail"], reason=0);
             return  
         } else {
-            showNotif(`Dummy channel ${channel} deleted.`)
+            showNotif(`Channel ${channel} deleted.`)
             document.querySelector(`#${channel}`).remove();
             return
         }
@@ -85,7 +85,7 @@ async function deleteChannel(event) {
 
 function constructChannelLink(channelName){
     let baseURL = window.location.protocol + "//" + window.location.host + "/";
-    return baseURL + "wagtail_live_interface/channels/" + channelName + "/";
+    return baseURL + "webapp/channels/" + channelName + "/";
 }
 
 function createChannelDiv(channel){

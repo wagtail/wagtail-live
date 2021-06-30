@@ -1,4 +1,4 @@
-""" Wagtail Live Interface models."""
+""" Webapp models."""
 
 from django.db import models
 

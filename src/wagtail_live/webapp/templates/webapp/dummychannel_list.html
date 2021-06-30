@@ -1,7 +1,7 @@
-{% extends 'wagtail_live_interface/base.html' %}
+{% extends 'webapp/base.html' %}
 {% load static %}
 
-{% block title %} Dummy Channels {% endblock title %}
+{% block title %} Channels {% endblock title %}
 
 {% block header %}
   <h2>Channels</h2>
@@ -14,7 +14,7 @@
       <input type="text" id="channel_name" name="channel_name" autofocus required>
     </div>
     <div>
-      <button type="submit">New Dummy Channel</button>
+      <button type="submit">New Channel</button>
     </div>
 </form>
 {% endblock form %}
@@ -45,5 +45,5 @@
 <script>
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 </script>
-<script src="{% static 'wagtail_live_interface/js/channels.js' %}"></script>
+<script src="{% static 'webapp/js/channels.js' %}"></script>
 {% endblock extra_js %}

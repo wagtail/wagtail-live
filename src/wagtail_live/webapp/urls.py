@@ -1,4 +1,4 @@
-""" Wagtail Live Interface URLs """
+""" Webapp URLs """
 
 from django.urls import include, path
 
