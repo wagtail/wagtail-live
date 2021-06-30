@@ -3,7 +3,9 @@ import json
 import time
 from hashlib import sha256
 
+import requests
 from django.conf import settings
+from django.core.files.base import ContentFile
 from django.http import HttpResponse
 
 from wagtail_live.exceptions import RequestVerificationError
@@ -119,6 +121,36 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
 
         return message["files"] if "files" in message else []
 
+    def get_image_title(self, image):
+        """See base class."""
+
+        return image["title"]
+
+    def get_image_name(self, image):
+        """See base class."""
+
+        return image["name"]
+
+    def get_image_mimetype(self, image):
+        """See base class."""
+
+        return image["mimetype"].split("/")[1]
+
+    def get_image_dimensions(self, image):
+        """See base class."""
+
+        try:
+            return (image["original_w"], image["original_h"])
+        except KeyError:
+            raise ValueError
+
+    def get_image_content(self, image):
+        """See base class."""
+
+        headers = {"Authorization": f"Bearer {settings.SLACK_BOT_TOKEN}"}
+        response = requests.get(image["url_private"], headers=headers)
+        return ContentFile(response.content)
+
     def get_message_id_from_edited_message(self, message):
         """See base class."""
 
@@ -137,9 +169,4 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
     def get_embed(self, text):
         """Strips leading `<` and trailing `>` from Slack urls."""
 
-        if is_embed(text=text[1:-1]):
-            # Not sure if it's the normal behavior, but have repeatedly received links
-            # from SLack API that looks like below:
-            # <https://twitter.com/lephoceen/status/139?s=20|https://twitter.com/lephoceen/status/139?s=20>'
-            return text[1:-1].split("|")[0]
-        return ""
+        return text[1:-1] if is_embed(text=text[1:-1]) else ""
