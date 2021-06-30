@@ -1,15 +1,12 @@
 """Wagtail Live receiver classes."""
 
 import json
+import logging
 from functools import cached_property
 
-import requests
-from django.conf import settings
-from django.core.files.base import ContentFile
 from django.http import HttpResponse, HttpResponseForbidden
 from django.urls import path
 from django.utils.decorators import method_decorator
-from django.utils.text import slugify
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -24,7 +21,10 @@ from .blocks import (
     construct_text_block,
 )
 from .exceptions import RequestVerificationError, WebhookSetupError
-from .utils import get_live_page_model, is_embed
+from .utils import SUPPORTED_MIME_TYPES, get_live_page_model, is_embed
+
+logger = logging.getLogger(__name__)
+
 
 TEXT = "text"
 IMAGE = "image"
@@ -116,6 +116,66 @@ class BaseMessageReceiver:
 
         Returns:
             (list) of files included in the given message.
+        """
+
+        raise NotImplementedError
+
+    def get_image_title(self, image):
+        """Retrieves the title of an image.
+
+        Args:
+            image (dict): Informations about an image
+
+        Returns:
+            (str) Title of the image.
+        """
+
+        raise NotImplementedError
+
+    def get_image_name(self, image):
+        """Retrieves the name of an image.
+
+        Args:
+            image (dict): Informations about an image
+
+        Returns:
+            (str) Name of the image.
+        """
+
+        raise NotImplementedError
+
+    def get_image_mimetype(self, image):
+        """Retrieves the mimetype of an image.
+
+        Args:
+            image (dict): Informations about an image
+
+        Returns:
+            (str) mimetype of the image.
+        """
+
+        raise NotImplementedError
+
+    def get_image_content(self, image):
+        """Retrieves the content of an image.
+
+        Args:
+            image (dict): Informations about an image
+
+        Returns:
+            (File) Content of the image.
+        """
+
+        raise NotImplementedError
+
+    def get_image_dimensions(self, image):
+        """Retrieves the width and height of an image.
+
+        Args:
+            image (dict): Informations about an image
+
+        Returns:
+            (int, int) Width and height of the image.
         """
 
         raise NotImplementedError
@@ -215,28 +275,37 @@ class BaseMessageReceiver:
         """
 
         for item in files:
-            mime_type = item["mimetype"]
-            if mime_type in ["image/png", "image/jpeg", "image/gif"]:
+            image_title = self.get_image_title(image=item)
+            try:
+                image_width, image_height = self.get_image_dimensions(image=item)
+            except ValueError:
+                logger.error(f"Unable to retrieve the dimensions of {image_title}")
+                continue
 
-                filename = item.get("name")
-                file_url = item["url_private"]
-                headers = {"Authorization": f"Bearer {settings.SLACK_BOT_TOKEN}"}
-                response = requests.get(file_url, headers=headers)
+            mime_type = self.get_image_mimetype(image=item)
+            if mime_type not in SUPPORTED_MIME_TYPES:
+                logger.error(
+                    f"Couldn't upload {image_title}. "
+                    + f"Images of type {mime_type} aren't supported yet."
+                )
+                continue
 
-                img = get_image_model()(
-                    title=slugify(filename).replace("-", " "),
-                    file=ContentFile(
-                        response.content,
-                        name=filename,
-                    ),
-                )
-                img.save()
-                block = construct_image_block(image=img)
-                add_block_to_live_post(
-                    block_type=IMAGE,
-                    block=block,
-                    live_block=live_post,
-                )
+            image = get_image_model()(
+                title=image_title,
+                width=image_width,
+                height=image_height,
+            )
+
+            image_content = self.get_image_content(image=item)
+            image_name = self.get_image_name(image=item)
+            image.file.save(name=image_name, content=image_content, save=True)
+
+            block = construct_image_block(image=image)
+            add_block_to_live_post(
+                block_type=IMAGE,
+                block=block,
+                live_block=live_post,
+            )
 
     def add_message(self, message):
         """Adds a received message from a messaging app to the
