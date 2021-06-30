@@ -41,7 +41,7 @@ $ export SLACK_SIGNING_SECRET=<your-signing-secret>
 
 Add the following in your `settings.base` file:
 ```python
-    SLACK_SIGNING_SECRET = os.environ['SLACK_SIGNING_SECRET']
+SLACK_SIGNING_SECRET = os.environ['SLACK_SIGNING_SECRET']
 ```
 
 ## Receiving Slack events
