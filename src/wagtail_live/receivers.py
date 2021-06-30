@@ -176,6 +176,9 @@ class BaseMessageReceiver:
 
         Returns:
             (int, int) Width and height of the image.
+
+        Raises:
+            ValueError if the width and height of the image can't be retrieved.
         """
 
         raise NotImplementedError
