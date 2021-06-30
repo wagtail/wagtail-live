@@ -5,6 +5,7 @@ from hashlib import sha256
 
 import requests
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
 from django.http import HttpResponse
 
@@ -147,7 +148,13 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
     def get_image_content(self, image):
         """See base class."""
 
-        headers = {"Authorization": f"Bearer {settings.SLACK_BOT_TOKEN}"}
+        slack_bot_token = getattr(settings, "SLACK_BOT_TOKEN", "")
+        if not slack_bot_token:
+            raise ImproperlyConfigured(
+                "You haven't specified SLACK_BOT_TOKEN in your settings."
+                + "You won't be able to upload images from Slack without this setting defined."
+            )
+        headers = {"Authorization": f"Bearer {slack_bot_token}"}
         response = requests.get(image["url_private"], headers=headers)
         return ContentFile(response.content)
 
