@@ -1,0 +1,5 @@
+// This file is loaded before Bootstrap and therefore will be leading.
+// To override a Bootstrap variable, define it here.
+
+$teal: #007C7F !default;
+$primary: $teal !default;
