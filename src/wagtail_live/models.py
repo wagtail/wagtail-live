@@ -22,6 +22,7 @@ class LivePageMixin(models.Model):
         help_text="Channel ID",
         max_length=255,
         blank=True,
+        unique=True,
     )
 
     live_posts = StreamField(
