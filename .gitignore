@@ -72,6 +72,7 @@ db.sqlite3
 # Images
 images/
 original_images/
+media/
 
 .envrc
 
