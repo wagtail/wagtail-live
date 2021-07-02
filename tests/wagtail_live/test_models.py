@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 import pytest
+from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks.stream_block import StreamValue
@@ -33,6 +34,15 @@ def test_live_page_mixin_channel_id_is_optional(blog_page_factory):
 
     page = blog_page_factory(channel_id="", live_posts=[])
     assert page.channel_id == ""
+
+
+@pytest.mark.django_db
+def test_channel_field_is_unique(blog_page_factory):
+    blog_page_factory(channel_id="some-id")
+    expected_err = "Blog page with this Channel id already exists."
+
+    with pytest.raises(ValidationError, match=expected_err):
+        blog_page_factory(channel_id="some-id")
 
 
 def test_live_page_mixin_live_posts_is_optional():
