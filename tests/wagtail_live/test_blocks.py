@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 import pytest
+from django.test import override_settings
 from wagtail.core.blocks import StreamValue, StructValue
 from wagtail.embeds.blocks import EmbedValue
 
@@ -45,6 +46,15 @@ def test_construct_live_post_block():
             "content": StreamValue(ContentBlock(), []),
         },
     )
+
+
+def test_get_live_post_template_default():
+    assert LivePostBlock().get_template() == "wagtail_live/blocks/live_post.html"
+
+
+@override_settings(WAGTAIL_LIVE_BLOCK_TEMPLATE="custom_template.html")
+def test_get_custom_live_post_template():
+    assert LivePostBlock().get_template() == "custom_template.html"
 
 
 def test_add_block_to_live_post_structvalue():
