@@ -45,7 +45,6 @@ class LivePageMixin(models.Model):
 
     def _get_live_post_index(self, message_id):
         """Retrieves the index of a live post.
-        Searches backwards.
 
         Args:
             message_id (str):
@@ -55,14 +54,10 @@ class LivePageMixin(models.Model):
             (int) Index of the live post if found else -1
         """
 
-        posts = self.live_posts
-        index = len(posts) - 1
-        while index >= 0:
-            if posts[index].value["message_id"] == message_id:
-                break
-            index -= 1
-
-        return index if index >= 0 else None
+        for i, post in enumerate(self.live_posts):
+            if post.value["message_id"] == message_id:
+                return i
+        return
 
     def get_live_post_index(self, message_id):
         """Retrieves index of a livepost."""
