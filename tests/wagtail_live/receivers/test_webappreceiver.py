@@ -141,7 +141,7 @@ def test_add_message(blog_page_factory, webapp_receiver, message):
     page = BlogPage.objects.get(channel_id=message["channel"])
     assert len(page.live_posts) == 2
 
-    post_added = page.live_posts[-1].value
+    post_added = page.live_posts[0].value
     assert post_added["message_id"] == message["id"]
 
     message_parts = message["content"].split("\n")
