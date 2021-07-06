@@ -31,6 +31,12 @@ setup(
     long_description_content_type="text/markdown",
     author="Tidiane Dia and Wagtail Core Team",
     author_email="hello@wagtail.io",
+    url="https://github.com/wagtail/wagtail-live/",
+    project_urls = {
+        "Documentation": "https://wagtail.github.io/wagtail-live/",
+        "Source": "https://github.com/wagtail/wagtail-live/",
+        "Issue tracker": "https://github.com/wagtail/wagtail-live/issues/",
+    },
     install_requires=install_requires,
     tests_require=test_requires,
     extras_require={
