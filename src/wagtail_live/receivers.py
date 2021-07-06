@@ -184,8 +184,12 @@ class BaseMessageReceiver:
 
         message_parts = message_text.split("\n")
         for text in message_parts:
-            block_type = ""
+            # Avoid creating a block for empty content
+            text = text.strip()
+            if not text:
+                continue
 
+            block_type = ""
             url = self.get_embed(text=text)
             if url:
                 block = construct_embed_block(url=url)
