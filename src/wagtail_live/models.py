@@ -112,12 +112,12 @@ class LivePageMixin(models.Model):
         """
 
         posts = self.live_posts
-        lp_index = len(posts)
+        lp_index = 0
         post_created_at = live_post["created"]
-        while lp_index > 0:
-            if posts[lp_index - 1].value["created"] < post_created_at:
+        while lp_index < len(posts):
+            if posts[lp_index].value["created"] < post_created_at:
                 break
-            lp_index -= 1
+            lp_index += 1
 
         # Insert to keep posts sorted by time
         self.live_posts.insert(lp_index, ("live_post", live_post))

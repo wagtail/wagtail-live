@@ -205,22 +205,22 @@ def test_live_page_mixin_add_live_post(blog_page_factory):
         [
             {
                 "type": "live_post",
-                "id": "906f6590-225f-4204-9e8a-de283f1d173c",
+                "id": "f6d17667-65f8-4202-9051-48f45d71bd2e",
                 "value": {
-                    "message_id": message_id_0,
-                    "created": "2020-01-01T12:00:00",
-                    "modified": "2020-01-01T12:00:00",
+                    "message_id": message_id_1,
+                    "created": "9999-01-01T12:00:00",
+                    "modified": "9999-01-01T12:00:00",
                     "show": True,
                     "content": [],
                 },
             },
             {
                 "type": "live_post",
-                "id": "f6d17667-65f8-4202-9051-48f45d71bd2e",
+                "id": "906f6590-225f-4204-9e8a-de283f1d173c",
                 "value": {
-                    "message_id": message_id_1,
-                    "created": "9999-01-01T12:00:00",
-                    "modified": "9999-01-01T12:00:00",
+                    "message_id": message_id_0,
+                    "created": "2020-01-01T12:00:00",
+                    "modified": "2020-01-01T12:00:00",
                     "show": True,
                     "content": [],
                 },
