@@ -24,6 +24,10 @@ test_requires = [
     "pytest_factoryboy>=2.1.0,<3",
     "wagtail-factories>=2.0.1,<3",
 ]
+build_requires = [
+    "twine",
+    "check-wheel-contents",
+]
 
 setup(
     name="wagtail-live",
@@ -44,6 +48,7 @@ setup(
     extras_require={
         "test": test_requires,
         "docs": docs_requires,
+        "build": build_requires,
     },
     package_dir={"": "src"},
     packages=find_packages("src"),
