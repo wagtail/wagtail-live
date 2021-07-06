@@ -230,6 +230,7 @@ def test_live_page_mixin_add_live_post(blog_page_factory):
     page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
 
     live_post = construct_live_post_block(message_id="some-id", created=now())
+    breakpoint()
     page.add_live_post(live_post=live_post)
     assert len(page.live_posts) == 3
 
