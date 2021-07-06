@@ -1,9 +1,10 @@
 """Wagtail Live publisher classes."""
 
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import cached_property
 
+from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import path
@@ -164,8 +165,9 @@ class IntervalPollingPublisher(PollingPublisherMixin):
 
         live_page = get_object_or_404(self.model, channel_id=channel_id)
         last_update_client = self.get_last_update_client_from_request(request=request)
+        tz = timezone.utc if settings.USE_TZ else None
         updated_posts, current_posts = live_page.get_updates_since(
-            last_update_ts=datetime.fromtimestamp(last_update_client),
+            last_update_ts=datetime.fromtimestamp(last_update_client, tz=tz),
         )
 
         return JsonResponse(
@@ -220,8 +222,9 @@ class LongPollingPublisher(PollingPublisherMixin):
             live_page = get_object_or_404(self.model, channel_id=channel_id)
             last_update_ts = live_page.last_update_timestamp
             if last_update_ts > last_update_client:
+                tz = timezone.utc if settings.USE_TZ else None
                 updated_posts, current_posts = live_page.get_updates_since(
-                    last_update_ts=datetime.fromtimestamp(last_update_client),
+                    last_update_ts=datetime.fromtimestamp(last_update_client, tz=tz),
                 )
 
                 return JsonResponse(
