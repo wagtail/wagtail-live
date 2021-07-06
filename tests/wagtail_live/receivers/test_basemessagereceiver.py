@@ -76,6 +76,8 @@ def test_process_text(base_receiver, blog_page_factory):
     msg = (
         "Live Post Title"
         + "\n"
+        + ""
+        + "\n"
         + "Check out Wagtail"
         + "\n"
         + valid_embed
