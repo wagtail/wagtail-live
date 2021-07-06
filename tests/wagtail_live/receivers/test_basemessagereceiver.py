@@ -76,8 +76,6 @@ def test_process_text(base_receiver, blog_page_factory):
     msg = (
         "Live Post Title"
         + "\n"
-        + ""
-        + "\n"
         + "Check out Wagtail"
         + "\n"
         + valid_embed
@@ -100,6 +98,33 @@ def test_process_text(base_receiver, blog_page_factory):
 
     assert post_content[-1].block_type == TEXT
     assert post_content[-1].value == "Have fun!"
+
+
+@pytest.mark.django_db
+def test_process_text_with_empty_content(base_receiver, blog_page_factory):
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": "2021-01-01T12:00:00",
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
+    live_post = page.get_live_post_by_index(live_post_index=0)
+
+    msg = "   "
+    base_receiver.process_text(live_post, msg)
+
+    # No block has been added
+    assert len(live_post.value["content"]) == 0
 
 
 # Abstract methods tests

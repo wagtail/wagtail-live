@@ -185,6 +185,7 @@ class BaseMessageReceiver:
         message_parts = message_text.split("\n")
         for text in message_parts:
             # Avoid creating a block for empty content
+            text = text.strip()
             if not text:
                 continue
 
