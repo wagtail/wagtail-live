@@ -60,3 +60,31 @@ mkdocs gh-deploy
 ```
 
 See [https://wagtail.github.io/wagtail-live/](https://wagtail.github.io/wagtail-live/)
+
+
+## Releasing new versions
+
+This package follows [SemVer](https://semver.org/).
+
+Please keep SemVer in mind when updating the version number in `src/wagtail_live/__init__.py`. 
+
+### Building the package & publishing to PyPI
+
+Make sure you install the `build` extra before attempting to make a release:
+
+```sh
+pip install -e '.[build]'
+```
+
+This project comes with a helper script that assists in making a release.
+
+```sh
+./make_release.sh
+```
+
+This script will:
+
+1. Verify that no git tag exists for the current version number.
+2. Builds wheels and source distributions.
+3. Show instructions on how to create a git tag.
+4. Show instructions on how to upload to PyPI.
