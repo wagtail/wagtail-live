@@ -1,5 +1,6 @@
 """ Block types and block constructors are defined in this module."""
 
+from django.conf import settings
 from wagtail.core.blocks import (
     BooleanBlock,
     CharBlock,
@@ -38,8 +39,11 @@ class LivePostBlock(StructBlock):
     )
     content = ContentBlock()
 
-    class Meta:
-        template = "wagtail_live/blocks/live_post.html"
+    def get_template(self, context=None):
+        """We override this method to allow a custom live block template."""
+
+        template = getattr(settings, "WAGTAIL_LIVE_BLOCK_TEMPLATE", "")
+        return template if template else "wagtail_live/blocks/live_post.html"
 
 
 def construct_text_block(text):
