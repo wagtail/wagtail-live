@@ -88,7 +88,9 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
         """See base class."""
 
         message = event["event"]
-        if subtype := message.get("subtype"):
+
+        subtype = message.get("subtype")
+        if subtype:
             if subtype == "message_changed":
                 self.change_message(message=message)
             elif subtype == "message_deleted":
