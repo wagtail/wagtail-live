@@ -155,6 +155,31 @@ def test_get_message_files_error_if_not_implemented(base_receiver):
         base_receiver.get_message_files(message={})
 
 
+def test_get_image_title_error_if_not_implemented(base_receiver):
+    with pytest.raises(NotImplementedError):
+        base_receiver.get_image_title(image={})
+
+
+def test_get_image_name_error_if_not_implemented(base_receiver):
+    with pytest.raises(NotImplementedError):
+        base_receiver.get_image_name(image={})
+
+
+def test_get_image_mimetype_error_if_not_implemented(base_receiver):
+    with pytest.raises(NotImplementedError):
+        base_receiver.get_image_mimetype(image={})
+
+
+def test_get_image_content_error_if_not_implemented(base_receiver):
+    with pytest.raises(NotImplementedError):
+        base_receiver.get_image_content(image={})
+
+
+def test_get_image_dimensions_error_if_not_implemented(base_receiver):
+    with pytest.raises(NotImplementedError):
+        base_receiver.get_image_dimensions(image={})
+
+
 def test_get_message_id_from_edited_message_error(base_receiver):
     with pytest.raises(NotImplementedError):
         base_receiver.get_message_id_from_edited_message(message={})

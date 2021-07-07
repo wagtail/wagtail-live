@@ -1,19 +1,24 @@
 import time
+from datetime import datetime
 
 import pytest
+import requests
+from django.core.exceptions import ImproperlyConfigured
+from django.core.files.base import ContentFile
 from django.test import override_settings
 from django.urls import resolve
 from django.urls.resolvers import URLPattern
+from wagtail.images.models import Image
 
 from tests.testapp.models import BlogPage
-from tests.utils import reload_urlconf
+from tests.utils import get_test_image_file, reload_urlconf
 from wagtail_live import blocks
 from wagtail_live.adapters.slack.receiver import (
     SlackEventsAPIReceiver,
     SlackWebhookMixin,
 )
 from wagtail_live.exceptions import RequestVerificationError
-from wagtail_live.receivers import TEXT, BaseMessageReceiver
+from wagtail_live.receivers import IMAGE, TEXT, BaseMessageReceiver
 
 
 @pytest.fixture
@@ -206,6 +211,65 @@ def test_get_message_files_if_files(slack_receiver, slack_image_message):
     assert message_files == message["files"]
 
 
+def test_get_image_title(slack_receiver, slack_image_message):
+    message = slack_image_message["event"]
+    image = slack_receiver.get_message_files(message=message)[0]
+    image_title = slack_receiver.get_image_title(image=image)
+
+    assert image_title == image["title"]
+
+
+def test_get_image_name(slack_receiver, slack_image_message):
+    message = slack_image_message["event"]
+    image = slack_receiver.get_message_files(message=message)[0]
+    image_name = slack_receiver.get_image_name(image=image)
+
+    assert image_name == image["name"]
+
+
+def test_get_image_mimetype(slack_receiver, slack_image_message):
+    message = slack_image_message["event"]
+    image = slack_receiver.get_message_files(message=message)[0]
+    image_mimetype = slack_receiver.get_image_mimetype(image=image)
+
+    assert image_mimetype == "png"
+
+
+def test_get_image_dimensions(slack_receiver, slack_image_message):
+    message = slack_image_message["event"]
+    image = slack_receiver.get_message_files(message=message)[0]
+    image_dimensions = slack_receiver.get_image_dimensions(image=image)
+
+    assert image_dimensions == (image["original_w"], image["original_h"])
+
+
+def test_get_image_dimensions_raises_value_error(slack_receiver):
+    with pytest.raises(ValueError):
+        slack_receiver.get_image_dimensions(image={})
+
+
+def test_get_image_content_missing_token(slack_receiver):
+    expected_err = (
+        "You haven't specified SLACK_BOT_TOKEN in your settings."
+        + "You won't be able to upload images from Slack without this setting defined."
+    )
+
+    with pytest.raises(ImproperlyConfigured, match=expected_err):
+        slack_receiver.get_image_content(image={})
+
+
+@override_settings(SLACK_BOT_TOKEN="some-token")
+def test_get_image_content(slack_receiver, mocker):
+    class ResponseMock:
+        content = b""
+
+    mocker.patch.object(requests, "get", return_value=ResponseMock())
+    image_content = slack_receiver.get_image_content(image={"url_private": "some-url"})
+
+    assert isinstance(image_content, ContentFile)
+    assert image_content.read() == b""
+
+
 def test_get_message_id_from_edited_message(slack_receiver, slack_edited_message):
     message = slack_edited_message["event"]
     message_id = slack_receiver.get_message_id_from_edited_message(message=message)
@@ -372,3 +436,58 @@ def test_delete_message_wrong_channel(
     deleted_message["channel"] = "not_slack_channel"
     slack_receiver.delete_message(message=deleted_message)
     assert len(BlogPage.objects.first().live_posts) == 1
+
+
+@pytest.mark.django_db
+def test_process_files(slack_receiver, slack_image_message, mocker):
+    message = slack_image_message["event"]
+    files = slack_receiver.get_message_files(message=message)
+    image = files[0]
+
+    image_content = get_test_image_file(
+        filename=slack_receiver.get_image_name(image=image),
+        size=slack_receiver.get_image_dimensions(image=image),
+    )
+    mocker.patch.object(slack_receiver, "get_image_content", return_value=image_content)
+    live_post = blocks.construct_live_post_block(
+        message_id="1234",
+        created=datetime(1970, 1, 1, 12, 00),
+    )
+    slack_receiver.process_files(live_post=live_post, files=files)
+
+    post_content = live_post["content"]
+    assert post_content[0].block_type == IMAGE
+
+    post_value = post_content[0].value
+    assert isinstance(post_value, Image)
+    assert post_value.title == image["title"]
+    assert (post_value.width, post_value.height) == slack_receiver.get_image_dimensions(
+        image=image
+    )
+
+
+def test_process_files_bad_dimensions(slack_receiver, slack_image_message, caplog):
+    live_post = blocks.construct_live_post_block(
+        message_id="1234",
+        created=datetime(1970, 1, 1, 12, 00),
+    )
+    files = [{"title": "test.png"}]
+
+    assert slack_receiver.process_files(live_post=live_post, files=files) is None
+    assert caplog.messages[0] == "Unable to retrieve the dimensions of test.png"
+
+
+def test_process_files_bad_mimetype(slack_receiver, slack_image_message, caplog):
+    live_post = blocks.construct_live_post_block(
+        message_id="1234",
+        created=datetime(1970, 1, 1, 12, 00),
+    )
+    message = slack_image_message["event"]
+    files = slack_receiver.get_message_files(message=message)
+    image = files[0]
+    image["mimetype"] = "image/bad_mimetype"
+    assert slack_receiver.process_files(live_post=live_post, files=files) is None
+    assert (
+        caplog.messages[0]
+        == "Couldn't upload test_image.png. Images of type bad_mimetype aren't supported yet."
+    )
