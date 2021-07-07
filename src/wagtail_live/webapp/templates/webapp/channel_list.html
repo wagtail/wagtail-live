@@ -21,19 +21,22 @@
 
 {% block content %}
 <ul>
-  {% for channel in dummy_channels %}
+  {% for channel in channels %}
     {% with channel.channel_name as channel_name %}
-      <li id="{{ channel_name }}">
+      <li data-id="{{ channel_name }}">
+
         <div>
-          <a href="{% url 'channel_detail' channel_name %}">{{ channel_name }}</a>
+          <a href="{% url 'channel_detail' channel_name %}">{{ channel }}</a>
           <span class="date">{{ channel.created }}</span>
         </div>
+
         <div class="btn-group channel-btn">
           <a href="{% url 'channel_detail' channel_name %}">
             <button class="enter-btn">Go to channel</button>
           </a>
           <button class="delete-btn" data-channel="{{channel_name}}">Delete</button>
         </div>
+
       </li>
     {% endwith %}
   {% endfor %}
