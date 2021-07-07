@@ -1,109 +1,103 @@
 """ Webapp views """
 
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 from django.views.generic import DetailView, ListView
-from rest_framework import generics, status
+from rest_framework import status
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .models import DummyChannel, Message
+from .models import Channel, Image, Message
 from .receiver import MESSAGE_CREATED, MESSAGE_DELETED, MESSAGE_EDITED, WebAppReceiver
-from .serializers import DummyChannelSerializer, MessageSerializer
+from .serializers import ChannelSerializer, MessageSerializer
 
 LIVE_RECEIVER = WebAppReceiver()
 
 
-class DummyChannelListView(ListView):
+def send_update(update_type, data):
+    event = {"update_type": update_type}
+    event.update(data)
+    LIVE_RECEIVER.dispatch_event(event=event)
+
+
+class ChannelListView(ListView):
     """List all channels"""
 
-    model = DummyChannel
-    context_object_name = "dummy_channels"
+    model = Channel
+    context_object_name = "channels"
 
 
-class DummyChannelDetailView(DetailView):
+channels_list_view = ChannelListView.as_view()
+
+
+class ChannelDetailView(DetailView):
     """Channel details view"""
 
-    model = DummyChannel
-    context_object_name = "dummy_channel"
+    model = Channel
+    context_object_name = "channel"
     slug_field = "channel_name"
     slug_url_kwarg = "channel_name"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["channel"] = self.object.channel_name
-        return context
+
+channel_detail_view = ChannelDetailView.as_view()
 
 
-class DummyChannelListAPIView(generics.GenericAPIView):
-    def get(self, request):
-        """API endpoint: list all channels"""
-
-        channels = DummyChannel.objects.all()
-        serializer = DummyChannelSerializer(channels, many=True)
-        return Response(serializer.data)
-
+class CreateChannelView(APIView):
     def post(self, request):
         """API endpoint: create a new channel"""
 
-        serializer = DummyChannelSerializer(data=request.data)
+        serializer = ChannelSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class DummyChannelDetailAPIView(generics.GenericAPIView):
-    model = DummyChannel
+create_channel_view = CreateChannelView.as_view()
+
+
+class DeleteChannelView(APIView):
     slug_field = "channel_name"
     slug_url_kwarg = "channel_name"
-
-    def get(self, request, channel_name):
-        """API endpoint: retrieve a channel by its name"""
-
-        channel = get_object_or_404(DummyChannel, channel_name=channel_name)
-        serializer = DummyChannelSerializer(channel)
-        return Response(serializer.data)
 
     def delete(self, request, channel_name):
         """API endpoint: delete a channel by its name"""
 
-        channel = get_object_or_404(DummyChannel, channel_name=channel_name)
+        channel = get_object_or_404(Channel, channel_name=channel_name)
         channel.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class MessageListAPIView(generics.GenericAPIView):
-    def get(self, request):
-        """API endpoint: list all messages"""
+delete_channel_view = DeleteChannelView.as_view()
 
-        messages = Message.objects.all().order_by("-created")
-        serializer = MessageSerializer(messages, many=True)
-        return Response(serializer.data)
+
+class CreateMessageView(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = "webapp/message.html"
 
     def post(self, request):
         """API endpoint: create a new message"""
-
         serializer = MessageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            update = serializer.data
-            update["update_type"] = MESSAGE_CREATED
-            LIVE_RECEIVER.dispatch_event(event=update)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            data = serializer.data
+            send_update(update_type=MESSAGE_CREATED, data=data)
+            return Response({"message": data}, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class MessageDetailAPIView(generics.GenericAPIView):
+create_message_view = CreateMessageView.as_view()
+
+
+class MessageDetailView(APIView):
     """
     Retrieve, update or delete a Message instance.
     """
 
-    def get(self, request, pk):
-        """API endpoint: retrieve a message by its ID"""
-
-        message = get_object_or_404(Message, pk=pk)
-        serializer = MessageSerializer(message)
-        return Response(serializer.data)
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = "webapp/message.html"
 
     def put(self, request, pk):
         """API endpoint: update a message by its ID"""
@@ -113,11 +107,10 @@ class MessageDetailAPIView(generics.GenericAPIView):
         if serializer.is_valid():
             serializer.validated_data["modified"] = now()
             serializer.save()
-            update = serializer.data
-            update["update_type"] = MESSAGE_EDITED
-            LIVE_RECEIVER.dispatch_event(event=update)
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            data = serializer.data
+            send_update(update_type=MESSAGE_EDITED, data=data)
+            return Response({"message": data})
+        return JsonResponse(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         """API endpoint: delete a message by its ID"""
@@ -126,8 +119,22 @@ class MessageDetailAPIView(generics.GenericAPIView):
         update = {
             "channel": message.channel.channel_name,
             "id": pk,
-            "update_type": MESSAGE_DELETED,
         }
         message.delete()
-        LIVE_RECEIVER.dispatch_event(event=update)
+        send_update(update_type=MESSAGE_DELETED, data=update)
+        return JsonResponse(data={}, status=status.HTTP_204_NO_CONTENT)
+
+
+message_detail_view = MessageDetailView.as_view()
+
+
+class DeleteImageView(APIView):
+    def delete(self, request, pk):
+        """API endpoint: delete an image by its ID"""
+
+        image = get_object_or_404(Image, pk=pk)
+        image.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+delete_image_view = DeleteImageView.as_view()
