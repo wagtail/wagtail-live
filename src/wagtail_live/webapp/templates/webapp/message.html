@@ -1,0 +1,42 @@
+{% with message_id=message.id  content=message.content images=message.images %}
+  <div class="message" data-id="{{message_id}}">
+    
+    <div class="message-content">
+      <div class="message-meta">
+        <span class="message-created">{{ message.created }}</span>
+        {% if message.modified %}
+          <span class="message-modified">edited on: {{ message.modified }}</span>
+        {% endif %}
+      </div>
+        
+      <div class="message-body">
+        <p class="message-text">{{ content }}</p>
+        {% if images %}
+          {% for img in images %}
+            <img class="message-image" src="{{img.image.url}}" width="{{img.image.width}}" height="{{img.image.height}}">
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+      
+    <form class="edit-form" data-id="{{message_id}}">
+      {% csrf_token %}
+      <textarea name="content" value="{{content}}">{{ content }}</textarea>
+      {% if images %}
+        {% for img in images %}
+          <div class="image-box" data-id="{{img.id}}">
+            <a href="{{img.image.url}}">{{ img.image.name }}</a>
+            <button data-id="{{img.id}}" class="delete-image delete-btn">Delete image</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      <input type="file" name="images" accept=".jpg, .jpeg, .png" multiple>
+      <button data-id="{{message_id}}" class="edit-message">Save changes</button>
+    </form>
+
+    <div class="btn-group">
+      <button data-id="{{message_id}}" class="show-edit-form">Edit message</button>
+      <button data-id="{{message_id}}" class="delete-message delete-btn">Delete message</button>
+    </div>
+  </div>
+{% endwith %}
