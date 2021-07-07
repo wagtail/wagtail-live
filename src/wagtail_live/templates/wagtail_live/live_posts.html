@@ -2,9 +2,11 @@
 
 <div id="live-posts">
     {% for post in self.live_posts %}
-    <div class="live-post-wrapper">
-        {% include_block post with block_id=post.id %}
-    </div>
+        {% if post.value.show %}
+            <div class="live-post-wrapper">
+                {% include_block post with block_id=post.id %}
+            </div>
+        {% endif %}
     {% endfor %}
 </div>
 
