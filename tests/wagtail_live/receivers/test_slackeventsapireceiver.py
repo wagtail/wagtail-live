@@ -176,6 +176,20 @@ def test_dispatch_deleted_message(slack_receiver, slack_deleted_message, mocker)
     slack_receiver.delete_message.assert_called_once_with(message=message)
 
 
+def test_dispatch_other_subtype_message(
+    slack_receiver, slack_channel_join_message, mocker
+):
+    mocker.patch.object(slack_receiver, "add_message")
+    mocker.patch.object(slack_receiver, "change_message")
+    mocker.patch.object(slack_receiver, "delete_message")
+
+    slack_receiver.dispatch_event(event=slack_channel_join_message)
+
+    slack_receiver.add_message.assert_not_called()
+    slack_receiver.change_message.assert_not_called()
+    slack_receiver.delete_message.assert_not_called()
+
+
 def test_get_channel_id_from_message(slack_receiver, slack_message):
     message = slack_message["event"]
     channel_id = slack_receiver.get_channel_id_from_message(message=message)

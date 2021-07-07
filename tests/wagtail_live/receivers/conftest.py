@@ -352,3 +352,24 @@ def slack_edited_image_message():
         "event_id": "Ev024EUE74NA",
         "event_time": 1623326006,
     }
+
+
+@pytest.fixture
+def slack_channel_join_message():
+    return {
+        "token": "token",
+        "event": {
+            "type": "message",
+            "subtype": "channel_join",
+            "ts": "1625679165.004400",
+            "user": "tester",
+            "text": "<@tester> has joined the channel",
+            "inviter": "inviter",
+            "channel": "slack_channel",
+            "event_ts": "1625679165.004400",
+            "channel_type": "channel",
+        },
+        "type": "event_callback",
+        "event_id": "Ev026XPJ8TLP",
+        "event_time": 1625679165,
+    }
