@@ -1,5 +1,7 @@
 from wagtail_live.receivers import BaseMessageReceiver
 
+from .models import Image
+
 MESSAGE_CREATED = 1
 MESSAGE_EDITED = 2
 MESSAGE_DELETED = 3
@@ -41,7 +43,33 @@ class WebAppReceiver(BaseMessageReceiver):
     def get_message_files(self, message):
         """See base class."""
 
-        return message["files"] if "files" in message else []
+        return message["images"]
+
+    def get_image_title(self, image):
+        """See base class."""
+
+        return image["image"]["name"].replace("-", " ")
+
+    def get_image_name(self, image):
+        """See base class."""
+
+        return image["image"]["name"]
+
+    def get_image_mimetype(self, image):
+        """See base class."""
+
+        mime_type = image["image"]["name"].split(".")[-1]
+        return "jpeg" if mime_type == "jpg" else mime_type
+
+    def get_image_dimensions(self, image):
+        """See base class."""
+
+        return (image["image"]["width"], image["image"]["height"])
+
+    def get_image_content(self, image):
+        """See base class."""
+
+        return Image.objects.get(id=image["id"]).image
 
     def get_message_id_from_edited_message(self, message):
         """See base class."""
