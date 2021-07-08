@@ -98,6 +98,8 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
                 self.change_message(message=message)
             elif subtype == "message_deleted":
                 self.delete_message(message=message)
+            elif subtype == "file_share":
+                self.add_message(message=message)
             return
 
         self.add_message(message=message)
