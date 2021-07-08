@@ -176,6 +176,19 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
         return self.get_message_files(message=message["message"])
 
     def get_embed(self, text):
-        """Strips leading `<` and trailing `>` from Slack urls."""
+        """Slack sends url in this format:
+        <https://twitter.com/wagtail/|https://twitter.com/wagtail/>'
+        where the first part is the full url and the second part
+        represents the user's input.
 
-        return text[1:-1] if is_embed(text=text[1:-1]) else ""
+        See https://api.slack.com/reference/surfaces/formatting#links-in-retrieved-messages
+        """
+
+        # Check if the text provided is a Slack-like url
+        if text.startswith("<") and text.endswith(">"):
+            # Get the url resolved by Slack
+            url = text[1:-1].split("|")[0]
+            if is_embed(text=url):
+                return url
+
+        return ""

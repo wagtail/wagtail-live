@@ -327,10 +327,14 @@ def test_get_files_from_edited_message_if_no_files(
 
 
 def test_get_embed_if_embed(slack_receiver):
-    slack_embed_url = "<https://www.youtube.com/watch?v=Cq3LOsf2kSY>"
+    slack_embed_url = (
+        "<https://www.youtube.com/watch?v=Cq3LOsf2kSY"
+        + "|"
+        + "https://www.youtube.com/watch?v=Cq3LOsf2kSY>"
+    )
     got = slack_receiver.get_embed(text=slack_embed_url)
 
-    assert got == slack_embed_url[1:-1]
+    assert got == slack_embed_url[1:-1].split("|")[0]
 
 
 def test_get_embed_if_not_embed(slack_receiver):
