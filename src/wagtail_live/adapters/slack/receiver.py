@@ -5,8 +5,9 @@ from hashlib import sha256
 
 import requests
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import ContentFile
+from django.core.validators import URLValidator
 from django.http import HttpResponse
 
 from wagtail_live.exceptions import RequestVerificationError
@@ -192,3 +193,29 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
                 return url
 
         return ""
+
+    def parse_text(self, text):
+        """See base class. See also:
+        https://api.slack.com/reference/surfaces/formatting#links-in-retrieved-messages
+        """
+
+        # Check if the text provided is a Slack-like url
+        if text.startswith("<") and text.endswith(">"):
+            try:
+                url, description = text[1:-1].split("|")
+            except ValueError as exc:
+                error_msg = str(exc.args[0])
+                if "not enough values to unpack" in error_msg:
+                    url = description = text[1:-1]
+                else:
+                    return text
+
+            try:
+                validator = URLValidator()
+                validator(url)
+            except ValidationError:
+                return text
+
+            return f"<a href='{url}'>{description}</a>"
+
+        return text

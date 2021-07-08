@@ -341,6 +341,48 @@ def test_get_embed_if_not_embed(slack_receiver):
     assert slack_receiver.get_embed("Not embed") == ""
 
 
+def test_parse_text(slack_receiver):
+    text = "A regular text."
+    got = slack_receiver.parse_text(text=text)
+
+    assert got == text
+
+
+def test_parse_text_valid_url_format_1(slack_receiver):
+    text = "<http://example.com/|http://example.com/>"
+    got = slack_receiver.parse_text(text=text)
+
+    assert got == "<a href='http://example.com/'>http://example.com/</a>"
+
+
+def test_parse_text_valid_url_format_2(slack_receiver):
+    text = "<http://example.com/>"
+    got = slack_receiver.parse_text(text=text)
+
+    assert got == "<a href='http://example.com/'>http://example.com/</a>"
+
+
+def test_parse_text_invalid_url_format_1(slack_receiver):
+    text = "<Some text>"
+    got = slack_receiver.parse_text(text=text)
+
+    assert got == text
+
+
+def test_parse_text_invalid_url_format_2(slack_receiver):
+    text = "<Some text|More text>"
+    got = slack_receiver.parse_text(text=text)
+
+    assert got == text
+
+
+def test_parse_text_invalid_url_format_3(slack_receiver):
+    text = "<Some text|More text|More more text>"
+    got = slack_receiver.parse_text(text=text)
+
+    assert got == text
+
+
 @pytest.fixture
 def slack_page(blog_page_factory):
     """Creates a live page corresponding to slack_channel in Slack."""
