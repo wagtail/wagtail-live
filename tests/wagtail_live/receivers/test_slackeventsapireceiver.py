@@ -176,6 +176,14 @@ def test_dispatch_deleted_message(slack_receiver, slack_deleted_message, mocker)
     slack_receiver.delete_message.assert_called_once_with(message=message)
 
 
+def test_dispatch_image_message(slack_receiver, slack_image_message, mocker):
+    mocker.patch.object(slack_receiver, "add_message")
+    slack_receiver.dispatch_event(event=slack_image_message)
+
+    message = slack_image_message["event"]
+    slack_receiver.add_message.assert_called_once_with(message=message)
+
+
 def test_dispatch_other_subtype_message(
     slack_receiver, slack_channel_join_message, mocker
 ):
