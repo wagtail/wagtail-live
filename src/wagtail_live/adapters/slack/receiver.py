@@ -205,13 +205,10 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
                 url, description = text[1:-1].split("|")
             except ValueError as exc:
                 error_msg = str(exc.args[0])
-                assert any(
-                    (
-                        "not enough values to unpack" in error_msg,
-                        "too many values to unpack" in error_msg,
-                    )
-                )
-                return text
+                if "not enough values to unpack" in error_msg:
+                    url = description = text[1:-1]
+                else:
+                    return text
 
             try:
                 validator = URLValidator()
