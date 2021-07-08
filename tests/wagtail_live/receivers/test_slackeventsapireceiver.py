@@ -348,18 +348,18 @@ def test_parse_text(slack_receiver):
     assert got == text
 
 
-def test_parse_text_valid_url_format(slack_receiver):
-    text = (
-        "<https://www.youtube.com/watch?v=Cq3LOsf2kSY"
-        "|"
-        "https://www.youtube.com/watch?v=Cq3LOsf2kSY>"
-    )
+def test_parse_text_valid_url_format_1(slack_receiver):
+    text = "<http://example.com/|http://example.com/>"
     got = slack_receiver.parse_text(text=text)
 
-    assert got == (
-        "<a href='https://www.youtube.com/watch?v=Cq3LOsf2kSY'>"
-        "https://www.youtube.com/watch?v=Cq3LOsf2kSY</a>"
-    )
+    assert got == "<a href='http://example.com/'>http://example.com/</a>"
+
+
+def test_parse_text_valid_url_format_2(slack_receiver):
+    text = "<http://example.com/>"
+    got = slack_receiver.parse_text(text=text)
+
+    assert got == "<a href='http://example.com/'>http://example.com/</a>"
 
 
 def test_parse_text_invalid_url_format_1(slack_receiver):
