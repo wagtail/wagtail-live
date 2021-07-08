@@ -180,6 +180,8 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
         <https://twitter.com/wagtail/|https://twitter.com/wagtail/>'
         where the first part is the full url and the second part
         represents the user's input.
+
+        See https://api.slack.com/reference/surfaces/formatting#links-in-retrieved-messages
         """
 
         # Check if the text provided is a Slack-like url
