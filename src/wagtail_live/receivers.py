@@ -231,6 +231,19 @@ class BaseMessageReceiver:
 
         return text if is_embed(text=text) else ""
 
+    def parse_text(self, text):
+        """Parses a raw text content according to the input source formatting rules.
+
+        Args:
+            text (str): a text
+
+        Returns:
+            (str) the actual content of the text.
+                Returns the text itself by default.
+        """
+
+        return text
+
     def process_text(self, live_post, message_text):
         """Processes the text of a message.
 
@@ -259,7 +272,8 @@ class BaseMessageReceiver:
                 block_type = EMBED
 
             else:
-                block = construct_text_block(text=text)
+                text_content = self.parse_text(text=text)
+                block = construct_text_block(text=text_content)
                 block_type = TEXT
 
             add_block_to_live_post(
