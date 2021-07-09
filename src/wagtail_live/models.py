@@ -172,6 +172,7 @@ def get_updates_since(live_page, last_update_ts):
     """
 
     current_posts, updated_posts = [], {}
+    # Reverse posts list so that latest updates are processed later by the client side.
     posts = reversed(live_page.live_posts)
     for post in posts:
         if not post.value["show"]:
