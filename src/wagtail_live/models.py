@@ -159,6 +159,9 @@ class LivePageMixin(models.Model):
 
         current_posts, updated_posts = [], {}
         for post in self.live_posts:
+            if not post.value["show"]:
+                continue
+
             post_id = post.id
             current_posts.append(post_id)
 
