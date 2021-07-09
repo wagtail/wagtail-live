@@ -1,5 +1,6 @@
 """ Block types and block constructors are defined in this module."""
 
+from django.utils.timezone import now
 from wagtail.core.blocks import (
     BooleanBlock,
     CharBlock,
@@ -40,6 +41,12 @@ class LivePostBlock(StructBlock):
 
     class Meta:
         template = "wagtail_live/blocks/live_post.html"
+
+    def clean(self, value):
+        """Update modified field when a block is modified via the admin interface."""
+
+        value["modified"] = now()
+        return super().clean(value)
 
 
 def construct_text_block(text):
