@@ -1,5 +1,6 @@
 import hmac
 import json
+import re
 import time
 from hashlib import sha256
 
@@ -199,23 +200,22 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
         https://api.slack.com/reference/surfaces/formatting#links-in-retrieved-messages
         """
 
-        # Check if the text provided is a Slack-like url
-        if text.startswith("<") and text.endswith(">"):
-            try:
-                url, description = text[1:-1].split("|")
-            except ValueError as exc:
-                error_msg = str(exc.args[0])
-                if "not enough values to unpack" in error_msg:
-                    url = description = text[1:-1]
-                else:
-                    return text
+        url_format = re.compile(r"<http([^|]+?)(\|([^|]+?))?>")
+
+        urls = url_format.finditer(text)
+        for url_match in urls:
+            match = url_match.group()[1:-1]
+            if "|" in match:
+                url, description = match.split("|")
+            else:
+                url = description = match
 
             try:
                 validator = URLValidator()
                 validator(url)
             except ValidationError:
-                return text
+                continue
 
-            return f"<a href='{url}'>{description}</a>"
+            text = text.replace(url_match.group(), f"<a href='{url}'>{description}</a>")
 
         return text
