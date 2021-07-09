@@ -5,6 +5,7 @@ import pytest
 from django.test import override_settings
 from django.urls import resolve
 
+from tests.testapp.models import BlogPage
 from tests.utils import reload_urlconf
 from wagtail_live.publishers import LongPollingPublisher, PollingPublisherMixin
 
@@ -30,7 +31,7 @@ def live_page(blog_page_factory):
                 "value": {
                     "message_id": "1",
                     "created": "2021-01-01T12:00:00",
-                    "modified": None,
+                    "modified": "2022-01-01T12:00:00",
                     "show": True,
                     "content": [],
                 },
@@ -52,7 +53,7 @@ def live_page(blog_page_factory):
                 "value": {
                     "message_id": "3",
                     "created": "2021-01-01T12:00:00",
-                    "modified": "2022-01-01T12:00:00",
+                    "modified": None,
                     "show": True,
                     "content": [],
                 },
@@ -77,7 +78,9 @@ class TestLongPolling:
 
         payload = response.json()
         assert payload["livePosts"] == ["post-1", "post-2", "post-3"]
-        assert payload["lastUpdateTimestamp"] == live_page.last_update_timestamp
+
+        page = BlogPage.objects.get(channel_id="test_channel")
+        assert payload["lastUpdateTimestamp"] == page.last_update_timestamp
 
     def test_post_bad_channel(self, blog_page_factory, client):
         blog_page_factory(channel_id="good_channel")
@@ -93,11 +96,13 @@ class TestLongPolling:
         assert response.status_code == 200
 
         payload = response.json()
+        assert "post-1" in payload["updates"]
         assert "post-2" in payload["updates"]
-        assert "post-3" in payload["updates"]
-        assert "post-1" not in payload["updates"]
-        assert payload["currentPosts"] == ["post-1", "post-2", "post-3"]
-        assert payload["lastUpdateTimestamp"] == live_page.last_update_timestamp
+        assert "post-3" not in payload["updates"]
+        assert payload["currentPosts"] == ["post-3", "post-2", "post-1"]
+
+        page = BlogPage.objects.get(channel_id="test_channel")
+        assert payload["lastUpdateTimestamp"] == page.last_update_timestamp
 
     def test_get_bad_channel(self, blog_page_factory, client):
         blog_page_factory(channel_id="good_channel")
