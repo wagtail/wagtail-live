@@ -329,8 +329,8 @@ def test_get_files_from_edited_message_if_no_files(
 def test_get_embed_if_embed(slack_receiver):
     slack_embed_url = (
         "<https://www.youtube.com/watch?v=Cq3LOsf2kSY"
-        + "|"
-        + "https://www.youtube.com/watch?v=Cq3LOsf2kSY>"
+        "|"
+        "https://www.youtube.com/watch?v=Cq3LOsf2kSY>"
     )
     got = slack_receiver.get_embed(text=slack_embed_url)
 
@@ -341,25 +341,20 @@ def test_get_embed_if_not_embed(slack_receiver):
     assert slack_receiver.get_embed("Not embed") == ""
 
 
-def test_parse_text(slack_receiver):
-    text = "A regular text."
-    got = slack_receiver.parse_text(text=text)
-
-    assert got == text
-
-
 def test_parse_text_valid_url_format_1(slack_receiver):
-    text = "<http://example.com/|http://example.com/>"
+    text = "This message contains a URL <http://example.com/>."
     got = slack_receiver.parse_text(text=text)
 
-    assert got == "<a href='http://example.com/'>http://example.com/</a>"
+    assert got == (
+        "This message contains a URL <a href='http://example.com/'>http://example.com/</a>."
+    )
 
 
 def test_parse_text_valid_url_format_2(slack_receiver):
-    text = "<http://example.com/>"
+    text = "So does this one: <http://example.com|www.example.com>"
     got = slack_receiver.parse_text(text=text)
 
-    assert got == "<a href='http://example.com/'>http://example.com/</a>"
+    assert got == "So does this one: <a href='http://example.com'>www.example.com</a>"
 
 
 def test_parse_text_invalid_url_format_1(slack_receiver):
@@ -370,14 +365,14 @@ def test_parse_text_invalid_url_format_1(slack_receiver):
 
 
 def test_parse_text_invalid_url_format_2(slack_receiver):
-    text = "<Some text|More text>"
+    text = "<http:Some text|More text>"
     got = slack_receiver.parse_text(text=text)
 
     assert got == text
 
 
 def test_parse_text_invalid_url_format_3(slack_receiver):
-    text = "<Some text|More text|More more text>"
+    text = "<http:Some text|More text|More more text>"
     got = slack_receiver.parse_text(text=text)
 
     assert got == text
