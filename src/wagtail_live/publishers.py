@@ -223,8 +223,6 @@ class LongPollingPublisher(PollingPublisherMixin):
         while time.time() - starting_time < polling_timeout:
             live_page = get_object_or_404(self.model, channel_id=channel_id)
             last_update_ts = live_page.last_update_timestamp
-            # print(f"last_update_ts: {datetime.fromtimestamp(last_update_ts)}")
-            # print(f"last_update_client: {datetime.fromtimestamp(last_update_client)}")
             if last_update_ts > last_update_client:
                 tz = timezone.utc if settings.USE_TZ else None
                 updated_posts, current_posts = get_updates_since(
