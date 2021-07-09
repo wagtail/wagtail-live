@@ -10,7 +10,7 @@ from wagtail.core.models import Page
 
 from tests.testapp.models import BlogPage
 from wagtail_live.blocks import construct_live_post_block
-from wagtail_live.models import LivePageMixin
+from wagtail_live.models import LivePageMixin, get_updates_since
 
 
 @pytest.mark.django_db
@@ -54,9 +54,8 @@ def test_live_page_mixin_live_posts_is_optional():
 @pytest.mark.django_db
 def test_last_update_timestamp(blog_page_factory):
     page = blog_page_factory(channel_id="some-id")
-    page.save_revision().publish()
 
-    assert page.last_update_timestamp == page.latest_revision_created_at.timestamp()
+    assert page.last_update_timestamp == page.last_updated_at.timestamp()
 
 
 @pytest.mark.django_db
@@ -357,6 +356,38 @@ def test_live_mixin_update_live_posts_creates_revisions(blog_page_factory):
 
 
 @pytest.mark.django_db
+def test_edit_live_posts_updates_last_updated_at(blog_page_factory):
+    """last_updated_at is updated when a live post is added, edited or deleted."""
+
+    page = blog_page_factory(channel_id="some-id")
+    last_updated_at = page.last_updated_at
+    diff = now() - last_updated_at
+    assert diff.total_seconds() == pytest.approx(0.0, abs=1)
+
+    # ADD
+    _now = now()
+    live_post = construct_live_post_block(message_id="some-id", created=_now)
+    page.add_live_post(live_post=live_post)
+    assert page.last_updated_at > last_updated_at
+    assert page.last_updated_at == _now
+    last_updated_at = page.last_updated_at
+
+    # EDIT
+    live_post = page.get_live_post_by_index(live_post_index=0)
+    page.update_live_post(live_post=live_post)
+    assert page.last_updated_at > last_updated_at
+    assert page.last_updated_at == live_post.value["modified"]
+    last_updated_at = page.last_updated_at
+
+    # DELETE
+    page.delete_live_post(message_id="some-id")
+    assert page.last_updated_at > last_updated_at
+    last_updated_at = page.last_updated_at
+    diff = now() - last_updated_at
+    assert diff.total_seconds() == pytest.approx(0.0, abs=1)
+
+
+@pytest.mark.django_db
 def test_get_updates_since(blog_page_factory):
     live_posts = json.dumps(
         [
@@ -396,11 +427,12 @@ def test_get_updates_since(blog_page_factory):
         ]
     )
     page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
-    updated_posts, current_posts = page.get_updates_since(
-        last_update_ts=datetime(2021, 2, 1)
+    updated_posts, current_posts = get_updates_since(
+        live_page=page,
+        last_update_ts=datetime(2021, 2, 1),
     )
 
-    assert current_posts == ["1", "2", "3"]
+    assert current_posts == ["3", "2", "1"]
     assert "2" in updated_posts
     assert "3" in updated_posts
     assert "1" not in updated_posts
@@ -447,11 +479,12 @@ def test_get_updates_since_hidden_posts(blog_page_factory):
     )
 
     page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
-    updated_posts, current_posts = page.get_updates_since(
-        last_update_ts=datetime(2021, 2, 1)
+    updated_posts, current_posts = get_updates_since(
+        live_page=page,
+        last_update_ts=datetime(2021, 2, 1),
     )
 
-    assert current_posts == ["1", "3"]
+    assert current_posts == ["3", "1"]
     assert "3" in updated_posts
     assert "2" not in updated_posts
     assert "1" not in updated_posts
