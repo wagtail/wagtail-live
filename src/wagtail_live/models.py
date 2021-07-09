@@ -1,7 +1,7 @@
 """ Wagtail Live models."""
 
 from django.db import models
-from django.utils.timezone import now
+from django.utils import timezone
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.fields import StreamField
 
@@ -24,6 +24,11 @@ class LivePageMixin(models.Model):
         blank=True,
         unique=True,
     )
+    last_updated_at = models.DateTimeField(
+        help_text="Last update of this page",
+        blank=True,
+        default=timezone.now,
+    )
 
     live_posts = StreamField(
         [
@@ -41,7 +46,7 @@ class LivePageMixin(models.Model):
     def last_update_timestamp(self):
         """Timestamp of the last update of this page."""
 
-        return self.latest_revision_created_at.timestamp()
+        return self.last_updated_at.timestamp()
 
     def _get_live_post_index(self, message_id):
         """Retrieves the index of a live post.
@@ -116,7 +121,7 @@ class LivePageMixin(models.Model):
 
         # Insert to keep posts sorted by time
         self.live_posts.insert(lp_index, ("live_post", live_post))
-
+        self.last_updated_at = post_created_at
         self.save_revision().publish()
 
     def delete_live_post(self, message_id):
@@ -132,8 +137,9 @@ class LivePageMixin(models.Model):
         live_post_index = self.get_live_post_index(message_id=message_id)
         if live_post_index is None:
             raise KeyError
-        del self.live_posts[live_post_index]
 
+        del self.live_posts[live_post_index]
+        self.last_updated_at = timezone.now()
         self.save_revision().publish()
 
     def update_live_post(self, live_post):
@@ -142,40 +148,46 @@ class LivePageMixin(models.Model):
             live_post (livePostBlock): Live post to update.
         """
 
-        live_post.value["modified"] = now()
+        now = timezone.now()
+        live_post.value["modified"] = now
+        self.last_updated_at = now
         self.save_revision().publish()
-
-    def get_updates_since(self, last_update_ts):
-        """Retrieves new updates since a given timestamp value.
-
-        Args:
-            last_update_ts (DateTime):
-                Timestamp of the last update.
-
-        Returns:
-            (list, dict) a tuple containing the current live posts
-            and the updated posts since last_update_ts.
-        """
-
-        current_posts, updated_posts = [], {}
-        for post in self.live_posts:
-            if not post.value["show"]:
-                continue
-
-            post_id = post.id
-            current_posts.append(post_id)
-
-            created = post.value["created"]
-            if created > last_update_ts:  # This is a new post
-                updated_posts[post_id] = post.render(context={"block_id": post_id})
-                continue
-
-            last_modified = post.value["modified"]
-            if last_modified and last_modified > last_update_ts:
-                # This is an edited post
-                updated_posts[post_id] = post.render(context={"block_id": post_id})
-
-        return (updated_posts, current_posts)
 
     class Meta:
         abstract = True
+
+
+def get_updates_since(live_page, last_update_ts):
+    """Retrieves new updates since a given timestamp value.
+
+    Args:
+        live_page (LivePageMixin):
+            Live page to check updates for
+        last_update_ts (DateTime):
+            Timestamp of the last update.
+
+    Returns:
+        (list, dict) a tuple containing the current live posts
+        and the updated posts since last_update_ts.
+    """
+
+    current_posts, updated_posts = [], {}
+    posts = reversed(live_page.live_posts)
+    for post in posts:
+        if not post.value["show"]:
+            continue
+
+        post_id = post.id
+        current_posts.append(post_id)
+
+        created = post.value["created"]
+        if created > last_update_ts:  # This is a new post
+            updated_posts[post_id] = post.render(context={"block_id": post_id})
+            continue
+
+        last_modified = post.value["modified"]
+        if last_modified and last_modified > last_update_ts:
+            # This is an edited post
+            updated_posts[post_id] = post.render(context={"block_id": post_id})
+
+    return (updated_posts, current_posts)
