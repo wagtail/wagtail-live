@@ -404,3 +404,54 @@ def test_get_updates_since(blog_page_factory):
     assert "2" in updated_posts
     assert "3" in updated_posts
     assert "1" not in updated_posts
+
+
+@pytest.mark.django_db
+def test_get_updates_since_hidden_posts(blog_page_factory):
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "1",
+                "value": {
+                    "message_id": "1",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "2",
+                "value": {
+                    "message_id": "2",
+                    "created": "2022-01-01T12:00:00",
+                    "modified": "2022-01-01T12:00:00",
+                    "show": False,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "3",
+                "value": {
+                    "message_id": "3",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": "2022-01-01T12:00:00",
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+
+    page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
+    updated_posts, current_posts = page.get_updates_since(
+        last_update_ts=datetime(2021, 2, 1)
+    )
+
+    assert current_posts == ["1", "3"]
+    assert "3" in updated_posts
+    assert "2" not in updated_posts
+    assert "1" not in updated_posts
