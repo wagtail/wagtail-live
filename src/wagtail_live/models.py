@@ -9,10 +9,13 @@ from .blocks import LivePostBlock
 
 
 class LivePageMixin(models.Model):
-    """A helper class for pages using Wagtail Live.
+    """Base class for pages using Wagtail Live.
+
     Attributes:
         channel_id (str):
             Id of the corresponding channel in a messaging app.
+        last_updated_at (DateTime):
+            Date and time of the last update of this page.
         live_posts (StreamField):
             StreamField containing all the posts/messages published
             respectively on this page/channel.
