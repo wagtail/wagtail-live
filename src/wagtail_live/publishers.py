@@ -217,8 +217,8 @@ class LongPollingPublisher(PollingPublisherMixin):
         """
 
         last_update_client = self.get_last_update_client_from_request(request=request)
-        starting_time = time.time()
         polling_timeout = get_polling_timeout()
+        starting_time = time.time()
 
         while time.time() - starting_time < polling_timeout:
             live_page = get_object_or_404(self.model, channel_id=channel_id)
