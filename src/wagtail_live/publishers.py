@@ -10,7 +10,6 @@ from django.shortcuts import get_object_or_404
 from django.urls import path
 from django.views import View
 
-from .models import get_updates_since
 from .utils import get_live_page_model, get_polling_interval, get_polling_timeout
 
 
@@ -167,8 +166,7 @@ class IntervalPollingPublisher(PollingPublisherMixin):
         live_page = get_object_or_404(self.model, channel_id=channel_id)
         last_update_client = self.get_last_update_client_from_request(request=request)
         tz = timezone.utc if settings.USE_TZ else None
-        updated_posts, current_posts = get_updates_since(
-            live_page=live_page,
+        updated_posts, current_posts = live_page.get_updates_since(
             last_update_ts=datetime.fromtimestamp(last_update_client, tz=tz),
         )
 
@@ -225,8 +223,7 @@ class LongPollingPublisher(PollingPublisherMixin):
             last_update_ts = live_page.last_update_timestamp
             if last_update_ts > last_update_client:
                 tz = timezone.utc if settings.USE_TZ else None
-                updated_posts, current_posts = get_updates_since(
-                    live_page=live_page,
+                updated_posts, current_posts = live_page.get_updates_since(
                     last_update_ts=datetime.fromtimestamp(last_update_client, tz=tz),
                 )
 

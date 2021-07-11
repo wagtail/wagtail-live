@@ -153,42 +153,39 @@ class LivePageMixin(models.Model):
         live_post.value["modified"] = self.last_updated_at = timezone.now()
         self.save_revision().publish()
 
+    def get_updates_since(self, last_update_ts):
+        """Retrieves new updates since a given timestamp value.
+
+        Args:
+            last_update_ts (DateTime):
+                Timestamp of the last update.
+
+        Returns:
+            (list, dict) a tuple containing the current live posts
+            and the updated posts since last_update_ts.
+        """
+
+        # Reverse posts list so that latest updates are processed later by the client side.
+        posts = reversed(self.live_posts)
+        current_posts, updated_posts = [], {}
+        for post in posts:
+            if not post.value["show"]:
+                continue
+
+            post_id = post.id
+            current_posts.append(post_id)
+
+            created = post.value["created"]
+            if created > last_update_ts:  # This is a new post
+                updated_posts[post_id] = post.render(context={"block_id": post_id})
+                continue
+
+            last_modified = post.value["modified"]
+            if last_modified and last_modified > last_update_ts:
+                # This is an edited post
+                updated_posts[post_id] = post.render(context={"block_id": post_id})
+
+        return (updated_posts, current_posts)
+
     class Meta:
         abstract = True
-
-
-def get_updates_since(live_page, last_update_ts):
-    """Retrieves new updates since a given timestamp value.
-
-    Args:
-        live_page (LivePageMixin):
-            Live page to check updates for
-        last_update_ts (DateTime):
-            Timestamp of the last update.
-
-    Returns:
-        (list, dict) a tuple containing the current live posts
-        and the updated posts since last_update_ts.
-    """
-
-    # Reverse posts list so that latest updates are processed later by the client side.
-    posts = reversed(live_page.live_posts)
-    current_posts, updated_posts = [], {}
-    for post in posts:
-        if not post.value["show"]:
-            continue
-
-        post_id = post.id
-        current_posts.append(post_id)
-
-        created = post.value["created"]
-        if created > last_update_ts:  # This is a new post
-            updated_posts[post_id] = post.render(context={"block_id": post_id})
-            continue
-
-        last_modified = post.value["modified"]
-        if last_modified and last_modified > last_update_ts:
-            # This is an edited post
-            updated_posts[post_id] = post.render(context={"block_id": post_id})
-
-    return (updated_posts, current_posts)

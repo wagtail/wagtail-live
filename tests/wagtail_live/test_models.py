@@ -10,7 +10,7 @@ from wagtail.core.models import Page
 
 from tests.testapp.models import BlogPage
 from wagtail_live.blocks import construct_live_post_block
-from wagtail_live.models import LivePageMixin, get_updates_since
+from wagtail_live.models import LivePageMixin
 
 
 @pytest.mark.django_db
@@ -427,8 +427,7 @@ def test_get_updates_since(blog_page_factory):
         ]
     )
     page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
-    updated_posts, current_posts = get_updates_since(
-        live_page=page,
+    updated_posts, current_posts = page.get_updates_since(
         last_update_ts=datetime(2021, 2, 1),
     )
 
@@ -479,8 +478,7 @@ def test_get_updates_since_hidden_posts(blog_page_factory):
     )
 
     page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
-    updated_posts, current_posts = get_updates_since(
-        live_page=page,
+    updated_posts, current_posts = page.get_updates_since(
         last_update_ts=datetime(2021, 2, 1),
     )
 
