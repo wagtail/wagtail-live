@@ -148,9 +148,7 @@ class LivePageMixin(models.Model):
             live_post (livePostBlock): Live post to update.
         """
 
-        now = timezone.now()
-        live_post.value["modified"] = now
-        self.last_updated_at = now
+        live_post.value["modified"] = self.last_updated_at = timezone.now()
         self.save_revision().publish()
 
     class Meta:
