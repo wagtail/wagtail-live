@@ -19,7 +19,7 @@ lint:
 	flake8 src/wagtail_live tests setup.py
 
 test:
-	pytest
+	pytest --cov wagtail_live
 
 docs:
 	mkdocs serve -a 127.0.0.1:8080
