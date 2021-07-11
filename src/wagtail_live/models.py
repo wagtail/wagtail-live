@@ -62,7 +62,6 @@ class LivePageMixin(models.Model):
         for i, post in enumerate(self.live_posts):
             if post.value["message_id"] == message_id:
                 return i
-        return
 
     def get_live_post_index(self, message_id):
         """Retrieves index of a livepost."""
