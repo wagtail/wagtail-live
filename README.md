@@ -1,5 +1,7 @@
 <p align="center">
+
 ![Wagtail Live](docs/images/wagtail-live-logo.svg)
+
 </p>
 
 # Wagtail Live
