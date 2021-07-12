@@ -1,7 +1,7 @@
 """ Wagtail Live models."""
 
 from django.db import models
-from django.utils.timezone import now
+from django.utils import timezone
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.fields import StreamField
 
@@ -9,10 +9,13 @@ from .blocks import LivePostBlock
 
 
 class LivePageMixin(models.Model):
-    """A helper class for pages using Wagtail Live.
+    """Base class for pages using Wagtail Live.
+
     Attributes:
         channel_id (str):
             Id of the corresponding channel in a messaging app.
+        last_updated_at (DateTime):
+            Date and time of the last update of this page.
         live_posts (StreamField):
             StreamField containing all the posts/messages published
             respectively on this page/channel.
@@ -23,6 +26,11 @@ class LivePageMixin(models.Model):
         max_length=255,
         blank=True,
         unique=True,
+    )
+    last_updated_at = models.DateTimeField(
+        help_text="Last update of this page",
+        blank=True,
+        default=timezone.now,
     )
 
     live_posts = StreamField(
@@ -41,7 +49,7 @@ class LivePageMixin(models.Model):
     def last_update_timestamp(self):
         """Timestamp of the last update of this page."""
 
-        return self.latest_revision_created_at.timestamp()
+        return self.last_updated_at.timestamp()
 
     def _get_live_post_index(self, message_id):
         """Retrieves the index of a live post.
@@ -57,7 +65,6 @@ class LivePageMixin(models.Model):
         for i, post in enumerate(self.live_posts):
             if post.value["message_id"] == message_id:
                 return i
-        return
 
     def get_live_post_index(self, message_id):
         """Retrieves index of a livepost."""
@@ -116,7 +123,7 @@ class LivePageMixin(models.Model):
 
         # Insert to keep posts sorted by time
         self.live_posts.insert(lp_index, ("live_post", live_post))
-
+        self.last_updated_at = post_created_at
         self.save_revision().publish()
 
     def delete_live_post(self, message_id):
@@ -132,8 +139,9 @@ class LivePageMixin(models.Model):
         live_post_index = self.get_live_post_index(message_id=message_id)
         if live_post_index is None:
             raise KeyError
-        del self.live_posts[live_post_index]
 
+        del self.live_posts[live_post_index]
+        self.last_updated_at = timezone.now()
         self.save_revision().publish()
 
     def update_live_post(self, live_post):
@@ -142,7 +150,7 @@ class LivePageMixin(models.Model):
             live_post (livePostBlock): Live post to update.
         """
 
-        live_post.value["modified"] = now()
+        live_post.value["modified"] = self.last_updated_at = timezone.now()
         self.save_revision().publish()
 
     def get_updates_since(self, last_update_ts):
@@ -157,8 +165,10 @@ class LivePageMixin(models.Model):
             and the updated posts since last_update_ts.
         """
 
+        # Reverse posts list so that latest updates are processed later by the client side.
+        posts = reversed(self.live_posts)
         current_posts, updated_posts = [], {}
-        for post in self.live_posts:
+        for post in posts:
             if not post.value["show"]:
                 continue
 
