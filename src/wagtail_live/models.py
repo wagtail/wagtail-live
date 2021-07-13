@@ -55,6 +55,7 @@ class LivePageMixin(models.Model):
         """Update last_updated_at when the page is modified on the admin interface."""
 
         self.last_updated_at = timezone.now()
+        super().clean()
 
     def _get_live_post_index(self, message_id):
         """Retrieves the index of a live post.
