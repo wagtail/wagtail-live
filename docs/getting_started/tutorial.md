@@ -136,4 +136,4 @@ You can choose the title you like for the page and fill the `channel_id` field w
 
 Click on the `Live` button to display the page.
 
-Enter in the channel you created in Slack and start posting in the channel. You should see your posts in the page within few!
+Enter in the channel you created in Slack and start posting in the channel. You should see your posts in the page momentarily!
