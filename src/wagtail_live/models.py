@@ -51,6 +51,12 @@ class LivePageMixin(models.Model):
 
         return self.last_updated_at.timestamp()
 
+    def clean(self):
+        """Update last_updated_at when the page is modified on the admin interface."""
+
+        self.last_updated_at = timezone.now()
+        super().clean()
+
     def _get_live_post_index(self, message_id):
         """Retrieves the index of a live post.
 
@@ -123,8 +129,9 @@ class LivePageMixin(models.Model):
 
         # Insert to keep posts sorted by time
         self.live_posts.insert(lp_index, ("live_post", live_post))
+
         self.last_updated_at = post_created_at
-        self.save_revision().publish()
+        self.save(clean=False)
 
     def delete_live_post(self, message_id):
         """Deletes the live post corresponding to message_id.
@@ -141,8 +148,9 @@ class LivePageMixin(models.Model):
             raise KeyError
 
         del self.live_posts[live_post_index]
+
         self.last_updated_at = timezone.now()
-        self.save_revision().publish()
+        self.save(clean=False)
 
     def update_live_post(self, live_post):
         """Updates a live post when it has been edited.
@@ -151,7 +159,7 @@ class LivePageMixin(models.Model):
         """
 
         live_post.value["modified"] = self.last_updated_at = timezone.now()
-        self.save_revision().publish()
+        self.save(clean=False)
 
     def get_updates_since(self, last_update_ts):
         """Retrieves new updates since a given timestamp value.
