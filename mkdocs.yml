@@ -13,7 +13,7 @@ nav:
   - Home: index.md
   - Getting started:
     - Tutorial: getting_started/tutorial.md
-    - Setup Slack Events API receiver: getting_started/setup_slack.md
+    - Set up Slack Events API receiver: getting_started/setup_slack.md
     - Setup long polling publisher: getting_started/setup_long_polling.md
     - Setup a local web server with ngrok: getting_started/setup_ngrok.md
   - Development: development.md
