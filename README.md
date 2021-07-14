@@ -61,7 +61,7 @@ Receivers:
 Publishers:
 
 - Interval polling
-- Long polling [Setup long polling publisher](docs/getting_started/setup_long_polling.md)
+- Long polling [Set up long polling publisher](docs/getting_started/setup_long_polling.md)
 - ...
 
 ## Documentation
