@@ -15,5 +15,5 @@ nav:
     - Tutorial: getting_started/tutorial.md
     - Set up Slack Events API receiver: getting_started/setup_slack.md
     - Set up long polling publisher: getting_started/setup_long_polling.md
-    - Setup a local web server with ngrok: getting_started/setup_ngrok.md
+    - Set up a local web server with ngrok: getting_started/setup_ngrok.md
   - Development: development.md
