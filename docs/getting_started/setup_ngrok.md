@@ -2,7 +2,7 @@
 
 When using Wagtail Live, especially webhook receivers, you will often need to register a public URL which messaging apps use to send new updates to your Wagtail site.
 
-In a development environment, ngrok can help us expose a public web server and tunnels requests to our local server.
+In a development environment, ngrok can help us expose a public web server and tunnel requests to our local server.
 
 ## Downloading ngrok
 
