@@ -9,7 +9,7 @@ In order to use the long polling technique for the publishing part, add this to 
 WAGTAIL_LIVE_PUBLISHER = "wagtail_live.publishers.LongPollingPublisher"
 ```
 
-You can optionally set a polling timeout by doing so:
+You can optionally set a polling timeout:
 ```python
 WAGTAIL_LIVE_POLLING_TIMEOUT = value # in seconds
 ```
