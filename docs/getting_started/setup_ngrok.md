@@ -16,7 +16,7 @@ Extract the ngrok zip file into the folder of your preference. - in `downloads/n
 
 ## Start ngrok server
 
-Navigate to the directory where you extracted ngrok - in our example `downloads/ngrok_folder` - and then start the server as following:
+Navigate to the directory where you extracted ngrok - in our example `downloads/ngrok_folder` - and then start the server as follows:
 ```console
 $ cd downloads/ngrok_folder
 $ ./ngrok http 8000
