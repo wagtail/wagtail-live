@@ -1,4 +1,4 @@
-# Setup Long polling Publisher
+# Set up long polling Publisher
 
 This document describes how to set up a publisher using the long polling technique.
 
