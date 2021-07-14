@@ -124,7 +124,7 @@ The goal of publishers is to "publish" new updates to the frontend/client side.
 
 In this tutorial we will use the long polling technique to publish new updates on the frontend.
 
-To do so, follow the steps in [Setup long polling publisher](setup_long_polling.md)
+To do so, follow the steps in [Set up long polling publisher](setup_long_polling.md)
 
 That's it for the configuration part.
 
