@@ -1,6 +1,6 @@
 # Setup Long polling Publisher
 
-This document walks through setting up a publisher using the long polling technique.
+This document describes how to set up a publisher using the long polling technique.
 
 ## Configure `WAGTAIL_LIVE_PUBLISHER`
 
