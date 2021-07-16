@@ -264,12 +264,9 @@ class MessageAPITests(TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertEqual(Message.objects.get(id=1).images.count(), 1)
 
-<<<<<<< HEAD
         # Cleanup
         Image.objects.first().image.delete()
 
-=======
->>>>>>> 9249f9c6803e25f3874964602d30946319dbe4ca
     def test_delete_message_status_code(self):
         """Response is 204 DELETED."""
 
