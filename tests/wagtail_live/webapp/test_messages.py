@@ -267,7 +267,6 @@ class MessageAPITests(TestCase):
         # Cleanup
         Image.objects.first().image.delete()
 
-
     def test_delete_message_status_code(self):
         """Response is 204 DELETED."""
 
