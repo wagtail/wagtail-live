@@ -14,6 +14,9 @@ class ImageAPITests(TestCase):
         image_content = get_test_image_file()
         self.image = Image.objects.create(message=message, image=image_content)
 
+    def tearDown(self):
+        self.image.image.delete()
+
     def test_delete_image(self):
         self.assertEqual(Image.objects.count(), 1)
         response = self.client.delete(f"/webapp/api/images/{self.image.id}/")

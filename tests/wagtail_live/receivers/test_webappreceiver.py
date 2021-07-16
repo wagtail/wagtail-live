@@ -168,6 +168,9 @@ def test_get_image_content(webapp_receiver, image):
     got = webapp_receiver.get_image_content(image=image)
     assert got == image_model.image
 
+    # Cleanup
+    got.delete()
+
 
 @pytest.mark.django_db
 def test_add_message(blog_page_factory, webapp_receiver, message):

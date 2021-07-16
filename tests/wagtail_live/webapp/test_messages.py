@@ -173,7 +173,6 @@ class MessageAPITests(TestCase):
                 "images": [get_test_image_file()],
             },
         )
-
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Image.objects.count(), 1)
 
@@ -193,6 +192,9 @@ class MessageAPITests(TestCase):
                 }
             ],
         )
+
+        # Cleanup
+        image.delete()
 
     def test_edit_message_status_code(self):
         """Response is 200 OK."""
@@ -261,6 +263,9 @@ class MessageAPITests(TestCase):
             response = self.client.put("/webapp/api/messages/1/", {})
             self.assertEqual(response.status_code, 200)
             self.assertEqual(Message.objects.get(id=1).images.count(), 1)
+
+        # Cleanup
+        Image.objects.first().image.delete()
 
     def test_delete_message_status_code(self):
         """Response is 204 DELETED."""
