@@ -133,7 +133,7 @@ def test_get_files_from_edited_message_if_files(webapp_receiver, edited_message,
 
 def test_get_image_title(webapp_receiver, image):
     got = webapp_receiver.get_image_title(image)
-    assert got == "test.jpg"
+    assert got == "test"
 
 
 def test_get_image_name(webapp_receiver, image):
