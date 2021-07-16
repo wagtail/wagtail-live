@@ -1,0 +1,44 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+
+{% block title %} {{ channel }} {% endblock title %}
+
+
+{% block header %}
+  <h2>{{ channel }}</h2>
+{% endblock header %}
+
+{% block form %}
+<form id="new-message-form">
+    {% csrf_token %}
+    <div>
+        <textarea placeholder="Type your message here" id="content" name="content" rows="4" cols="40" autofocus required></textarea>
+        <input type="file" id="images" name="images" accept=".jpg, .jpeg, .png" multiple>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+{% endblock form %}
+
+{% block content %}
+<ul>
+    {% for message in channel.messages.all %}
+        <li>
+            {% include "webapp/message.html" with message=message %}
+        </li>
+    {% endfor %}    
+</ul>
+
+<div id="back">
+    <a href="{% url 'channels' %}">All channels</a>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const channelName = "{{channel.channel_name}}";
+</script>
+<script src="{% static 'webapp/js/messages.js' %}"></script>
+{% endblock extra_js %}

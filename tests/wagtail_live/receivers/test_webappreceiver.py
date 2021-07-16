@@ -3,8 +3,10 @@ import json
 import pytest
 
 from tests.testapp.models import BlogPage
+from tests.utils import get_test_image_file
 from wagtail_live import blocks
 from wagtail_live.receivers import TEXT, BaseMessageReceiver
+from wagtail_live.webapp.models import Channel, Image, Message
 from wagtail_live.webapp.receiver import (
     MESSAGE_CREATED,
     MESSAGE_DELETED,
@@ -31,6 +33,7 @@ def message():
         "modified": None,
         "show": True,
         "content": "Some content. \n More content here.",
+        "images": [],
     }
 
 
@@ -38,6 +41,7 @@ def test_webapp_receiver_dispatch_new_msg(mocker, message, webapp_receiver):
     mocker.patch.object(WebAppReceiver, "add_message")
     message["update_type"] = MESSAGE_CREATED
     webapp_receiver.dispatch_event(event=message)
+
     WebAppReceiver.add_message.assert_called_once_with(message=message)
 
 
@@ -45,6 +49,7 @@ def test_webapp_receiver_dispatch_edit_msg(mocker, message, webapp_receiver):
     mocker.patch.object(WebAppReceiver, "change_message")
     message["update_type"] = MESSAGE_EDITED
     webapp_receiver.dispatch_event(event=message)
+
     WebAppReceiver.change_message.assert_called_once_with(message=message)
 
 
@@ -56,6 +61,7 @@ def test_webapp_receiver_dispatch_delete_msg(mocker, webapp_receiver):
         "update_type": MESSAGE_DELETED,
     }
     webapp_receiver.dispatch_event(event=message)
+
     WebAppReceiver.delete_message.assert_called_once_with(message=message)
 
 
@@ -79,17 +85,29 @@ def test_get_message_files_if_no_files(webapp_receiver, message):
     assert got == []
 
 
-@pytest.mark.skip(reason="Unrealistic")
-def test_get_message_files_if_files(webapp_receiver, message):
-    message["files"] = ["unrealistic-file"]
-    got = webapp_receiver.get_message_files(message)
-    assert got == ["unrealistic-file"]
-
-
 @pytest.fixture
 def edited_message(message):
     message["content"] = "Edited content"
     return message
+
+
+@pytest.fixture
+def image():
+    return {
+        "id": 1,
+        "image": {
+            "name": "test.jpg",
+            "url": "/media/test.jpg",
+            "width": 100,
+            "height": 100,
+        },
+    }
+
+
+def test_get_message_files_if_files(webapp_receiver, image, message):
+    message["images"] = [image]
+    got = webapp_receiver.get_message_files(message)
+    assert got == [image]
 
 
 def test_get_message_id_from_edited_message(webapp_receiver, edited_message):
@@ -107,11 +125,48 @@ def test_get_files_from_edited_message_no_files(webapp_receiver, edited_message)
     assert got == []
 
 
-@pytest.mark.skip(reason="Unrealistic")
-def test_get_files_from_edited_message_if_files(webapp_receiver, edited_message):
-    edited_message["files"] = ["unrealistic-file"]
+def test_get_files_from_edited_message_if_files(webapp_receiver, edited_message, image):
+    edited_message["images"] = [image]
     got = webapp_receiver.get_message_files_from_edited_message(edited_message)
-    assert got == ["unrealistic-file"]
+    assert got == [image]
+
+
+def test_get_image_title(webapp_receiver, image):
+    got = webapp_receiver.get_image_title(image)
+    assert got == "test.jpg"
+
+
+def test_get_image_name(webapp_receiver, image):
+    got = webapp_receiver.get_image_name(image)
+    assert got == "test.jpg"
+
+
+def test_get_image_mimetype_jpg(webapp_receiver, image):
+    got = webapp_receiver.get_image_mimetype(image)
+    assert got == "jpeg"
+
+
+def test_get_image_mimetype_other_formats(webapp_receiver, image):
+    image["image"]["name"] = "test.other"
+    got = webapp_receiver.get_image_mimetype(image)
+    assert got == "other"
+
+
+def test_get_image_dimensions(webapp_receiver, image):
+    got = webapp_receiver.get_image_dimensions(image)
+    assert got == (100, 100)
+
+
+@pytest.mark.django_db
+def test_get_image_content(webapp_receiver, image):
+    channel = Channel.objects.create(channel_name="test_channel")
+    message = Message.objects.create(channel=channel, content="Some content")
+
+    image_content = get_test_image_file(filename="test.png", size=(100, 100))
+    image_model = Image.objects.create(message=message, image=image_content)
+
+    got = webapp_receiver.get_image_content(image=image)
+    assert got == image_model.image
 
 
 @pytest.mark.django_db

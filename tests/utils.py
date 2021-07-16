@@ -3,7 +3,7 @@ from importlib import reload
 from io import BytesIO
 
 import PIL.Image
-from django.core.files.images import ImageFile
+from django.core.files.base import File
 from django.urls import clear_url_caches
 
 
@@ -14,10 +14,9 @@ def reload_urlconf():
             reload(sys.modules[module])
 
 
-def get_test_image_file(filename, size, colour="white"):
-    # Copied from wagtail.images.tests.utils
-
+def get_test_image_file(filename="test.png", size=(100, 100), colour="white"):
     f = BytesIO()
     image = PIL.Image.new("RGBA", size, colour)
     image.save(f, "PNG")
-    return ImageFile(f, name=filename)
+    f.seek(0)
+    return File(f, name=filename)

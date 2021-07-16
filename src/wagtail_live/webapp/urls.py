@@ -5,22 +5,19 @@ from django.urls import include, path
 from . import views
 
 api_patterns = [
-    path("channels/", views.DummyChannelListAPIView.as_view()),
-    path("channels/<slug:channel_name>/", views.DummyChannelDetailAPIView.as_view()),
-    path("messages/", views.MessageListAPIView.as_view()),
-    path("messages/<int:pk>/", views.MessageDetailAPIView.as_view()),
+    path("channels/", views.create_channel_view),
+    path("channels/<slug:channel_name>/", views.delete_channel_view),
+    path("messages/", views.create_message_view),
+    path("messages/<int:pk>/", views.message_detail_view),
+    path("images/<int:pk>/", views.delete_image_view),
 ]
 
 urlpatterns = [
-    path(
-        "channels/",
-        views.DummyChannelListView.as_view(),
-        name="channels",
-    ),
+    path("api/", include(api_patterns)),
+    path("channels/", views.channels_list_view, name="channels"),
     path(
         "channels/<slug:channel_name>/",
-        views.DummyChannelDetailView.as_view(),
+        views.channel_detail_view,
         name="channel_detail",
     ),
-    path("api/", include(api_patterns)),
 ]

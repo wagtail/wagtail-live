@@ -3,7 +3,7 @@
 from django.db import models
 
 
-class DummyChannel(models.Model):
+class Channel(models.Model):
     """A model that mimics a channel in a messaging app."""
 
     channel_name = models.CharField(
@@ -24,13 +24,10 @@ class DummyChannel(models.Model):
 
 
 class Message(models.Model):
-    """A model that mimics a message in a messaging app.
-
-    TODO: Add image support."
-    """
+    """A model that mimics a message in a messaging app."""
 
     channel = models.ForeignKey(
-        "DummyChannel",
+        "Channel",
         on_delete=models.CASCADE,
         related_name="messages",
         help_text="Channel this message was posted to.",
@@ -51,5 +48,21 @@ class Message(models.Model):
     )
     content = models.TextField(help_text="Content of the message")
 
+    @property
+    def images(self):
+        return self.files.all()
+
     class Meta:
         ordering = ["-created"]
+
+
+class Image(models.Model):
+    """A Model that represents an image of a message."""
+
+    image = models.ImageField(help_text="Image of a message")
+    message = models.ForeignKey(
+        "Message",
+        on_delete=models.CASCADE,
+        related_name="files",
+        help_text="Message this image was posted to.",
+    )

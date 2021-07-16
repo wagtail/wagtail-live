@@ -1,147 +1,187 @@
-document.addEventListener('DOMContentLoaded', function() {
-    newMessageForm = document.querySelector('#new-message-form');
+document.addEventListener('DOMContentLoaded', () => {
+    const newMessageForm = document.querySelector('#new-message-form');
     newMessageForm.addEventListener('submit', createMessage);
-
-    showEditMsgFormBtn = document.querySelectorAll(".show-edit-msg-form");
-    showEditMsgFormBtn.forEach(btn => {
-        btn.addEventListener("click", showEditMsgForm);
+  
+    const showEditMsgFormBtn = document.querySelectorAll('.show-edit-form');
+    showEditMsgFormBtn.forEach((btn) => {
+      btn.addEventListener('click', showEditMsgForm);
     });
-
-    deleteMsgBtn = document.querySelectorAll(".delete-message");
-    deleteMsgBtn.forEach(btn => {
-        btn.addEventListener("click", deleteMessage);
+  
+    const deleteMsgBtn = document.querySelectorAll('.delete-message');
+    deleteMsgBtn.forEach((btn) => {
+      btn.addEventListener('click', deleteMessage);
     });
-});
-
-function showEditMsgForm(event) {
-    let showEditFormBtn = event.target;
-    let editMsgForm = showEditFormBtn.parentElement.parentElement.querySelector('.edit-message-form')
-    editMsgForm.previousElementSibling.style.display = "none",
-    showEditFormBtn.style.display = "none",
-    editMsgForm.style.display = "block";
-
-    editMsgForm.addEventListener("submit", editMessage);
-};
-
-async function editMessage(event) {
-    // Prevent default form submission
-    event.preventDefault();
-    let form = event.target;
-    let pk = form.dataset.id;
-    let payload = JSON.stringify({
-        channel: document.querySelector("#channel-name").innerText,
-        content: form["content"].value,
-    })
-
-    try {
-        let response = await fetchHelper(`messages/${pk}/`, 'PUT', payload);
-    
-        if (response.status != 200) {
-            // Display corresponding error message
-            let errorMsg = await response.json();
-            showNotif(errorMsg["detail"], reason=0);
-            return  
-        } else {
-            message = await response.json()
-            showNotif(`Message ${pk} edited.`)
-            form.style.display = "none";
-            form.previousElementSibling.querySelector("p").innerText = message["content"];
-            form.previousElementSibling.style.display = "block";
-            form.parentElement.nextElementSibling.querySelector(".show-edit-msg-form").style.display = "block";
-            return
-        }
-
-    } catch(error) {
-        showNotif(error, reason=0);
-        return
+  
+    const deleteImageBtn = document.querySelectorAll('.delete-image');
+    deleteImageBtn.forEach((btn) => {
+      btn.addEventListener('click', deleteImage);
+    });
+  });
+  
+  async function fetchHelper(path, method, body, expectedStatus = 200) {
+    const fullPath = `/webapp/api/${path}`;
+    const response = await fetch(fullPath, {
+      method,
+      headers: {
+        'X-CSRFToken': csrftoken,
+      },
+      body,
+    });
+  
+    if (response.status != expectedStatus) {
+      // Display corresponding error message
+      const errorMsg = await response.json();
+      showNotif(errorMsg.detail, reason = 0);
+      return { ok: false };
     }
-}
-
-async function deleteMessage(event) {
+    return { ok: true, response };
+  }
+  
+  function getMessage(messageID) {
+    return document.querySelector(`.message[data-id='${messageID}']`);
+  }
+  
+  function getImage(imageID) {
+    return document.querySelector(`.image-box[data-id='${imageID}']`);
+  }
+  
+  function showEditMsgForm(event) {
+    const showEditFormBtn = event.target;
+    const message = getMessage(messageID = showEditFormBtn.dataset.id);
+    const editMsgForm = message.querySelector('.edit-form');
+  
+    // Hide message content
+    message.querySelector('.message-content').style.display = 'none';
+  
+    // Hide edit message button
+    showEditFormBtn.style.display = 'none';
+  
+    // Show edit form
+    editMsgForm.style.display = 'block';
+  
+    editMsgForm.addEventListener('submit', editMessage);
+  }
+  
+  async function editMessage(event) {
     // Prevent default form submission
     event.preventDefault();
-
-    let deleteMsgBtn = event.target;
-    let pk = deleteMsgBtn.dataset.id
+  
+    const form = event.target;
+    const formdata = new FormData(form);
+    formdata.append('channel', channelName);
+    const pk = form.dataset.id;
+  
+    try {
+      let response = await fetchHelper(path = `messages/${pk}/`, method = 'PUT', body = formdata);
+      if (!response.ok) {
+        return;
+      }
+  
+      response = response.response;
+      showNotif(`Message ${pk} edited.`);
+  
+      const message = await response.text();
+      const messageDiv = createMessageDiv(message);
+  
+      // Hide edit form
+      form.style.display = 'none';
+  
+      // Replace previous message
+      const previousMessageDiv = form.parentElement.parentElement;
+      previousMessageDiv.parentElement.replaceChild(messageDiv, previousMessageDiv);
+      return;
+  
+    } catch (error) {
+      showNotif(error, reason = 0);
+    }
+  }
+  
+  async function deleteMessage(event) {
+    // Prevent default form submission
+    event.preventDefault();
+  
+    const deleteMsgBtn = event.target;
+    const pk = deleteMsgBtn.dataset.id;
+  
+    try {
+      const response = await fetchHelper(path = `messages/${pk}/`, method = 'DELETE', body = {}, expectedStatus = 204);
+      if (!response.ok) {
+        return;
+      }
+      // Remove message
+      getMessage(messageID = pk).parentElement.remove();
+      showNotif(`Message ${pk} deleted.`);
+      return;
+  
+    } catch (error) {
+      showNotif(error, reason = 0);
+    }
+  }
+  
+  async function deleteImage(event) {
+    // Prevent default form submission
+    event.preventDefault();
+  
+    const deleteImageBtn = event.target;
+    const pk = deleteImageBtn.dataset.id;
+  
+    try {
+      const response = await fetchHelper(path = `images/${pk}/`, method = 'DELETE', body = {}, expectedStatus = 204);
+      if (!response.ok) {
+        return;
+      }
+      // Remove Image
+      getImage(ImageID = pk).remove();
+      showNotif(`Image ${pk} deleted.`);
+      return;
+  
+    } catch (error) {
+      showNotif(error, reason = 0);
+    }
+  }
+  
+  async function createMessage(event) {
+    // Prevent default form submission
+    event.preventDefault();
+  
+    const form = event.target;
+    const formdata = new FormData(form);
+    formdata.append('channel', channelName);
+  
     // Send a POST request to save channel
     try {
-        let response = await fetchHelper(`messages/${pk}/`, 'DELETE');
-    
-        if (response.status != 204) {
-            // Display corresponding error message
-            let errorMsg = await response.json();
-            showNotif(errorMsg["detail"], reason=0);
-            return  
-        } else {
-            showNotif(`Message ${pk} deleted.`)
-            deleteMsgBtn.parentElement.parentElement.remove();
-            return
-        }
-
-    } catch(error) {
-        showNotif(error, reason=0);
-        return
+      let response = await fetchHelper(path = 'messages/', method = 'POST', body = formdata, expectedStatus = 201);
+      if (!response.ok) {
+        return;
+      }
+  
+      response = response.response;
+      const message = await response.text();
+  
+      // Clear out composition fields
+      document.querySelector('#content').value = '';
+      document.querySelector('#images').value = '';
+  
+      showNotif('Message posted.');
+  
+      const messageDiv = createMessageDiv(message);
+      document.querySelector('ul').insertAdjacentElement('afterbegin', messageDiv);
+      return;
+  
+    } catch (error) {
+      showNotif(error, reason = 0);
     }
-}
-
-
-async function createMessage(event) {
-    // Prevent default form submission
-    event.preventDefault();
-
-    let form = event.target;
-    let payload = JSON.stringify({
-        channel: document.querySelector("#channel-name").innerText,
-        content: form["content"].value,
+  }
+  
+  function createMessageDiv(message) {
+    const messageDiv = document.createElement('li');
+    messageDiv.innerHTML = message;
+    messageDiv.querySelector('.delete-message').addEventListener('click', deleteMessage);
+    messageDiv.querySelector('.show-edit-form').addEventListener('click', showEditMsgForm);
+    deleteImageBtn = messageDiv.querySelectorAll('.delete-image');
+    deleteImageBtn.forEach((btn) => {
+      btn.addEventListener('click', deleteImage);
     });
-
-    // Send a POST request to save channel
-    try {
-        let response = await fetchHelper('messages/', 'POST', payload);
-    
-        if (response.status != 201) {
-            let errorMsg = await response.json(); 
-            showNotif(errorMsg, reason=0);
-            return  
-        } else {
-            let message = await response.json();
-            // Clear out composition fields
-            document.querySelector('#content').value = '';
-            showNotif(`Message posted.`)
-            let messageDiv = createMessageDiv(message);
-            document.querySelector("ul").insertAdjacentElement("afterbegin", messageDiv);
-            return
-        }
-
-    } catch(error) {
-        showNotif(error, reason=0);
-        return
-    }
-}
-
-function createMessageDiv(message){
-    let messageContent = message["content"];
-    let messageID = message["id"];
-    let messageDiv = document.createElement("li");
-
-    messageDiv.innerHTML = `
-        <div class="message-content">
-            <div>
-                <span class="date">${message["created"]}</span>
-                <p>${messageContent}</p>
-            </div>
-            
-            <form class="edit-message-form" data-id="${messageID}">
-                <textarea name="content" value="${messageContent}">${messageContent}</textarea>
-                <button data-id="${messageID}" class="edit-message">Save changes</button>
-            </form>
-        </div>
-        <div class="btn-group">
-            <button data-id=${messageID} class="show-edit-msg-form">Edit message</button>
-            <button data-id=${messageID} class="delete-message delete-btn">Delete message</button>
-        </div>
-    `;
-    messageDiv.querySelector(".delete-message").addEventListener("click", deleteMessage);
-    messageDiv.querySelector(".show-edit-msg-form").addEventListener("click", showEditMsgForm);
     return messageDiv;
-}
+  }
+  
