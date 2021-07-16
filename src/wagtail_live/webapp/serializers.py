@@ -6,11 +6,11 @@ from .models import Channel, Image, Message
 
 
 class ImageListSerializer(serializers.ListSerializer):
-    def get_value(self, dictionnary):
-        if hasattr(dictionnary, "getlist"):
-            images = dictionnary.getlist("images")
+    def get_value(self, dictionary):
+        if hasattr(dictionary, "getlist"):
+            images = dictionary.getlist("images")
         else:
-            images = dictionnary.get("images")
+            images = dictionary.get("images")
 
         if not images or not images[0]:
             return
