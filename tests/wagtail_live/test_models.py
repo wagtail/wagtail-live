@@ -455,3 +455,393 @@ def test_get_updates_since_hidden_posts(blog_page_factory):
     assert "3" in updated_posts
     assert "2" not in updated_posts
     assert "1" not in updated_posts
+
+
+@pytest.mark.django_db
+def test_clean_live_page_1(blog_page_factory):
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": False,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+    page.clean()
+    page.save()
+
+    assert page.last_updated_at > last_updated_at
+    last_updated_at = page.last_updated_at
+    assert (
+        page.get_live_post_by_message_id(message_id="some-id").value["modified"]
+        == last_updated_at
+    )
+    assert (
+        page.get_live_post_by_message_id(message_id="other-id").value["modified"]
+        is None
+    )
+
+
+@pytest.mark.django_db
+def test_clean_live_page_2(blog_page_factory):
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+    page.clean()
+    page.save()
+
+    assert page.last_updated_at > last_updated_at
+    assert (
+        page.get_live_post_by_message_id(message_id="other-id").value["modified"]
+        is None
+    )
+
+
+@pytest.mark.django_db
+def test_clean_live_page_3(blog_page_factory):
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "new-id",
+                "value": {
+                    "message_id": "new-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+    page.clean()
+    page.save()
+
+    assert page.last_updated_at > last_updated_at
+    assert (
+        page.get_live_post_by_message_id(message_id="other-id").value["modified"]
+        is None
+    )
+    assert (
+        page.get_live_post_by_message_id(message_id="new-id").value["modified"] is None
+    )
+
+
+@pytest.mark.django_db
+def test_clean_live_page_4(blog_page_factory):
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_post = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": False,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": False,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_post
+    page.clean()
+    page.save()
+
+    assert page.last_updated_at > last_updated_at
+    last_updated_at = page.last_updated_at
+    assert (
+        page.get_live_post_by_message_id(message_id="some-id").value["modified"]
+        == last_updated_at
+    )
+    assert (
+        page.get_live_post_by_message_id(message_id="other-id").value["modified"]
+        is None
+    )
+
+
+@pytest.mark.django_db
+def test_clean_live_page_5(blog_page_factory):
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+    page.clean()
+    page.save()
+
+    assert page.last_updated_at == last_updated_at
+    assert (
+        page.get_live_post_by_message_id(message_id="some-id").value["modified"] is None
+    )
+    assert (
+        page.get_live_post_by_message_id(message_id="other-id").value["modified"]
+        is None
+    )
+
+
+@pytest.mark.django_db
+def test_clean_live_page_6(blog_page_factory):
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="some-id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+    page.clean()
+    page.save()
+
+    assert page.last_updated_at > last_updated_at
+    assert (
+        page.get_live_post_by_message_id(message_id="some-id").value["modified"] is None
+    )
