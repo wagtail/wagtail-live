@@ -51,11 +51,65 @@ class LivePageMixin(models.Model):
 
         return self.last_updated_at.timestamp()
 
-    def clean(self):
-        """Update last_updated_at when the page is modified on the admin interface."""
+    def __init__(self, *args, **kwargs):
+        """Add extra attributes to track changes made in the admin interface."""
 
-        self.last_updated_at = timezone.now()
+        super().__init__(*args, **kwargs)
+        self._previous_posts = self.live_posts
+        self._synced = False
+        self._has_changed = False
+
+    def save(self, *args, **kwargs):
+        result = super().save(*args, **kwargs)
+
+        # Update extra attributes when the page is saved
+        self._previous_posts = self.live_posts
+        self._synced = False
+        self._has_changed = False
+        return result
+
+    def clean(self):
+        """Update `last_updated_at` and `modified` when the page is modified
+        via the admin interface."""
+
         super().clean()
+
+        if not self._synced:
+            j = 0
+            n = len(self.live_posts)
+            now = timezone.now()
+
+            for i, post in enumerate(self._previous_posts):
+                if j == n:
+                    # The current version of this page has less posts than its latest version
+                    self._has_changed = True
+                    break
+
+                current_post = self.live_posts[j].value
+                previous_post = post.value
+                if previous_post["message_id"] == current_post["message_id"]:
+                    if (
+                        previous_post["show"] != current_post["show"]
+                        or previous_post["content"] != current_post["content"]
+                    ):
+                        # This is an edited post
+                        current_post["modified"] = now
+                        self._has_changed = True
+
+                    j += 1
+
+                else:
+                    # At least, one post has been deleted
+                    self._has_changed = True
+
+            if j < n:
+                # The current version of this page has more posts than its latest version
+                self._has_changed = True
+
+            if self._has_changed:
+                self.last_updated_at = now
+
+            self._synced = True
 
     def _get_live_post_index(self, message_id):
         """Retrieves the index of a live post.
