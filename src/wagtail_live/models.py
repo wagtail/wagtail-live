@@ -56,16 +56,14 @@ class LivePageMixin(models.Model):
 
         super().__init__(*args, **kwargs)
         self._previous_posts = self.live_posts
-        self._synced = False
-        self._has_changed = False
+        self._synced = self._has_changed = False
 
     def save(self, *args, **kwargs):
         result = super().save(*args, **kwargs)
 
         # Update extra attributes when the page is saved
         self._previous_posts = self.live_posts
-        self._synced = False
-        self._has_changed = False
+        self._synced = self._has_changed = False
         return result
 
     def clean(self):
