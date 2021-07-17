@@ -80,30 +80,35 @@ class LivePageMixin(models.Model):
             now = timezone.now()
 
             for i, post in enumerate(self._previous_posts):
+                previous_post = post.value
+                # Try to find this previous_post in its newer version
+                while (
+                    j < n
+                    and previous_post["message_id"]
+                    != self.live_posts[j].value["message_id"]
+                ):
+                    # The order of the posts in the page has changed.
+                    self._has_changed = True
+                    j += 1
+
                 if j == n:
-                    # The current version of this page has less posts than its latest version
+                    # The order of the posts in the page has changed.
                     self._has_changed = True
                     break
 
                 current_post = self.live_posts[j].value
-                previous_post = post.value
-                if previous_post["message_id"] == current_post["message_id"]:
-                    if (
-                        previous_post["show"] != current_post["show"]
-                        or previous_post["content"] != current_post["content"]
-                    ):
-                        # This is an edited post
-                        current_post["modified"] = now
-                        self._has_changed = True
-
-                    j += 1
-
-                else:
-                    # At least, one post has been deleted
+                if (
+                    previous_post["show"] != current_post["show"]
+                    or previous_post["content"] != current_post["content"]
+                ):
+                    # This post has changed.
+                    current_post["modified"] = now
                     self._has_changed = True
 
+                j += 1
+
             if j < n:
-                # The current version of this page has more posts than its latest version
+                # The new version of this page has more posts than its latest version
                 self._has_changed = True
 
             if self._has_changed:
