@@ -1,6 +1,7 @@
 """Wagtail Live utils"""
 
 import re
+from functools import cache
 from importlib import import_module
 
 from django.conf import settings
@@ -121,6 +122,7 @@ def get_polling_interval():
     return getattr(settings, "WAGTAIL_LIVE_POLLING_INTERVAL", 3000)
 
 
+@cache
 def is_embed(text):
     """Checks if a text is a link to embed.
 
