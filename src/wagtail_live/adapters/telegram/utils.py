@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
 
-@lru_cache(maxsize=None)
+@lru_cache(maxsize=1)
 def get_telegram_bot_token():
     """Retrieves user's telegram bot token.
 
@@ -23,7 +23,7 @@ def get_telegram_bot_token():
     return bot_token
 
 
-@lru_cache(maxsize=None)
+@lru_cache(maxsize=1)
 def get_telegram_webhook_url():
     """Retrieves the webhook url which Telegram sends new updates to.
 
@@ -48,7 +48,7 @@ def get_telegram_webhook_url():
     )
 
 
-@lru_cache(maxsize=None)
+@lru_cache(maxsize=1)
 def get_base_telegram_url():
     """Returns the base URL to use when calling Telegram's API."""
 
