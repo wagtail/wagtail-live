@@ -84,4 +84,4 @@ In the chat where you want to post messages, type the following: **/get_chat_id*
 
 You can then create a live page and add the chat ID to the `channel_id` field of that page. From then, all messages added or edited in the chat will be synced with your live page!
 
-**Note**: Telegram doesn't send updates when a message is deleted. This means that when you delete a message in a telegram chat it won't be automatically deleted from your LivePage.
+**Note**: Telegram doesn't send updates when a message is deleted. This means that when you delete a message in a Telegram chat it won't be automatically deleted from your LivePage.
