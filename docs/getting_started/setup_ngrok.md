@@ -2,7 +2,7 @@
 
 When using Wagtail Live, especially webhook receivers, you will often need to register a public URL which messaging apps use to send new updates to your Wagtail site.
 
-In a development environment, ngrok can help us expose a public web server and tunnels requests to our local server.
+In a development environment, ngrok can help us expose a public web server and tunnel requests to our local server.
 
 ## Downloading ngrok
 
@@ -16,7 +16,7 @@ Extract the ngrok zip file into the folder of your preference. - in `downloads/n
 
 ## Start ngrok server
 
-Navigate to the directory where you extracted ngrok - in our example `downloads/ngrok_folder` - and then start the server as following:
+Navigate to the directory where you extracted ngrok - in our example `downloads/ngrok_folder` - and then start the server as follows:
 ```console
 $ cd downloads/ngrok_folder
 $ ./ngrok http 8000

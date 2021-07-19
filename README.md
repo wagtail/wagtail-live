@@ -53,7 +53,7 @@ You also need to configure a receiver (messaging app) and publisher (frontend up
 
 Receivers:
 
-- Slack [Setup Slack Events API Receiver](docs/getting_started/setup_slack.md)
+- Slack [Set up Slack Events API Receiver](docs/getting_started/setup_slack.md)
 - Telegram
 - Webapp
 - ...
@@ -61,7 +61,7 @@ Receivers:
 Publishers:
 
 - Interval polling
-- Long polling [Setup long polling publisher](docs/getting_started/setup_long_polling.md)
+- Long polling [Set up long polling publisher](docs/getting_started/setup_long_polling.md)
 - ...
 
 ## Documentation

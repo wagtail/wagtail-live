@@ -1,6 +1,6 @@
 # Wagtail Live Tutorial
 
-This tutorial walks you through building a live blog with Wagtail Live.
+This tutorial describes how to build a live blog with Wagtail Live.
 
 ## Install and run Wagtail Live
 
@@ -79,7 +79,7 @@ We can now create our first `LiveBlogPage`. Add the following in `liveblog.model
 
 
 
-Create a `templates` folder inside your `liveblog` app. Add a `liveblog` folder in the `templates` folder you just created and create a `live_blog_page.html` file. This represents our `LiveBlogPage` template.
+Create a `templates` folder inside your `liveblog` app. Add a `liveblog` folder in the `templates` folder that you just created and create a `live_blog_page.html` file. This represents our `LiveBlogPage` template.
 
 For now, add this to your `live_blog_page.html` template:
 ```python
@@ -108,7 +108,7 @@ When logged into the admin site, a superuser has full permissions and is able to
 
 We need an input source for our live blog.
 
-An input source is a platform (often a messaging app but any other tool that allows content editing and offering an API can be used) where we edit the content that appears on the front-end/client side.
+An input source is a platform (often a messaging app, but any other tool that allows content editing and offers an API can be used) where we edit the content that appears on the front-end/client side.
 
 We also need a receiver for our input source. The goal of a receiver is to receive/retrieve updates from an input source.
 
@@ -124,7 +124,7 @@ The goal of publishers is to "publish" new updates to the frontend/client side.
 
 In this tutorial we will use the long polling technique to publish new updates on the frontend.
 
-To do so, follow the steps in [Setup long polling publisher](setup_long_polling.md)
+To do so, follow the steps in [Set up long polling publisher](setup_long_polling.md)
 
 That's it for the configuration part.
 
@@ -136,4 +136,4 @@ You can choose the title you like for the page and fill the `channel_id` field w
 
 Click on the `Live` button to display the page.
 
-Enter in the channel you created in Slack and start posting in the channel. You should see your posts in the page within few!
+Enter in the channel you created in Slack and start posting in the channel. You should see your posts in the page momentarily!
