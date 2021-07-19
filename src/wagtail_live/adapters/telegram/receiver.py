@@ -168,36 +168,32 @@ class TelegramWebhookReceiver(TelegramWebhookMixin, BaseMessageReceiver):
 
         text = message_text["text"]
         len_text = len(text)
-
-        cumulated_offset = 0
         entities = message_text["entities"]
-        for entity in entities:
+
+        # Process the entities in reversed order to be able to edit the text in place.
+        for entity in reversed(entities):
             url = ""
-            offset = int(entity["offset"]) + cumulated_offset
-            length = int(entity["length"])
-            end = offset + length
+            start = entity["offset"]
+            end = start + entity["length"]
 
             if entity["type"] == "url":
-                url = description = text[offset:end]
+                url = description = text[start:end]
+
                 if is_embed(url):
                     # Check if this can match an embed block, if so no conversion happens.
-                    if end == len_text or (
-                        len_text > end + 1 and text[end : end + 1] == "\n"  # noqa
-                    ):
-                        if offset == 0 or text[offset - 1 : offset] == "\n":  # noqa
-                            # This is an embed block
+                    # It matches an embed block if it has a line in the text for itself.
+                    if end == len_text or text[end] == "\n":
+                        if start == 0 or text[start - 1] == "\n":
+                            # This is an embed block, skip to the next entity
                             continue
 
             if entity["type"] == "text_link":
                 url = entity["url"]
-                description = text[offset:end]
+                description = text[start:end]
 
             if url:
-                link = f"<a href='{url}'>{description}</a>"
-                text = text[:offset] + link + text[end:]
-                len_added = len(link) - length
-                cumulated_offset += len_added
-                len_text += len_added
+                link = f'<a href="{url}">{description}</a>'
+                text = text[:start] + link + text[end:]
 
         return super().process_text(live_post=live_post, message_text=text)
 
