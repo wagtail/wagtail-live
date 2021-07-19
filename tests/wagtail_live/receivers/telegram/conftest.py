@@ -300,3 +300,47 @@ def telegram_message_with_entities():
             ],
         },
     }
+
+
+@pytest.fixture
+def telegram_bot_command():
+    return {
+        "update_id": 11,
+        "message": {
+            "message_id": 11,
+            "from": {
+                "id": 100,
+                "is_bot": False,
+                "first_name": "Tester",
+            },
+            "chat": {
+                "id": 100,
+                "first_name": "Tester",
+            },
+            "date": 1626688645,
+            "text": "/get_chat_id",
+            "entities": [{"offset": 0, "length": 12, "type": "bot_command"}],
+        },
+    }
+
+
+@pytest.fixture
+def telegram_bot_other_command():
+    return {
+        "update_id": 12,
+        "message": {
+            "message_id": 12,
+            "from": {
+                "id": 100,
+                "is_bot": False,
+                "first_name": "Tester",
+            },
+            "chat": {
+                "id": 100,
+                "first_name": "Tester",
+            },
+            "date": 1626688645,
+            "text": "/other_command",
+            "entities": [{"offset": 0, "length": 15, "type": "bot_command"}],
+        },
+    }
