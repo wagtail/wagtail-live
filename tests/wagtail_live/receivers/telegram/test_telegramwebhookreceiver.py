@@ -304,12 +304,12 @@ def test_process_text(telegram_receiver, telegram_message_with_entities):
     assert content[0].value == "This post contains different type of entities."
     assert (
         content[1].value
-        == "This is a regular link <a href='https://github.com/'>https://github.com/</a>."
+        == 'This is a regular link <a href="https://github.com/">https://github.com/</a>.'
     )
     assert content[2].value == "This is a hashtag entity #WagtailLiveBot"
     assert (
         content[3].value
-        == "This is a link_text <a href='https://github.com/wagtail'>wagtail</a>."
+        == 'This is a link_text <a href="https://github.com/wagtail">wagtail</a>.'
     )
 
 
@@ -459,13 +459,13 @@ def test_embed_message_2(
     content = live_post_block["content"]
     assert content[0].value == "This is another test post."
     assert content[1].value == (
-        "<a href='https://www.youtube.com/watch?v=Cq3LOsf2kSY'>"
+        '<a href="https://www.youtube.com/watch?v=Cq3LOsf2kSY">'
         "https://www.youtube.com/watch?v=Cq3LOsf2kSY</a>. "
         "Some content here."
     )
     assert content[2].value == (
         "Some content here. "
-        "<a href='https://www.youtube.com/watch?v=Cq3LOsf2kSY'>"
+        '<a href="https://www.youtube.com/watch?v=Cq3LOsf2kSY">'
         "https://www.youtube.com/watch?v=Cq3LOsf2kSY</a>"
     )
 
