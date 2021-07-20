@@ -20,7 +20,7 @@ from .blocks import (
     construct_live_post_block,
     construct_text_block,
 )
-from .exceptions import RequestVerificationError, WebhookSetupError
+from .exceptions import RequestVerificationError
 from .utils import SUPPORTED_MIME_TYPES, get_live_page_model, is_embed
 
 logger = logging.getLogger(__name__)
@@ -493,10 +493,7 @@ class WebhookReceiverMixin(View):
         """
 
         if not cls.webhook_connection_set():
-            try:
-                cls.set_webhook()
-            except WebhookSetupError:
-                raise
+            cls.set_webhook()
 
         return [
             path(cls.url_path, cls.as_view(), name=cls.url_name),
