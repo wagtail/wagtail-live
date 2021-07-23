@@ -54,7 +54,7 @@ def get_live_receiver():
         wagtail_live.receivers.BaseMessageReceiver.
     """
 
-    from wagtail_live.receivers import BaseMessageReceiver
+    from wagtail_live.receivers.base import BaseMessageReceiver
 
     live_receiver = getattr(settings, "WAGTAIL_LIVE_RECEIVER", "")
     if not live_receiver:

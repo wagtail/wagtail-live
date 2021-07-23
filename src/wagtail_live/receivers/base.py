@@ -12,7 +12,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from wagtail.images import get_image_model
 
-from .blocks import (
+from wagtail_live.blocks import (
     add_block_to_live_post,
     clear_live_post_content,
     construct_embed_block,
@@ -20,8 +20,8 @@ from .blocks import (
     construct_live_post_block,
     construct_text_block,
 )
-from .exceptions import RequestVerificationError
-from .utils import SUPPORTED_MIME_TYPES, get_live_page_model, is_embed
+from wagtail_live.exceptions import RequestVerificationError
+from wagtail_live.utils import SUPPORTED_MIME_TYPES, get_live_page_model, is_embed
 
 logger = logging.getLogger(__name__)
 

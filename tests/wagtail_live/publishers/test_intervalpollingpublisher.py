@@ -7,13 +7,14 @@ from django.urls import resolve
 
 from tests.testapp.models import BlogPage
 from tests.utils import reload_urlconf
-from wagtail_live.publishers import IntervalPollingPublisher, PollingPublisherMixin
+from wagtail_live.publishers.base import PollingPublisherMixin
+from wagtail_live.publishers.polling import IntervalPollingPublisher
 from wagtail_live.utils import get_polling_interval
 
 
 @pytest.fixture(scope="class")
 @override_settings(
-    WAGTAIL_LIVE_PUBLISHER="wagtail_live.publishers.IntervalPollingPublisher"
+    WAGTAIL_LIVE_PUBLISHER="wagtail_live.publishers.polling.IntervalPollingPublisher"
 )
 def reload_urls():
     reload_urlconf()

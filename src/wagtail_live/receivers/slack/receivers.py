@@ -12,7 +12,7 @@ from django.core.validators import URLValidator
 from django.http import HttpResponse
 
 from wagtail_live.exceptions import RequestVerificationError
-from wagtail_live.receivers import BaseMessageReceiver, WebhookReceiverMixin
+from wagtail_live.receivers.base import BaseMessageReceiver, WebhookReceiverMixin
 from wagtail_live.utils import is_embed
 
 

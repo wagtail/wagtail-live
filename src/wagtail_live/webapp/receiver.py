@@ -1,4 +1,4 @@
-from wagtail_live.receivers import BaseMessageReceiver
+from wagtail_live.receivers.base import BaseMessageReceiver
 
 from .models import Image
 

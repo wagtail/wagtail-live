@@ -13,12 +13,9 @@ from wagtail.images.models import Image
 from tests.testapp.models import BlogPage
 from tests.utils import get_test_image_file, reload_urlconf
 from wagtail_live import blocks
-from wagtail_live.adapters.slack.receiver import (
-    SlackEventsAPIReceiver,
-    SlackWebhookMixin,
-)
 from wagtail_live.exceptions import RequestVerificationError
-from wagtail_live.receivers import IMAGE, TEXT, BaseMessageReceiver
+from wagtail_live.receivers.base import IMAGE, TEXT, BaseMessageReceiver
+from wagtail_live.receivers.slack import SlackEventsAPIReceiver, SlackWebhookMixin
 
 
 @pytest.fixture
@@ -95,7 +92,7 @@ def test_verify_request(slack_receiver, rf, settings):
 
 @pytest.fixture(scope="class")
 @override_settings(
-    WAGTAIL_LIVE_RECEIVER="wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
+    WAGTAIL_LIVE_RECEIVER="wagtail_live.receivers.slack.SlackEventsAPIReceiver"
 )
 def reload_urls():
     reload_urlconf()

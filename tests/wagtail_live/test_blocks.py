@@ -15,7 +15,7 @@ from wagtail_live.blocks import (
     construct_live_post_block,
     construct_text_block,
 )
-from wagtail_live.receivers import TEXT
+from wagtail_live.receivers.base import TEXT
 
 
 def test_construct_text_block():
