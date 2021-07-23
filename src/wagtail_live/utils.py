@@ -96,6 +96,20 @@ def get_live_publisher():
     return publisher
 
 
+def get_updates_publisher():
+    """Retrieves the listener function to call on a page update.
+
+    Returns:
+        (callable) listener to the live_page_update signal if the
+            publisher chosen uses the websocket technique
+        (None) else
+    """
+
+    publisher = get_live_publisher()
+    if hasattr(publisher, "get_updates_publisher"):
+        return publisher().get_updates_publisher()
+
+
 def get_polling_timeout():
     """Retrieves the duration for the polling timeout for the long polling technique.
     The user can set this parameter in his settings by doing so:
