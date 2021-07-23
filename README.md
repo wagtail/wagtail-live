@@ -1,8 +1,4 @@
-<p align="center">
-
-![Wagtail Live](docs/images/wagtail-live-logo.svg)
-
-</p>
+<p align="center"><img src="https://wagtail.github.io/wagtail-live/images/wagtail-live-logo.svg" width="320px" style="max-width: 100%"></p>
 
 # Wagtail Live
 
@@ -11,6 +7,7 @@ _Wagtail Live_ is a Wagtail CMS package to create live blog pages.
 ## About
 
 With Wagtail Live:
+
 - Reporters can _instantly publish to a live blog_ by submitting messages via mobile apps.
 - Audience can read the posts right away as the live blog page instantly updates. 
 - Content editors can edit messages via the Wagtail Admin. The internal format is a normal Wagtail page with streamfield and blocks.
@@ -18,10 +15,12 @@ With Wagtail Live:
 - Rich text, images, emojis, URLs are converted to embeds.
 
 Slack and a Live blog page:
-![Wagtail Live: Slack and live blog page](docs/images/slack-and-live-blog-page.jpg)
+
+![Wagtail Live: Slack and live blog page](https://wagtail.github.io/wagtail-live/images/slack-and-live-blog-page.jpg)
 
 Content is also editable via the Wagtail admin:
-![Wagtail Live: Page edit view](docs/images/wagtail-admin.jpg)
+
+![Wagtail Live: Page edit view](https://wagtail.github.io/wagtail-live/images/wagtail-admin.jpg)
 
 ## Install
 
@@ -46,7 +45,7 @@ You also need to configure a receiver (messaging app) and publisher (frontend up
 
 Receivers:
 
-- Slack [Set up Slack Events API Receiver](docs/getting_started/setup_slack.md)
+- [Slack](https://wagtail.github.io/wagtail-live/getting_started/setup_telegram/)
 - Telegram
 - Webapp
 - ...
@@ -54,7 +53,7 @@ Receivers:
 Publishers:
 
 - Interval polling
-- Long polling [Set up long polling publisher](docs/getting_started/setup_long_polling.md)
+- [Long polling](https://wagtail.github.io/wagtail-live/getting_started/setup_long_polling/)
 - ...
 
 ## Documentation
