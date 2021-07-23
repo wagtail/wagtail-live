@@ -1,12 +1,12 @@
 import time
 from datetime import datetime, timezone
+from functools import cached_property
 
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import path
 from django.views import View
-from functols import cached_property
 
 from wagtail_live.utils import (
     get_live_page_model,
