@@ -17,4 +17,27 @@ nav:
     - Setup Telegram webhook receiver: getting_started/setup_telegram.md
     - Setup long polling publisher: getting_started/setup_long_polling.md
     - Setup a local web server with ngrok: getting_started/setup_ngrok.md
+  - Reference:
+      - Settings: reference/settings.md
+      - LivePageMixin: reference/live-page-mixin.md
+      - Receivers:
+        - BaseMessageReceiver: reference/receivers/base-message-receiver.md
+        - Slack: reference/receivers/slack.md
+        - Telegram: reference/receivers/telegram.md
+        - Webapp: reference/receivers/webapp.md
+      - Publishers:
+        - PollingMixin: reference/publishers/polling-mixin.md
+        - Interval polling: reference/publishers/interval-polling.md
+        - Long polling: reference/publishers/long-polling.md
+      - Utilities: reference/utils.md
   - Development: development.md
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          setup_commands:
+            - import os
+            - import django
+            - os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tests.settings")
+            - django.setup()
