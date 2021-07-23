@@ -8,8 +8,6 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from wagtail.embeds.oembed_providers import all_providers
 
-from .models import LivePageMixin
-
 SUPPORTED_MIME_TYPES = ["png", "jpeg", "gif"]
 
 
@@ -23,6 +21,8 @@ def get_live_page_model():
         (ImproperlyConfigured) if no live page model is specified or the one
         specified doesn't inherit from wagtail_live.models.LivePageMixin.
     """
+
+    from wagtail_live.models import LivePageMixin
 
     live_model = getattr(settings, "WAGTAIL_LIVE_PAGE_MODEL", "")
     if not live_model:
