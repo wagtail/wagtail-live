@@ -2,7 +2,7 @@
 
 import django.dispatch
 
-from .utils import get_updates_publisher
+from wagtail_live.utils import get_updates_publisher
 
 live_page_update = django.dispatch.Signal()
 
