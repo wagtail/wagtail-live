@@ -10,6 +10,7 @@ class DjangoChannelsPublisher(BaseWebsocketsPublisher):
     def publish(self, channel_id, renders, removals):
         """See base class."""
 
+        channel_layer = channels.layers.get_channel_layer()
         group_name = f"liveblog_{channel_id}"
         message = {
             "type": "new_update",
@@ -17,5 +18,5 @@ class DjangoChannelsPublisher(BaseWebsocketsPublisher):
             "removals": removals,
         }
 
-        channel_layer = channels.layers.get_channel_layer()
+        # Send message to room group
         async_to_sync(channel_layer.group_send)(group_name, message)
