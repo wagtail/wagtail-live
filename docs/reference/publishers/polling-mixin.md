@@ -1,6 +1,6 @@
 # Polling Mixin
 
-::: wagtail_live.publishers.base.PollingPublisherMixin
+::: wagtail_live.publishers.polling.PollingPublisherMixin
     rendering:
       show_root_heading: true
       show_signature_annotations: true

@@ -7,8 +7,7 @@ from django.urls import resolve
 
 from tests.testapp.models import BlogPage
 from tests.utils import reload_urlconf
-from wagtail_live.publishers.base import PollingPublisherMixin
-from wagtail_live.publishers.polling import LongPollingPublisher
+from wagtail_live.publishers.polling import LongPollingPublisher, PollingPublisherMixin
 
 
 @pytest.fixture(scope="class")
