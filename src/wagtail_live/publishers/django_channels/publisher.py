@@ -1,5 +1,5 @@
-import channels.layers
 from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from wagtail_live.publishers.websocket import BaseWebsocketPublisher
 
@@ -8,9 +8,9 @@ class DjangoChannelsPublisher(BaseWebsocketPublisher):
     """Django channels publisher."""
 
     def publish(self, channel_id, renders, removals):
-        """See base class."""
+        """Sends updates to the room group corresponding to channel_id."""
 
-        channel_layer = channels.layers.get_channel_layer()
+        channel_layer = get_channel_layer()
         group_name = f"liveblog_{channel_id}"
         message = {
             "type": "new_update",
@@ -18,5 +18,4 @@ class DjangoChannelsPublisher(BaseWebsocketPublisher):
             "removals": removals,
         }
 
-        # Send message to room group
         async_to_sync(channel_layer.group_send)(group_name, message)
