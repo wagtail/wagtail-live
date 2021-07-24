@@ -1,0 +1,2 @@
+class DummyPublisher:
+    pass
