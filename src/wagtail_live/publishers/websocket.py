@@ -1,12 +1,7 @@
 class BaseWebsocketPublisher:
     """Base class for publishers using the websocket technique."""
 
-    def get_updates_publisher(self):
-        """Helper to connect a publisher to the live_page_update signal."""
-
-        return self._publish
-
-    def _publish(self, sender, channel_id, renders, removals, **kwargs):
+    def __call__(self, sender, channel_id, renders, removals, **kwargs):
         """Listens to the live_page_update signal.
 
         Args:
@@ -27,9 +22,9 @@ class BaseWebsocketPublisher:
 
     def publish(self, channel_id, renders, removals):
         """Sends a new update:
-        - to the websocket client for hosted websocket services
-        - to the consumers for django channels
+        - to the "channel_id group" for django channels
         - to an event bus for separate websocket servers
+        - to the websocket client for hosted websocket services
 
         Args:
             channel_id (str):
