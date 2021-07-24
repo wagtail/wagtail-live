@@ -4,16 +4,17 @@ import pytest
 from channels.layers import get_channel_layer
 from channels.routing import URLRouter
 from channels.testing import WebsocketCommunicator
-from django.test import override_settings
 
 from wagtail_live.publishers.django_channels import live_websocket_route
 
 
 @pytest.mark.asyncio
-@override_settings(
-    CHANNEL_LAYERS={"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
-)
-async def test_django_channels_app():
+async def test_django_channels_app(settings):
+    # @override_settings fails for django 2.2
+    settings.CHANNEL_LAYERS = {
+        "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
+    }
+
     # Initialize
     channel_layer = get_channel_layer()
     application = URLRouter(live_websocket_route)
