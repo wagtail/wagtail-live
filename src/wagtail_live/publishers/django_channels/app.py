@@ -30,6 +30,6 @@ class DjangoChannelsApp(JsonWebsocketConsumer):
         self.send_json({"renders": event["renders"], "removals": event["removals"]})
 
 
-websocket_route = [
+live_websocket_route = [
     re_path(r"ws/channel/(?P<channel_id>\w+)/$", DjangoChannelsApp.as_asgi()),
 ]
