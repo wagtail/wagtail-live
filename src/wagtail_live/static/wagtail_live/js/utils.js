@@ -24,6 +24,12 @@ function process(updateID, value) {
     } else {postsDiv.insertAdjacentElement("afterbegin", livePost);}
 }
 
+
+function process_updates(data) {
+    for (let i in data.renders) {process(i, data.renders[i])};
+    data.removals.forEach(post => removeLivePost(post));
+}
+
 /**
  * Removes a live post.
  * @param {string} livePostID - ID of the live post to remove.

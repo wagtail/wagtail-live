@@ -1,10 +1,10 @@
 import channels.layers
 from asgiref.sync import async_to_sync
 
-from wagtail_live.publishers.websocket import BaseWebsocketsPublisher
+from wagtail_live.publishers.websocket import BaseWebsocketPublisher
 
 
-class DjangoChannelsPublisher(BaseWebsocketsPublisher):
+class DjangoChannelsPublisher(BaseWebsocketPublisher):
     """Django channels publisher."""
 
     def publish(self, channel_id, renders, removals):
