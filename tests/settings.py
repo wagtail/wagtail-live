@@ -85,3 +85,6 @@ WAGTAIL_SITE_NAME = "Wagtail Live Test Suite"
 # Wagtail Live settings
 
 WAGTAIL_LIVE_PAGE_MODEL = "tests.testapp.models.BlogPage"
+
+# Define this to avoid ImproperlyConfiguredError
+WAGTAIL_LIVE_PUBLISHER = "tests.testapp.publishers.DummyPublisher"
