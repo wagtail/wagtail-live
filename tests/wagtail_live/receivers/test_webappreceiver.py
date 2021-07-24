@@ -5,7 +5,7 @@ import pytest
 from tests.testapp.models import BlogPage
 from tests.utils import get_test_image_file
 from wagtail_live import blocks
-from wagtail_live.receivers import TEXT, BaseMessageReceiver
+from wagtail_live.receivers.base import TEXT, BaseMessageReceiver
 from wagtail_live.webapp.models import Channel, Image, Message
 from wagtail_live.webapp.receiver import (
     MESSAGE_CREATED,

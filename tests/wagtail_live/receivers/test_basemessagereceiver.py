@@ -5,7 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from wagtail.embeds.blocks import EmbedValue
 
 from tests.testapp.models import BlogPage
-from wagtail_live.receivers import EMBED, TEXT, BaseMessageReceiver
+from wagtail_live.receivers.base import EMBED, TEXT, BaseMessageReceiver
 
 
 @pytest.fixture

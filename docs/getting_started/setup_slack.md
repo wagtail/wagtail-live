@@ -92,7 +92,7 @@ If you are comfortable with ngrok, start ngrok on port 8000. Otherwise you can s
 
 - Add the following to your `settings` file:
     ```python
-        WAGTAIL_LIVE_RECEIVER = "wagtail_live.adapters.slack.receiver.SlackEventsAPIReceiver"
+        WAGTAIL_LIVE_RECEIVER = "wagtail_live.receivers.slack.SlackEventsAPIReceiver"
     ```
 
 - Make sure ngrok is running on port 8000 and start the development server in another shell like this:

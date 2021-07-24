@@ -1,6 +1,6 @@
 # Base Message Receiver
 
-::: wagtail_live.receivers.BaseMessageReceiver
+::: wagtail_live.receivers.base.BaseMessageReceiver
     rendering:
       show_root_heading: true
       show_signature_annotations: true

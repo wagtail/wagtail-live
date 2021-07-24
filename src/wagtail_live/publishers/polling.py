@@ -1,5 +1,3 @@
-"""Wagtail Live publisher classes."""
-
 import time
 from datetime import datetime, timezone
 from functools import cached_property
@@ -10,7 +8,11 @@ from django.shortcuts import get_object_or_404
 from django.urls import path
 from django.views import View
 
-from .utils import get_live_page_model, get_polling_interval, get_polling_timeout
+from wagtail_live.utils import (
+    get_live_page_model,
+    get_polling_interval,
+    get_polling_timeout,
+)
 
 
 class PollingPublisherMixin(View):

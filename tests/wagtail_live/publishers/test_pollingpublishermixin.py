@@ -3,7 +3,7 @@ from django.urls.resolvers import URLPattern
 from django.views import View
 
 from tests.testapp.models import BlogPage
-from wagtail_live.publishers import PollingPublisherMixin
+from wagtail_live.publishers.polling import PollingPublisherMixin
 
 
 @pytest.fixture

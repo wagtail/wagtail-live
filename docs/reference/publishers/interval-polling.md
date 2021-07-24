@@ -1,6 +1,6 @@
 # Interval Polling
 
-::: wagtail_live.publishers.IntervalPollingPublisher
+::: wagtail_live.publishers.polling.IntervalPollingPublisher
     rendering:
       show_root_heading: true
       show_signature_annotations: true

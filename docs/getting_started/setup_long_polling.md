@@ -6,7 +6,7 @@ This document describes how to set up a publisher using the long polling techniq
 
 In order to use the long polling technique for the publishing part, add this to your `settings`:
 ```python
-WAGTAIL_LIVE_PUBLISHER = "wagtail_live.publishers.LongPollingPublisher"
+WAGTAIL_LIVE_PUBLISHER = "wagtail_live.publishers.polling.LongPollingPublisher"
 ```
 
 You can optionally set a polling timeout:

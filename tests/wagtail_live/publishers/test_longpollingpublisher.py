@@ -7,12 +7,12 @@ from django.urls import resolve
 
 from tests.testapp.models import BlogPage
 from tests.utils import reload_urlconf
-from wagtail_live.publishers import LongPollingPublisher, PollingPublisherMixin
+from wagtail_live.publishers.polling import LongPollingPublisher, PollingPublisherMixin
 
 
 @pytest.fixture(scope="class")
 @override_settings(
-    WAGTAIL_LIVE_PUBLISHER="wagtail_live.publishers.LongPollingPublisher"
+    WAGTAIL_LIVE_PUBLISHER="wagtail_live.publishers.polling.LongPollingPublisher"
 )
 def reload_urls():
     reload_urlconf()

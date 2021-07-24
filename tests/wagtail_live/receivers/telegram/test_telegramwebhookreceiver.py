@@ -7,14 +7,14 @@ from django.test import override_settings
 from django.urls import resolve, reverse
 
 from tests.utils import get_test_image_file, reload_urlconf
-from wagtail_live.adapters.telegram import get_base_telegram_url
-from wagtail_live.adapters.telegram.receiver import (
-    TelegramWebhookMixin,
-    TelegramWebhookReceiver,
-)
 from wagtail_live.blocks import construct_live_post_block
 from wagtail_live.exceptions import WebhookSetupError
-from wagtail_live.receivers import EMBED, IMAGE, BaseMessageReceiver
+from wagtail_live.receivers.base import EMBED, IMAGE, BaseMessageReceiver
+from wagtail_live.receivers.telegram import (
+    TelegramWebhookMixin,
+    TelegramWebhookReceiver,
+    get_base_telegram_url,
+)
 
 
 @pytest.fixture
@@ -44,7 +44,7 @@ class ResponseMock:
 
 @pytest.fixture
 @override_settings(
-    WAGTAIL_LIVE_RECEIVER="wagtail_live.adapters.telegram.TelegramWebhookReceiver"
+    WAGTAIL_LIVE_RECEIVER="wagtail_live.receivers.telegram.TelegramWebhookReceiver"
 )
 def reload_urls(mocker):
     mocker.patch.object(

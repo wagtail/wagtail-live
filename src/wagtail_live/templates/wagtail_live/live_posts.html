@@ -1,4 +1,4 @@
-{% load wagtailcore_tags %}
+{% load static wagtailcore_tags %}
 
 <div id="live-posts">
     {% for post in self.live_posts %}
@@ -15,3 +15,4 @@
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const channelID = "{{ self.channel_id }}";
 </script>
+<script src="{% static 'wagtail_live/js/utils.js' %}"></script>
