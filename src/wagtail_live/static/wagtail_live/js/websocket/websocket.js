@@ -38,11 +38,7 @@ class WebsocketPublisher {
 class GenericWebsocketPublisher extends WebsocketPublisher {
     initialize_websocket_connection() {
         this.websocket = new WebSocket(
-            'ws://'
-            + this.baseURL
-            + '/ws/channel/'
-            + channelID
-            + '/'
+            `ws://${this.baseURL}/ws/channel/${channelID}/`
         );
     }
 
