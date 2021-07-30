@@ -48,7 +48,7 @@ class WebAppReceiver(BaseMessageReceiver):
     def get_image_title(self, image):
         """See base class."""
 
-        return image["image"]["name"].replace("-", " ")
+        return image["image"]["name"].split(".")[0].replace("-", " ")
 
     def get_image_name(self, image):
         """See base class."""
