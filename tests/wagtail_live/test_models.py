@@ -379,18 +379,14 @@ def test_edit_live_posts_sends_signal(blog_page_factory):
 
         assert count == 1
         assert _channel_id == "some-id"
-        assert _renders == {
-            live_post_id: live_post.render(context={"block_id": live_post_id})
-        }
+        assert _renders == [live_post]
         assert _removals == []
 
         # EDIT
         page.update_live_post(live_post=live_post)
         assert count == 2
         assert _channel_id == "some-id"
-        assert _renders == {
-            live_post_id: live_post.render(context={"block_id": live_post_id})
-        }
+        assert _renders == [live_post]
         assert _removals == []
 
         # DELETE

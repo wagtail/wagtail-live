@@ -138,9 +138,7 @@ class LivePageMixin(models.Model):
         live_page_update.send(
             sender=self.__class__,
             channel_id=self.channel_id,
-            renders={
-                live_post.id: live_post.render(context={"block_id": live_post.id})
-            },
+            renders=[live_post],
             removals=[],
         )
 
@@ -158,9 +156,7 @@ class LivePageMixin(models.Model):
         live_page_update.send(
             sender=self.__class__,
             channel_id=self.channel_id,
-            renders={
-                live_post.id: live_post.render(context={"block_id": live_post.id})
-            },
+            renders=[live_post],
             removals=[],
         )
 
