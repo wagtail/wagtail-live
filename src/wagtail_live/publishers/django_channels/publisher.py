@@ -13,7 +13,7 @@ class DjangoChannelsPublisher(BaseWebsocketPublisher):
         channel_layer = get_channel_layer()
         group_name = f"liveblog_{channel_id}"
         message = {
-            "type": "new_update",
+            "type": "update",
             "renders": renders,
             "removals": removals,
         }

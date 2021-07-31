@@ -31,7 +31,7 @@ async def test_django_channels_app(settings):
     assert len(groups["liveblog_test"]) == 1
 
     # Ensure new_update method is called when a message is sent to liveblog_test group.
-    message = {"type": "new_update", "renders": {}, "removals": []}
+    message = {"type": "update", "renders": {}, "removals": []}
     await channel_layer.group_send("liveblog_test", message)
 
     response = await communicator.receive_from()

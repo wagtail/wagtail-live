@@ -27,7 +27,7 @@ def test_publish_new_update_on_live_page_update_signal():
 
         # Ensure that the update is published i.e sent to live page group
         message = async_to_sync(channel_layer.receive)("test-channel")
-        assert message == {"type": "new_update", "renders": {}, "removals": []}
+        assert message == {"type": "update", "renders": {}, "removals": []}
 
     finally:
         live_page_update.disconnect(publisher)

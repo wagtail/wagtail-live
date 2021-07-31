@@ -19,7 +19,7 @@ class DjangoChannelsApp(AsyncJsonWebsocketConsumer):
 
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
-    async def new_update(self, event):
+    async def update(self, event):
         """Receives messages from room group and sends them to websocket client."""
 
         await self.send_json(
