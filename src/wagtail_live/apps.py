@@ -16,6 +16,4 @@ class WagtailLiveConfig(AppConfig):
         if issubclass(live_publisher, BaseWebsocketPublisher):
             from wagtail_live.signals import live_page_update
 
-            live_page_update.connect(
-                live_publisher(), dispatch_uid="publisher_identifier"
-            )
+            live_page_update.connect(live_publisher(), dispatch_uid="live_publisher")
