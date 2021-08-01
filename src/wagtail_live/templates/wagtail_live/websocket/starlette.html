@@ -1,0 +1,9 @@
+{% load static wagtail_live_tags %}
+
+<script>
+    const serverHost = "{% get_server_host %}";
+    const serverPort = "{% get_server_port %}";
+</script>
+
+<script src="{% static 'wagtail_live/js/websocket/websocket.js' %}"></script>
+<script src="{% static 'wagtail_live/js/websocket/starlette.js' %}"></script> 
