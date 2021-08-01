@@ -28,6 +28,7 @@ test_requires = [
     "channels",
     "aioredis",
     "starlette",
+    "websockets",
     "mock>=4.0.3,<5.0.0",
     "wagtail-factories>=2.0.1,<3",
 ]
