@@ -11,6 +11,7 @@ from wagtail.core.models import Page
 from tests.testapp.models import BlogPage
 from wagtail_live.blocks import construct_live_post_block
 from wagtail_live.models import LivePageMixin
+from wagtail_live.signals import live_page_update
 
 
 @pytest.mark.django_db
@@ -354,6 +355,49 @@ def test_edit_live_posts_updates_last_updated_at(blog_page_factory):
     last_updated_at = page.last_updated_at
     diff = now() - last_updated_at
     assert diff.total_seconds() == pytest.approx(0.0, abs=1)
+
+
+@pytest.mark.django_db
+def test_edit_live_posts_sends_signal(blog_page_factory):
+    count = 0
+    _channel_id = _renders = _removals = None
+
+    def callback(sender, channel_id, renders, removals, **kwargs):
+        nonlocal count, _channel_id, _renders, _removals
+        _channel_id, _renders, _removals = channel_id, renders, removals
+        count += 1
+
+    live_page_update.connect(callback)
+    page = blog_page_factory(channel_id="some-id")
+
+    try:
+        # ADD
+        live_post = construct_live_post_block(message_id="some-id", created=now())
+        page.add_live_post(live_post=live_post)
+        live_post = page.get_live_post_by_index(live_post_index=0)
+        live_post_id = live_post.id
+
+        assert count == 1
+        assert _channel_id == "some-id"
+        assert _renders == [live_post]
+        assert _removals == []
+
+        # EDIT
+        page.update_live_post(live_post=live_post)
+        assert count == 2
+        assert _channel_id == "some-id"
+        assert _renders == [live_post]
+        assert _removals == []
+
+        # DELETE
+        page.delete_live_post(message_id="some-id")
+        assert count == 3
+        assert _channel_id == "some-id"
+        assert _renders == {}
+        assert _removals == [live_post_id]
+
+    finally:
+        live_page_update.disconnect(callback)
 
 
 @pytest.mark.django_db

@@ -24,9 +24,12 @@ test_requires = [
     "pytest-django>=4.3.0,<5",
     "pytest-factoryboy>=2.1.0,<3",
     "pytest-mock>=3.6.1,<3.7.0",
+    "pytest-asyncio",
+    "channels",
     "mock>=4.0.3,<5.0.0",
     "wagtail-factories>=2.0.1,<3",
 ]
+
 build_requires = [
     "twine",
     "check-wheel-contents",

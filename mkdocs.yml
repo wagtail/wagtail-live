@@ -15,6 +15,7 @@ nav:
     - Tutorial: getting_started/tutorial.md
     - Setup Slack Events API receiver: getting_started/setup_slack.md
     - Setup Telegram webhook receiver: getting_started/setup_telegram.md
+    - Setup Django channels publisher: getting_started/setup_django_channels.md
     - Setup long polling publisher: getting_started/setup_long_polling.md
     - Setup a local web server with ngrok: getting_started/setup_ngrok.md
   - Reference:

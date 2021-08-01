@@ -5,7 +5,8 @@ from django.utils import timezone
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.fields import StreamField
 
-from .blocks import LivePostBlock
+from wagtail_live.blocks import LivePostBlock
+from wagtail_live.signals import live_page_update
 
 
 class LivePageMixin(models.Model):
@@ -133,6 +134,32 @@ class LivePageMixin(models.Model):
         self.last_updated_at = post_created_at
         self.save(clean=False)
 
+        live_post = self.get_live_post_by_index(lp_index)
+        live_page_update.send(
+            sender=self.__class__,
+            channel_id=self.channel_id,
+            renders=[live_post],
+            removals=[],
+        )
+
+    def update_live_post(self, live_post):
+        """Updates a live post when it has been edited.
+
+        Args:
+            live_post (livePostBlock):
+                Live post to update.
+        """
+
+        live_post.value["modified"] = self.last_updated_at = timezone.now()
+        self.save(clean=False)
+
+        live_page_update.send(
+            sender=self.__class__,
+            channel_id=self.channel_id,
+            renders=[live_post],
+            removals=[],
+        )
+
     def delete_live_post(self, message_id):
         """Deletes the live post corresponding to message_id.
 
@@ -147,19 +174,18 @@ class LivePageMixin(models.Model):
         if live_post_index is None:
             raise KeyError
 
+        live_post_id = self.live_posts[live_post_index].id
         del self.live_posts[live_post_index]
 
         self.last_updated_at = timezone.now()
         self.save(clean=False)
 
-    def update_live_post(self, live_post):
-        """Updates a live post when it has been edited.
-        Args:
-            live_post (livePostBlock): Live post to update.
-        """
-
-        live_post.value["modified"] = self.last_updated_at = timezone.now()
-        self.save(clean=False)
+        live_page_update.send(
+            sender=self.__class__,
+            channel_id=self.channel_id,
+            renders={},
+            removals=[live_post_id],
+        )
 
     def get_updates_since(self, last_update_ts):
         """Retrieves new updates since a given timestamp value.
