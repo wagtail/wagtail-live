@@ -1,12 +1,19 @@
 """ Wagtail Live models."""
 
+from collections import namedtuple
+
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.functional import lazy
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.fields import StreamField
 
 from wagtail_live.blocks import LivePostBlock
 from wagtail_live.signals import live_page_update
+
+PostContent = namedtuple("PostContent", ["show", "content"])
+sync_admin = lazy(lambda: getattr(settings, "WAGTAIL_LIVE_SYNC_WITH_ADMIN", True), bool)
 
 
 class LivePageMixin(models.Model):
@@ -52,11 +59,63 @@ class LivePageMixin(models.Model):
 
         return self.last_updated_at.timestamp()
 
-    def clean(self):
-        """Update last_updated_at when the page is modified on the admin interface."""
+    def __init__(self, *args, **kwargs):
+        """Add extra attributes to track changes made in the admin interface."""
 
-        self.last_updated_at = timezone.now()
-        super().clean()
+        super().__init__(*args, **kwargs)
+
+        if sync_admin():
+            self._previous_posts = {
+                post.id: PostContent(post.value["show"], post.value["content"])
+                for post in self.live_posts
+            }
+
+    def save(self, sync=sync_admin(), *args, **kwargs):
+        if sync:
+            renders, _new_posts, _seen = [], {}, set()
+            now = timezone.now()
+
+            for post in reversed(self.live_posts):  # New posts
+                post_id = post.id
+                show, content = post.value["show"], post.value["content"]
+                _new_posts[post_id] = PostContent(show, content)
+
+                if post_id in self._previous_posts:
+                    _seen.add(post_id)
+                    previous_version = self._previous_posts[post_id]
+
+                    # Check if the post has been modified.
+                    if (
+                        previous_version.show != show
+                        or previous_version.content != content
+                    ):
+                        post.value["modified"] = now
+                        renders.append(post)
+
+                else:  # This is a new post
+                    renders.append(post)
+
+            removals = list(set(self._previous_posts.keys()).difference(_seen))
+
+            _has_changed = bool(renders or removals)
+            if _has_changed:
+                self.last_updated_at = now
+
+        result = super().save(*args, **kwargs)
+
+        if sync and _has_changed:
+            # Update extra attributes when the page is saved
+            self._previous_posts = _new_posts
+
+            # Send signal
+            live_page_update.send(
+                sender=self.__class__,
+                channel_id=self.channel_id,
+                renders=renders,
+                removals=removals,
+            )
+
+        return result
 
     def _get_live_post_index(self, message_id):
         """Retrieves the index of a live post.
@@ -132,7 +191,7 @@ class LivePageMixin(models.Model):
         self.live_posts.insert(lp_index, ("live_post", live_post))
 
         self.last_updated_at = post_created_at
-        self.save(clean=False)
+        self.save(sync=False)
 
         live_post = self.get_live_post_by_index(lp_index)
         live_page_update.send(
@@ -151,7 +210,7 @@ class LivePageMixin(models.Model):
         """
 
         live_post.value["modified"] = self.last_updated_at = timezone.now()
-        self.save(clean=False)
+        self.save(sync=False)
 
         live_page_update.send(
             sender=self.__class__,
@@ -178,7 +237,7 @@ class LivePageMixin(models.Model):
         del self.live_posts[live_post_index]
 
         self.last_updated_at = timezone.now()
-        self.save(clean=False)
+        self.save(sync=False)
 
         live_page_update.send(
             sender=self.__class__,
