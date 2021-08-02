@@ -3,6 +3,7 @@ from datetime import datetime
 
 import pytest
 from django.core.exceptions import ValidationError
+from django.test import override_settings
 from django.utils.timezone import now
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks.stream_block import StreamValue
@@ -499,3 +500,284 @@ def test_get_updates_since_hidden_posts(blog_page_factory):
     assert "3" in updated_posts
     assert "2" not in updated_posts
     assert "1" not in updated_posts
+
+
+@pytest.mark.django_db
+def test_save_live_page_new_post(blog_page_factory):
+    # Setup signal callback
+    count = 0
+    _channel_id = _renders = _removals = None
+
+    def callback(sender, channel_id, renders, removals, **kwargs):
+        nonlocal count, _channel_id, _renders, _removals
+        _channel_id, _renders, _removals = channel_id, renders, removals
+        count += 1
+
+    live_page_update.connect(callback)
+
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="channel_id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+            {
+                "type": "live_post",
+                "id": "other-id",
+                "value": {
+                    "message_id": "other-id",
+                    "created": "2021-01-01T13:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+
+    try:
+        page.save()
+
+        # last_updated_at field is modified
+        assert page.last_updated_at > last_updated_at
+
+        # The value of the modified field for the first post shouldn't change
+        assert (
+            page.get_live_post_by_message_id(message_id="some-id").value["modified"]
+            is None
+        )
+
+        # Signal is sent with correct renders
+        new_post = page.get_live_post_by_message_id(message_id="other-id")
+        assert count == 1
+        assert _channel_id == "channel_id"
+        assert _renders == [new_post]
+        assert _removals == []
+
+    finally:
+        live_page_update.disconnect(callback)
+
+
+@pytest.mark.django_db
+def test_save_live_page_edited_post(blog_page_factory):
+    # Setup signal callback
+    count = 0
+    _channel_id = _renders = _removals = None
+
+    def callback(sender, channel_id, renders, removals, **kwargs):
+        nonlocal count, _channel_id, _renders, _removals
+        _channel_id, _renders, _removals = channel_id, renders, removals
+        count += 1
+
+    live_page_update.connect(callback)
+
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="channel_id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": False,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+
+    try:
+        page.save()
+
+        # last_updated_at field is modified
+        assert page.last_updated_at > last_updated_at
+
+        post = page.get_live_post_by_message_id(message_id="some-id")
+
+        # The value of the modified field for the first post shouldn't change
+        assert (
+            page.get_live_post_by_message_id(message_id="some-id").value["modified"]
+            == page.last_updated_at
+        )
+
+        # Signal is sent with correct renders
+        assert count == 1
+        assert _channel_id == "channel_id"
+        assert _renders == [post]
+        assert _removals == []
+
+    finally:
+        live_page_update.disconnect(callback)
+
+
+@pytest.mark.django_db
+def test_save_live_page_deleted_post(blog_page_factory):
+    # Setup signal callback
+    count = 0
+    _channel_id = _renders = _removals = None
+
+    def callback(sender, channel_id, renders, removals, **kwargs):
+        nonlocal count, _channel_id, _renders, _removals
+        _channel_id, _renders, _removals = channel_id, renders, removals
+        count += 1
+
+    live_page_update.connect(callback)
+
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="channel_id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = []
+    page.live_posts = new_posts
+
+    try:
+        page.save()
+
+        # last_updated_at field is modified
+        assert page.last_updated_at > last_updated_at
+
+        # Signal is sent with correct renders
+        assert count == 1
+        assert _channel_id == "channel_id"
+        assert _renders == []
+        assert _removals == ["some-id"]
+
+    finally:
+        live_page_update.disconnect(callback)
+
+
+@pytest.mark.django_db
+def test_save_live_page_no_changes(blog_page_factory):
+    # Setup signal callback
+    count = 0
+    _channel_id = _renders = _removals = None
+
+    def callback(sender, channel_id, renders, removals, **kwargs):
+        nonlocal count, _channel_id, _renders, _removals
+        _channel_id, _renders, _removals = channel_id, renders, removals
+        count += 1
+
+    live_page_update.connect(callback)
+
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="channel_id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+
+    try:
+        page.save()
+
+        # last_updated_at field isn't modified
+        assert page.last_updated_at == last_updated_at
+
+        # Signal isn't sent
+        assert count == 0
+        assert _channel_id is None
+        assert _renders is None
+        assert _removals is None
+
+    finally:
+        live_page_update.disconnect(callback)
+
+
+@pytest.mark.django_db
+def test_init_sync_with_admin_true(blog_page_factory):
+    page = blog_page_factory(channel_id="channel_id")
+    assert hasattr(page, "_previous_posts")
+
+
+@pytest.mark.django_db
+@override_settings(WAGTAIL_LIVE_SYNC_WITH_ADMIN=False)
+def test_init_sync_with_admin_false(blog_page_factory):
+    page = blog_page_factory(channel_id="channel_id")
+    assert not hasattr(page, "_previous_posts")
