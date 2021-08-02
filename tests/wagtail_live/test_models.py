@@ -640,7 +640,7 @@ def test_save_live_page_edited_post(blog_page_factory):
 
         post = page.get_live_post_by_message_id(message_id="some-id")
 
-        # The value of the modified field for the first post shouldn't change
+        # The value of the modified field for the first post should change
         assert (
             page.get_live_post_by_message_id(message_id="some-id").value["modified"]
             == page.last_updated_at
