@@ -27,10 +27,14 @@ WAGTAIL_LIVE_PUBLISHER = "wagtail_live.publishers.starlette.StarlettePublisher"
 
 In this architecture, you will need a separate server to handle websocket connections.
 <<<<<<< HEAD
+<<<<<<< HEAD
 You can define the server's host and port in your settings file as follows:
 =======
 You can define the server's host and port in your settings file by doing so:
 >>>>>>> Add docs for redis and starlette
+=======
+You can define the server's host and port in your settings file as follows:
+>>>>>>> Apply suggestions from code review
 
 ```python
 WAGTAIL_LIVE_SERVER_HOST = "my-server-host" # Defaults to `localhost`.
