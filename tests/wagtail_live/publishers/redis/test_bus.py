@@ -7,23 +7,24 @@ from wagtail_live.publishers.utils import get_redis_url
 
 from ..conftest import wait_for_message
 
+count = 0
+_message = _recipients = None
+
 
 async def broadcast(message, recipients):
-    pass
+    global count, _message, _recipients
+    count += 1
+    _message, _recipients = message, recipients
 
 
 @pytest.fixture
-def mocked(mocker):
-    return mocker.AsyncMock(broadcast, return_value=None)
-
-
-@pytest.fixture
-def bus(mocked):
-    return RedisBus(get_redis_url(), mocked)
+def bus():
+    return RedisBus(get_redis_url(), broadcast)
 
 
 @pytest.mark.asyncio
-async def test_pubsub(bus, mocked, redis):
+async def test_pubsub(bus, redis):
+    global count, _message, _recipients
     channel_group_name = make_channel_group_name("test_channel")
     other_channel_group_name = make_channel_group_name("other_channel")
     ws_1, ws_2, ws_3 = "ws_1", "ws_2", "ws_3"
@@ -43,7 +44,9 @@ async def test_pubsub(bus, mocked, redis):
     # it is broadcasted to websocket connections that have subscribed to that channel group.
     await redis.publish(channel_group_name, "hey")
     await wait_for_message(bus.pubsub)
-    mocked.assert_called_once_with("hey", {ws_1, ws_2})
+    assert count == 1
+    assert _message == "hey"
+    assert _recipients == {ws_1, ws_2}
 
     await bus.unsubscribe(other_channel_group_name, ws_3)
     assert bus.get_channel_group_subscribers(other_channel_group_name) == set()
@@ -56,9 +59,14 @@ async def test_pubsub(bus, mocked, redis):
     await wait_for_message(bus.pubsub)
     assert bus.pubsub.channels == {}
 
+    # Reset values
+    count = 0
+    _message = _recipients = None
+
 
 @pytest.mark.asyncio
-async def test_run(bus, redis, mocker):
+async def test_run(bus, redis):
+    global count, _message, _recipients
     assert bus._running is None
 
     asyncio.create_task(bus.run())
@@ -72,11 +80,16 @@ async def test_run(bus, redis, mocker):
     await bus.subscribe(channel_group_name, ws_connection)
     assert bus._running.is_set()
 
-    mocker.patch.object(bus, "broadcast")
     await redis.publish(channel_group_name, "hey")
 
     # Give a chance to the bus task to receive the message
     await asyncio.sleep(1e-3)
-    bus.broadcast.assert_called_once_with("hey", {ws_connection})
+    assert count == 1
+    assert _message == "hey"
+    assert _recipients == {ws_connection}
 
     await bus.unsubscribe(channel_group_name, ws_connection)
+
+    # Reset values
+    count = 0
+    _message = _recipients = None
