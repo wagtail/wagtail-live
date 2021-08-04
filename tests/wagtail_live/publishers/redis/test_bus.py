@@ -29,7 +29,7 @@ async def test_pubsub(bus, mocker, redis):
 
     await bus.subscribe(other_channel_group_name, ws_3)
 
-    assert bus.get_channel_group_subscribers(channel_group_name) == set([ws_1, ws_2])
+    assert bus.get_channel_group_subscribers(channel_group_name) == {ws_1, ws_2}
     assert bus.pubsub.channels == {
         channel_group_name: bus.handle_message,
         other_channel_group_name: bus.handle_message,
@@ -39,10 +39,10 @@ async def test_pubsub(bus, mocker, redis):
     # it is broadcasted to websocket connections that have subscribed to that channel group.
     await redis.publish(channel_group_name, "hey")
     await wait_for_message(bus.pubsub)
-    bus.broadcast.assert_called_once_with("hey", set([ws_1, ws_2]))
+    bus.broadcast.assert_called_once_with("hey", {ws_1, ws_2})
 
     await bus.unsubscribe(other_channel_group_name, ws_3)
-    assert bus.get_channel_group_subscribers(other_channel_group_name) == set()
+    assert bus.get_channel_group_subscribers(other_channel_group_name) == {}
 
     await wait_for_message(bus.pubsub)
     assert bus.pubsub.channels == {channel_group_name: bus.handle_message}
@@ -73,6 +73,6 @@ async def test_run(bus, redis, mocker):
 
     # Give a chance to the bus task to receive the message
     await asyncio.sleep(1e-3)
-    bus.broadcast.assert_called_once_with("hey", set([ws_connection]))
+    bus.broadcast.assert_called_once_with("hey", {ws_connection})
 
     await bus.unsubscribe(channel_group_name, ws_connection)
