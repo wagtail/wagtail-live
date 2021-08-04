@@ -1,3 +1,6 @@
+import asyncio
+
+
 class BaseWebsocketPublisher:
     """Base class for publishers using the websocket technique."""
 
@@ -23,7 +26,9 @@ class BaseWebsocketPublisher:
             }
             for post in renders
         }
-        return self.publish(channel_id=channel_id, renders=renders, removals=removals)
+        asyncio.run(
+            self.publish(channel_id=channel_id, renders=renders, removals=removals)
+        )
 
     def publish(self, channel_id, renders, removals):
         """
