@@ -2,11 +2,11 @@
 
 import json
 import logging
-from functools import cached_property
 
 from django.http import HttpResponse, HttpResponseForbidden
 from django.urls import path
 from django.utils.decorators import method_decorator
+from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
