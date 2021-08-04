@@ -42,7 +42,7 @@ async def test_pubsub(bus, mocker, redis):
     bus.broadcast.assert_called_once_with("hey", {ws_1, ws_2})
 
     await bus.unsubscribe(other_channel_group_name, ws_3)
-    assert bus.get_channel_group_subscribers(other_channel_group_name) == {}
+    assert bus.get_channel_group_subscribers(other_channel_group_name) == set()
 
     await wait_for_message(bus.pubsub)
     assert bus.pubsub.channels == {channel_group_name: bus.handle_message}
