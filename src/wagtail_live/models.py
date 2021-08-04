@@ -203,21 +203,24 @@ class LivePageMixin(models.Model):
         posts = reversed(self.live_posts)
         current_posts, updated_posts = [], {}
         for post in posts:
-            if not post.value["show"]:
-                continue
-
             post_id = post.id
             current_posts.append(post_id)
 
             created = post.value["created"]
             if created > last_update_ts:  # This is a new post
-                updated_posts[post_id] = post.render(context={"block_id": post_id})
+                updated_posts[post_id] = {
+                    "show": post.value["show"],
+                    "content": post.render(context={"block_id": post.id}),
+                }
                 continue
 
             last_modified = post.value["modified"]
             if last_modified and last_modified > last_update_ts:
                 # This is an edited post
-                updated_posts[post_id] = post.render(context={"block_id": post_id})
+                updated_posts[post_id] = {
+                    "show": post.value["show"],
+                    "content": post.render(context={"block_id": post.id}),
+                }
 
         return (updated_posts, current_posts)
 

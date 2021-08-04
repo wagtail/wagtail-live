@@ -19,7 +19,11 @@ class BaseWebsocketPublisher:
         """
 
         renders = {
-            post.id: post.render(context={"block_id": post.id}) for post in renders
+            post.id: {
+                "show": post.value["show"],
+                "content": post.render(context={"block_id": post.id}),
+            }
+            for post in renders
         }
         return self.publish(channel_id=channel_id, renders=renders, removals=removals)
 
