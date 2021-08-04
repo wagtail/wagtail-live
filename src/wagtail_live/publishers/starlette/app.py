@@ -11,7 +11,8 @@ from ..utils import get_redis_url
 
 # Define the broadcast method to be used by the bus.
 async def broadcast(message, connections):
-    await asyncio.wait([ws.send_json(json.loads(message)) for ws in connections])
+    message = json.loads(message)
+    await asyncio.wait([ws.send_json(message) for ws in connections])
 
 
 BUS = RedisBus(url=get_redis_url(), broadcast=broadcast)
