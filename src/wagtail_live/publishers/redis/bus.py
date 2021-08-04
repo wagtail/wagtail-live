@@ -103,9 +103,7 @@ class RedisBus:
         if not self.get_channel_group_subscribers(channel_group_name):
             # Passing parameters as `channel=handler` to the pubsub.subscribe method
             # has the effect to call `handler` whenever a message is published on `channel`.
-            await self.pubsub.subscribe(
-                **{f"{channel_group_name}": self.handle_message}
-            )
+            await self.pubsub.subscribe(**{channel_group_name: self.handle_message})
 
         self.channel_groups[channel_group_name].add(ws_connection)
         self._set_running()
