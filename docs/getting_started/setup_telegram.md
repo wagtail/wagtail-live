@@ -1,4 +1,4 @@
-# Setup Telegram webhook receiver
+# Set up Telegram webhook receiver
 
 This document walks you through how to set up Telegram as an input source for your live blog and set a webhook connection to receive new updates.
 
