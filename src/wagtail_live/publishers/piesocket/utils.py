@@ -12,7 +12,7 @@ def get_piesocket_api_key():
         (str) Piesocket API key.
 
     Raises:
-        (ImproperlyConfigured) if the piesocket API key isn't specified in settings.
+        (ImproperlyConfigured) if the Piesocket API key isn't specified in settings.
     """
 
     api_key = getattr(settings, "PIESOCKET_API_KEY", None)
