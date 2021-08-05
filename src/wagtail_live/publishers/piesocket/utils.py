@@ -6,7 +6,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 @lru_cache(maxsize=1)
 def get_piesocket_api_key():
-    """Retrieves user's piesocket API key.
+    """Retrieves user's Piesocket API key.
 
     Returns:
         (str) Piesocket API key.
