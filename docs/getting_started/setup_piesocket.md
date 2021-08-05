@@ -17,7 +17,7 @@ In your dashboard, fill in the key name field and click the `CREATE NEW KEY` but
 ## Retrieve your API key, your secret and PieSocket endpoint
 
 Wagtail Live needs your `API_KEY` and your `SECRET`. It also needs the API endpoint to use.
-After creating a new key, you can click the little informations icon to find them as shown below:
+After creating a new key, you can click the little information icon to find them as shown below:
 
 
 ![PieSocket credentials](/images/piesocket_credentials.jpg)
