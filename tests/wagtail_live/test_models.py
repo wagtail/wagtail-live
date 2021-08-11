@@ -495,7 +495,8 @@ def test_get_updates_since_hidden_posts(blog_page_factory):
         last_update_ts=datetime(2021, 2, 1),
     )
 
-    assert current_posts == ["3", "1"]
+    assert current_posts == ["3", "2", "1"]
     assert "3" in updated_posts
-    assert "2" not in updated_posts
+    assert "2" in updated_posts
+    assert updated_posts["2"]["show"] is False
     assert "1" not in updated_posts

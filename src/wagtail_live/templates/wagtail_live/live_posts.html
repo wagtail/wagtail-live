@@ -6,6 +6,10 @@
             <div class="live-post-wrapper">
                 {% include_block post with block_id=post.id %}
             </div>
+        {% else %}
+            <div class="live-post-wrapper" style="display: none;">
+                {% include_block post with block_id=post.id %}
+            </div>
         {% endif %}
     {% endfor %}
 </div>

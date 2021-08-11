@@ -12,12 +12,17 @@ function getPostByID(livePostID) {
  * Replaces a previous live post if it's been edited or 
  * adds a new live post if it's been created.
  * @param {string} updateID - ID of the live post to update
- * @param {string} value - Value of the new content of this live post.
+ * @param {dict} value - Dict containing the show value and the content 
+ * of the post being processed.
  */
 function process(updateID, value) {
     let postsDiv = document.querySelector("#live-posts");
-    let livePost = createLivePostWrapper(value);
+    let livePost = createLivePostWrapper(value.content);
     let post = getPostByID(updateID);
+
+    if (!value.show) {
+        livePost.style.display = "none";
+    }
 
     if (post != null) {
         postsDiv.replaceChild(livePost, post.parentElement);
