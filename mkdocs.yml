@@ -17,6 +17,7 @@ nav:
     - Setup Telegram webhook receiver: getting_started/setup_telegram.md
     - Setup Django channels publisher: getting_started/setup_django_channels.md
     - Setup long polling publisher: getting_started/setup_long_polling.md
+    - Setup PieSocket publisher: getting_started/setup_piesocket.md
     - Setup a local web server with ngrok: getting_started/setup_ngrok.md
   - Reference:
       - Settings: reference/settings.md
