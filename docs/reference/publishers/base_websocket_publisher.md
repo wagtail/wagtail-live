@@ -1,6 +1,6 @@
-# Interval Polling
+# Base Websocket Publisher
 
-::: wagtail_live.publishers.polling.IntervalPollingPublisher
+::: wagtail_live.publishers.websocket.BaseWebsocketPublisher
     rendering:
       show_root_heading: true
       show_signature_annotations: true

@@ -6,13 +6,14 @@ from django.core.exceptions import ImproperlyConfigured
 
 @lru_cache(maxsize=1)
 def get_telegram_bot_token():
-    """Retrieves user's telegram bot token.
+    """
+    Retrieves user's telegram bot token.
 
     Returns:
-        (str) telegram bot token.
+        str: telegram bot token.
 
     Raises:
-        (ImproperlyConfigured) if the telegram bot token isn't specified in settings.
+        ImproperlyConfigured: if the telegram bot token isn't specified in settings.
     """
 
     bot_token = getattr(settings, "TELEGRAM_BOT_TOKEN", "")
@@ -25,13 +26,14 @@ def get_telegram_bot_token():
 
 @lru_cache(maxsize=1)
 def get_telegram_webhook_url():
-    """Retrieves the webhook url which Telegram sends new updates to.
+    """
+    Retrieves the webhook url which Telegram sends new updates to.
 
     Returns:
-        (str) a URL.
+        str: a URL.
 
     Raises:
-        (ImproperlyConfigured) if the telegram webhook url isn't specified in settings.
+        ImproperlyConfigured: if the telegram webhook url isn't specified in settings.
     """
 
     base_webhook_url = getattr(settings, "TELEGRAM_WEBHOOK_URL", "")
