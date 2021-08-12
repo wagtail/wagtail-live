@@ -12,7 +12,7 @@ Once you have created an account, you will need to create a new **API KEY**.
 In your dashboard, fill in the key name field and click the `CREATE NEW KEY` button.
 
 
-![PieSocket dashboard screenshot](/images/piesocket_dashboard.jpg)
+![PieSocket dashboard screenshot](https://wagtail.github.io/wagtail-live/images/piesocket_dashboard.jpg)
 
 ## Retrieve your API key, your secret and PieSocket endpoint
 
@@ -20,8 +20,7 @@ Wagtail Live needs your `API_KEY` and your `SECRET`. It also needs the API endpo
 After creating a new key, you can click the little information icon to find them as shown below:
 
 
-![PieSocket credentials](/images/piesocket_credentials.jpg)
-
+![PieSocket credentials](https://wagtail.github.io/wagtail-live/images/piesocket_credentials.jpg)
 ### Save your credentials
 
 Let's save the API key and the secret as environment variables like this:
