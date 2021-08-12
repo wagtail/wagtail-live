@@ -13,7 +13,9 @@ from wagtail_live.blocks import LivePostBlock
 from wagtail_live.signals import live_page_update
 
 PostContent = namedtuple("PostContent", ["show", "content"])
-sync_admin = lazy(lambda: getattr(settings, "WAGTAIL_LIVE_SYNC_WITH_ADMIN", True), bool)
+sync_with_admin = lazy(
+    lambda: getattr(settings, "WAGTAIL_LIVE_SYNC_WITH_ADMIN", True), bool
+)
 
 
 class LivePageMixin(models.Model):
@@ -64,14 +66,17 @@ class LivePageMixin(models.Model):
 
         super().__init__(*args, **kwargs)
 
-        if sync_admin():
+        if sync_with_admin():
             self._previous_posts = {
                 post.id: PostContent(post.value["show"], post.value["content"])
                 for post in self.live_posts
             }
 
-    def save(self, sync=sync_admin(), *args, **kwargs):
-        if sync:
+    def save(self, sync=True, *args, **kwargs):
+        """Update live page on save depending on the WAGTAIL_LIVE_SYNC_WITH_ADMIN setting."""
+
+        sync_changes = sync and sync_with_admin()
+        if sync_changes:
             renders, _new_posts, _seen = [], {}, set()
             now = timezone.now()
 
@@ -103,7 +108,7 @@ class LivePageMixin(models.Model):
 
         result = super().save(*args, **kwargs)
 
-        if sync and _has_changed:
+        if sync_changes and _has_changed:
             # Update extra attributes when the page is saved
             self._previous_posts = _new_posts
 
