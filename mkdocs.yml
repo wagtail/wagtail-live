@@ -25,11 +25,13 @@ nav:
       - LivePageMixin: reference/live-page-mixin.md
       - Receivers:
         - BaseMessageReceiver: reference/receivers/base-message-receiver.md
+        - WebhookReceiverMixin: reference/receivers/webhook_receiver_mixin.md
         - Slack: reference/receivers/slack.md
         - Telegram: reference/receivers/telegram.md
         - Webapp: reference/receivers/webapp.md
       - Publishers:
-        - PollingMixin: reference/publishers/polling-mixin.md
+        - Base Websocket Publisher: reference/publishers/base_websocket_publisher.md
+        - Polling publisher mixin: reference/publishers/polling-mixin.md
         - Interval polling: reference/publishers/interval-polling.md
         - Long polling: reference/publishers/long-polling.md
       - Utilities: reference/utils.md

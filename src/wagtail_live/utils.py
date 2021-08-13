@@ -12,14 +12,16 @@ SUPPORTED_MIME_TYPES = ["png", "jpeg", "gif"]
 
 
 def get_live_page_model():
-    """Retrieves the live page model specified.
+    """
+    Retrieves the live page model specified in user's settings.
 
     Returns:
-        (LivePageMixin) corresponding to the live page model specified.
+        LivePageMixin:
+            The live page model specified.
 
     Raises:
-        (ImproperlyConfigured) if no live page model is specified or the one
-        specified doesn't inherit from wagtail_live.models.LivePageMixin.
+        ImproperlyConfigured: if no live page model is specified or
+            the one specified doesn't inherit from `wagtail_live.models.LivePageMixin`.
     """
 
     from wagtail_live.models import LivePageMixin
@@ -44,14 +46,15 @@ def get_live_page_model():
 
 
 def get_live_receiver():
-    """Retrieves the live receiver chosen.
+    """
+    Retrieves the live receiver specified in user's settings.
 
     Returns:
-        (BaseMessageReceiver) corresponding to the live receiver specified if found else None.
+        BaseMessageReceiver: The live receiver specified if found else `None`.
 
     Raises:
-        (ImproperlyConfigured) if the receiver specified doesn't inherit from
-        wagtail_live.receivers.BaseMessageReceiver.
+        ImproperlyConfigured: if the receiver specified doesn't inherit from
+            `wagtail_live.receivers.BaseMessageReceiver`.
     """
 
     from wagtail_live.receivers.base import BaseMessageReceiver
@@ -74,13 +77,14 @@ def get_live_receiver():
 
 
 def get_live_publisher():
-    """Retrieves the live receiver chosen.
+    """
+    Retrieves the live publisher specified in user's settings.
 
     Returns:
-        (Publisher) corresponding to the live publisher specified.
+        Publisher: The live publisher specified.
 
     Raises:
-        (ImproperlyConfigured) if no publisher class is specified.
+        ImproperlyConfigured: if no publisher class is specified in settings.
     """
 
     live_publisher = getattr(settings, "WAGTAIL_LIVE_PUBLISHER", "")
@@ -97,26 +101,35 @@ def get_live_publisher():
 
 
 def get_polling_timeout():
-    """Retrieves the duration for the polling timeout for the long polling technique.
+    """
+    Retrieves the duration of the polling timeout for the long polling technique.
+
     The user can set this parameter in his settings by doing so:
+    ```python
     WAGTAIL_LIVE_POLLING_TIMEOUT = (duration in seconds)
-    Defaults to 60(seconds).
+    ```
+
+    The default value is 60 seconds.
 
     Returns:
-        (int) the duration of the polling timeout if defined else 60.
+        int: The duration of the polling timeout if defined else 60.
     """
 
     return getattr(settings, "WAGTAIL_LIVE_POLLING_TIMEOUT", 60)
 
 
 def get_polling_interval():
-    """Retrieves the duration of the polling interval for the interval polling technique.
+    """
+    Retrieves the duration of the polling interval for the interval polling technique.
+
     The user can set this parameter in his settings by doing so:
+    ```python
     WAGTAIL_LIVE_POLLING_INTERVAL = (duration in ms)
-    Defaults to 3000(ms).
+    ```
+    The default value is 3000 milliseconds.
 
     Returns:
-        (int) the duration of the polling interval if defined else 3000.
+        int: the duration of the polling interval if defined else 3000.
     """
 
     return getattr(settings, "WAGTAIL_LIVE_POLLING_INTERVAL", 3000)
@@ -124,13 +137,16 @@ def get_polling_interval():
 
 @lru_cache(maxsize=None)
 def is_embed(text):
-    """Checks if a text is a link to embed.
+    """
+    Checks if a text is a link to embed.
 
     Args:
         text (str): Text to check
 
     Returns:
-        (bool) True if text corresponds to an embed link False else
+        bool:
+        - `True` if text corresponds to an embed link.
+        - `False` else.
     """
 
     for provider in all_providers:

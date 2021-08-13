@@ -16,7 +16,8 @@ from wagtail_live.utils import (
 
 
 class PollingPublisherMixin(View):
-    """A mixin for publishers using the polling technique.
+    """
+    A mixin for publishers using the polling technique.
 
     Attributes:
         url_path (str):
@@ -44,20 +45,21 @@ class PollingPublisherMixin(View):
 
     @staticmethod
     def get_last_update_client_from_request(request):
-        """Retrieves the timestamp of the last update received
-        in the client side.
+        """
+        Retrieves the timestamp of the last update received in the client side.
 
         Args:
             request (HttpRequest): client side request
 
         Returns:
-            (float) timestamp of the last update received in the client side.
+            float: Timestamp of the last update received in the client side.
         """
 
         return float(request.GET.get("last_update_ts"))
 
     def post(self, request, channel_id, *args, **kwargs):
-        """Initiates communication with client side and sends current live posts.
+        """
+        Initiates communication with client side and sends current live posts.
 
         Args:
             request (HttpRequest):
@@ -66,22 +68,28 @@ class PollingPublisherMixin(View):
                 Id of the channel to get updates from.
 
         Returns:
-            (JSONResponse) containing:
-            - A list of the IDs of the current live posts for the page requested.
-                Client side uses this list to keep track of live posts that have been deleted.
+            HttpResponse:
+            - JSONResponse with the following informations:
+                - A list of the IDs of the current live posts for the page requested.
 
-            - Timestamp of the last update for the page requested.
-                Client side uses this to know when new updates are available.
+                    Client side uses this list to keep track of live posts that have been deleted.
 
-            - The duration of the polling interval for interval polling.
+                - Timestamp of the last update for the page requested.
 
-            (Http404) if a page corresponding to the channel_id given doesn't exist.
+                    Client side uses this to know when new updates are available.
+
+                - The duration of the polling interval for interval polling.
+
+                if a page corresponding to the `channel_id` given exists.
+
+            - Http404 else.
         """
 
         raise NotImplementedError
 
     def get(self, request, channel_id, *args, **kwargs):
-        """Retrieves and sends new updates.
+        """
+        Retrieves and sends new updates to the client side.
 
         Args:
             request (HttpRequest):
@@ -91,37 +99,43 @@ class PollingPublisherMixin(View):
                 Id of the channel to get last update's timestamp from.
 
         Returns:
-            (JSONResponse) containing:
-            - A dictionnary of the live posts updated since client side's last update timestamp.
-                Keys represents IDs of the live posts edited and the values are the
-                new content of those live posts.
+            HttpResponse:
+            - JSONResponse with the following informations:
+                - A mapping of the live posts updated since client side's last update timestamp.
 
-            - A list of the IDs of the current live posts for the page requested.
-                Client side compares this list to the one it has and remove the live posts
-                whose IDs aren't in this new list.
+                    Keys represents IDs of the live posts edited and the values
+                    are the new content of those live posts.
 
-            - Timestamp of the last update for the page requested.
+                - A list of the IDs of the current live posts for the page requested.
 
-            (Http404) if a page corresponding to the channel_id given doesn't exist.
+                    Client side compares this list to the one it has and remove the live posts
+                    whose IDs aren't in this new list.
+
+                - Timestamp of the last update for the page requested.
+
+                if a page corresponding to the `channel_id` given exists.
+
+            - Http404 else.
         """
 
         raise NotImplementedError
 
 
 class IntervalPollingPublisher(PollingPublisherMixin):
-    """Interval polling Publisher. Class Based View.
+    """
+    Interval polling Publisher. Class Based View.
 
     This class handles delivering new updates to the client side (Interval polling technique).
     It accepts 3 request methods (POST, HEAD and GET) which correspond to the following steps:
 
-    1- The client side initiates (shake) the communication by sending a POST request.
+    1. The client side initiates (shake) the communication by sending a POST request.
         The publisher acknowledges by sending relevant data to the client side.
 
-    2- The client side asks if there are any updates by sending a HEAD request.
+    2. The client side asks if there are any updates by sending a HEAD request.
         If no updates are available, client side sleeps for the duration of the polling interval
         and repeats this step.
 
-    3- If new updates are available, client side sends a GET request to get the new updates.
+    3. If new updates are available, client side sends a GET request to get the new updates.
     """
 
     url_name = "interval-polling"
@@ -139,7 +153,8 @@ class IntervalPollingPublisher(PollingPublisherMixin):
         )
 
     def head(self, request, channel_id, *args, **kwargs):
-        """Sends the timestamp of the last update for the page requested.
+        """
+        Sends the timestamp of the last update for the page requested.
 
         Args:
             request (HttpRequest):
@@ -148,13 +163,15 @@ class IntervalPollingPublisher(PollingPublisherMixin):
                 Id of the channel to get last update's timestamp from.
 
         Returns:
-            (HttpResponse) containing the timestamp of the last update for the page requested.
+            HttpResponse:
+            - OK: if a page corresponding to the `channel_id` given exists.
 
-            Client side checks if this value is greater than the last one received.
-            In such case, the client side knows that new updates are available and sends a
-            GET request to get those updates.
+                The timestamp of the last update for the page requested is sent in the response.
+                Client side checks if this value is greater than the last one received.
+                In such case, the client side knows that new updates are available and sends a
+                GET request to get those updates.
 
-            (Http404) if a page corresponding to the channel_id given doesn't exist.
+            - Http404: else.
         """
 
         live_page = get_object_or_404(self.model, channel_id=channel_id)
@@ -187,14 +204,16 @@ class LongPollingPublisher(PollingPublisherMixin):
     This class handles delivering new updates to the client side (Long polling technique).
     It accepts 2 request methods (POST and GET) which correspond to the following steps:
 
-    1- The client side initiates (shake) the communication by sending a POST request.
+    1. The client side initiates (shake) the communication by sending a POST request.
         The publisher acknowledges by sending relevant data to the client side.
 
-    2- The client side asks new updates by sending a GET request.
+    2. The client side asks new updates by sending a GET request.
+
         Server side keeps the connection open until a new update is available.
         In that case, updates are directly sent to client side.
+
         If the polling timeout duration is reached, it sends a response
-        containing a timeOutReached parameter which indicates the client side
+        containing a `timeOutReached` parameter which indicates the client side
         that there aren't updates available.
     """
 
@@ -212,7 +231,9 @@ class LongPollingPublisher(PollingPublisherMixin):
         )
 
     def get(self, request, channel_id, *args, **kwargs):
-        """Sends updates when they are available as long as the polling timeout isn't reached.
+        """
+        Sends updates when they are available as long as the polling timeout isn't reached.
+
         See base class.
         """
 

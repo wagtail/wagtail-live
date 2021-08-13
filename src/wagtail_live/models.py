@@ -59,22 +59,19 @@ class LivePageMixin(models.Model):
         super().clean()
 
     def _get_live_post_index(self, message_id):
-        """Retrieves the index of a live post.
-
-        Args:
-            message_id (str):
-                ID of the message corresponding to a live post.
-
-        Returns:
-            (int) Index of the live post if found else -1
-        """
-
         for i, post in enumerate(self.live_posts):
             if post.value["message_id"] == message_id:
                 return i
 
     def get_live_post_index(self, message_id):
-        """Retrieves index of a livepost."""
+        """Retrieves the index of a live post.
+
+        Args:
+            message_id (str): ID of the message corresponding to a live post.
+
+        Returns:
+            int: Index of the live post if found else -1
+        """
 
         return self._get_live_post_index(message_id=message_id)
 
@@ -82,13 +79,13 @@ class LivePageMixin(models.Model):
         """Retrieves a live post by its index.
 
         Args:
-            live_post_index (str): Index of the live post to look for.
+            live_post_index (int): Index of the live post to look for.
 
         Returns:
-            (LivePostBlock) The live post instance
+            LivePostBlock: The live post instance
 
         Raises:
-            (IndexError) if a live post with the given index doesn't exist.
+            IndexError: if a live post with the given index doesn't exist.
         """
 
         return self.live_posts[live_post_index]
@@ -101,10 +98,10 @@ class LivePageMixin(models.Model):
                 ID of the message corresponding to a live post.
 
         Returns:
-            (LivePostBlock) The live post instance
+            LivePostBlock: The live post instance
 
         Raises:
-            (KeyError) if a live post with the given ID doesn't exist.
+            KeyError: if a live post with the given ID doesn't exist.
         """
 
         live_post_index = self.get_live_post_index(message_id=message_id)
@@ -167,7 +164,7 @@ class LivePageMixin(models.Model):
             message_id (str):
                 ID of the message corresponding to a live post.
         Raises:
-            (KeyError) if live post containing message with message_id doesn't exist.
+            KeyError: if live post containing message with message_id doesn't exist.
         """
 
         live_post_index = self.get_live_post_index(message_id=message_id)
@@ -195,8 +192,9 @@ class LivePageMixin(models.Model):
                 Timestamp of the last update.
 
         Returns:
-            (list, dict) a tuple containing the current live posts
-            and the updated posts since last_update_ts.
+            (list, dict):
+                a tuple containing the current live posts
+                and the updated posts since `last_update_ts`.
         """
 
         # Reverse posts list so that latest updates are processed later by the client side.

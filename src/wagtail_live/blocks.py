@@ -50,46 +50,50 @@ class LivePostBlock(StructBlock):
 
 
 def construct_text_block(text):
-    """Helper function to construct a text block for a LivePostBlock content.
+    """
+    Helper function to construct a text block for a LivePostBlock content.
 
     Args:
         text (str): Text to add
 
     Returns:
-        a TextBlock
+        TextBlock: a TextBlock filled with the given text.
     """
 
     return TextBlock().to_python(text)
 
 
 def construct_image_block(image):
-    """Helper function to construct an image block for a LivePostBlock content.
+    """
+    Helper function to construct an image block for a LivePostBlock content.
 
     Args:
         image (pk): Foreign key to the image to add
 
     Returns:
-        an ImageBlock
+        ImageBlock: an ImageBlock filled with the given image.
     """
 
     return ImageChooserBlock().to_python(image.id)
 
 
 def construct_embed_block(url):
-    """Helper function to construct an embed block for a LivePostBlock content.
+    """
+    Helper function to construct an embed block for a LivePostBlock content.
 
     Args:
         url (str): Url of the embed
 
     Returns:
-        an EmbedBlock
+        EmbedBlock: an EmbedBlock filled with the given url.
     """
 
     return EmbedBlock().to_python(url)
 
 
 def construct_live_post_block(message_id, created):
-    """Helper function to construct a LivePostBlock .
+    """
+    Helper function to construct a LivePostBlock.
 
     Args:
         message_id (str):
@@ -98,7 +102,7 @@ def construct_live_post_block(message_id, created):
             Date and time of message creation.
 
     Returns:
-        a LivePostBlock
+        LivePostBlock: a LivePostBlock
     """
 
     return LivePostBlock().to_python(
@@ -110,7 +114,9 @@ def construct_live_post_block(message_id, created):
 
 
 def add_block_to_live_post(block_type, block, live_block):
-    """Adds a new content block to a live post.
+    """
+    Adds a new content block to a live post.
+
     Args:
         block_type (str):
             Type of the block to add
@@ -127,7 +133,9 @@ def add_block_to_live_post(block_type, block, live_block):
 
 
 def clear_live_post_content(live_post):
-    """Clears the content of a live post.
+    """
+    Clears the content of a live post.
+
     Args:
         live_post (livePostBlock): Live post which content will be cleared.
     """

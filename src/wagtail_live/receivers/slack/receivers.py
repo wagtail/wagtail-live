@@ -23,11 +23,12 @@ class SlackWebhookMixin(WebhookReceiverMixin):
     url_name = "slack_events_handler"
 
     def post(self, request, *args, **kwargs):
-        """Checks if Slack is trying to verify our Request URL.
+        """
+        Checks if Slack is trying to verify our Request URL.
 
         Returns:
-            (HttpResponse) containing the challenge string if Slack
-            is trying to verify our request URL.
+            HttpResponse:
+                containing the challenge string if Slack is trying to verify our request URL.
         """
 
         payload = json.loads(request.body.decode("utf-8"))
@@ -37,21 +38,23 @@ class SlackWebhookMixin(WebhookReceiverMixin):
 
     @staticmethod
     def sign_slack_request(content):
-        """Signs content from a Slack request using the SLACK_SIGNING_SECRET as key."""
+        """Signs content from a Slack request using the `SLACK_SIGNING_SECRET` as key."""
 
         hasher = hmac.new(str.encode(settings.SLACK_SIGNING_SECRET), digestmod=sha256)
         hasher.update(str.encode(content))
         return hasher.hexdigest()
 
     def verify_request(self, request, body):
-        """Verifies Slack requests.
-        See https://api.slack.com/authentication/verifying-requests-from-slack.
+        """
+        Verifies Slack requests.
+        See: [Verifying requests from Slack](https://api.slack.com/authentication/
+        verifying-requests-from-slack).
 
         Args:
             request (HttpRequest): from Slack
 
         Raises:
-            (RequestVerificationError) if request failed to be verified.
+            RequestVerificationError: if request failed to be verified.
         """
 
         timestamp = request.headers.get("X-Slack-Request-Timestamp")
@@ -178,12 +181,13 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
         return self.get_message_files(message=message["message"])
 
     def get_embed(self, text):
-        """Slack sends url in this format:
-        <https://twitter.com/wagtail/|https://twitter.com/wagtail/>'
-        where the first part is the full url and the second part
-        represents the user's input.
+        """
+        Slack sends url in this format:
+        `<https://twitter.com/wagtail/|https://twitter.com/wagtail/>`
+        where the first part is the full url and the second part represents the user's input.
 
-        See https://api.slack.com/reference/surfaces/formatting#links-in-retrieved-messages
+        See [Links in retrieved messages](https://api.slack.com/reference/surfaces/
+        formatting#links-in-retrieved-messages).
         """
 
         # Check if the text provided is a Slack-like url
@@ -196,8 +200,11 @@ class SlackEventsAPIReceiver(BaseMessageReceiver, SlackWebhookMixin):
         return ""
 
     def parse_text(self, text):
-        """See base class. See also:
-        https://api.slack.com/reference/surfaces/formatting#links-in-retrieved-messages
+        """
+        See [Links in retrieved messages](https://api.slack.com/reference/surfaces/
+        formatting#links-in-retrieved-messages).
+
+        See also base class.
         """
 
         url_format = re.compile(r"<http([^|]+?)(\|([^|]+?))?>")

@@ -70,8 +70,10 @@ class TelegramWebhookReceiver(TelegramWebhookMixin, BaseMessageReceiver):
     """Telegram webhook receiver."""
 
     def dispatch_event(self, event):
-        """Telegram doesn't send an update when a message is deleted.
-        See base class.
+        """
+        **Note**: Telegram doesn't send an update when a message is deleted.
+
+        See also base class.
         """
 
         for edit_type in ["edited_message", "edited_channel_post"]:
@@ -111,8 +113,10 @@ class TelegramWebhookReceiver(TelegramWebhookMixin, BaseMessageReceiver):
         live_page.update_live_post(live_post=live_post)
 
     def handle_bot_command(self, message):
-        """Handles the following bot commands:
-        /get_chat_id: returns the id of the current chat.
+        """
+        Handles the following bot commands:
+
+        - `/get_chat_id`: returns the id of the current chat.
         """
 
         command = message["entities"][0]
@@ -142,8 +146,10 @@ class TelegramWebhookReceiver(TelegramWebhookMixin, BaseMessageReceiver):
         return str(message["chat"]["id"])
 
     def get_message_id_from_message(self, message):
-        """Messages containing multiple images have a media_group_id attribute.
-        See base class.
+        """
+        Messages containing multiple images have a `media_group_id` attribute.
+
+        See also base class.
         """
 
         msg_id = message.get("media_group_id") or message.get("message_id")
@@ -160,10 +166,13 @@ class TelegramWebhookReceiver(TelegramWebhookMixin, BaseMessageReceiver):
         }
 
     def process_text(self, live_post, message_text):
-        """Use the message entities to convert links.
-        A raw link isn't converted by Telegram.
-        A link with a description is sent as a `text_link` entity.
-        See base class.
+        """
+        Use the message entities to convert links.
+
+        A raw link isn't converted by Telegram and a link with a description
+        is sent as a `text_link` entity.
+
+        See also base class.
         """
 
         text = message_text["text"]
@@ -198,14 +207,16 @@ class TelegramWebhookReceiver(TelegramWebhookMixin, BaseMessageReceiver):
         return super().process_text(live_post=live_post, message_text=text)
 
     def get_file_path(self, file_id):
-        """Retrieves the file_path of a Telegram file.
-        The file_path is necessary to have more infos about the image and download it.
+        """
+        Retrieves the `file_path` of a Telegram file.
+
+        The `file_path` is necessary to have more infos about the image and to download it.
 
         Args:
             file_id (str): Id of the file to download.
 
         Returns:
-            (str) The file_path property of the file as sent by Telegram.
+            str: The `file_path` property of the file as sent by Telegram.
         """
 
         response = requests.get(

@@ -45,7 +45,8 @@ class BaseMessageReceiver:
         return get_live_page_model()
 
     def dispatch_event(self, event):
-        """Dispatch an event to find corresponding handler.
+        """
+        Dispatches an event to find the corresponding handler.
 
         Args:
             event: New event from a messaging app.
@@ -54,46 +55,50 @@ class BaseMessageReceiver:
         raise NotImplementedError
 
     def get_channel_id_from_message(self, message):
-        """Retrieves a channel ID from a message.
+        """
+        Retrieves a channel ID from a message.
 
         Args:
-            message: A received message from a messaging app
+            message: A received message from a messaging app.
 
         Returns:
-            ID of the channel which the given message belongs to
+            str: ID of the channel which the given message belongs to.
         """
 
         raise NotImplementedError
 
     def get_live_page_from_channel_id(self, channel_id):
-        """Retrieves the live page with a given channel ID.
+        """
+        Retrieves the live page with a given channel ID.
 
         Args:
             channel_id (str): Channel ID
 
         Returns:
-            (LivePageMixin) The livepage corresponding to channel ID.
+            LivePageMixin: The livepage corresponding to `channel_id`.
 
         Raises:
-            Http404 if a page with the given channel ID doesn't exist.
+            Http404: if a page with the given `channel_id` doesn't exist.
         """
 
         return self.model.objects.get(channel_id=channel_id)
 
     def get_message_id_from_message(self, message):
-        """Retrieves message's ID.
+        """
+        Retrieves message's ID.
 
         Args:
             message: A received message from a messaging app
 
         Returns:
-            Id of the given message
+            str: Id of the given message
         """
 
         raise NotImplementedError
 
     def get_message_text(self, message):
-        """Retrieves the text of a message.
+        """
+        Retrieves the text of a message.
 
         A message is made of text and files.
 
@@ -101,13 +106,14 @@ class BaseMessageReceiver:
             message: A received message from a messaging app
 
         Returns:
-            (str) Text of the given message.
+            str: Text of the given message.
         """
 
         raise NotImplementedError
 
     def get_message_files(self, message):
-        """Retrieves the files of a message.
+        """
+        Retrieves the files of a message.
 
         A message is made of text and files.
 
@@ -115,145 +121,154 @@ class BaseMessageReceiver:
             message: A received message from a messaging app
 
         Returns:
-            (list) of files included in the given message.
+            list: Files included in the given message.
         """
 
         raise NotImplementedError
 
     def get_image_title(self, image):
-        """Retrieves the title of an image.
+        """
+        Retrieves the title of an image.
 
         Args:
             image (dict): Informations about an image
 
         Returns:
-            (str) Title of the image.
+            str: Title of the image.
         """
 
         raise NotImplementedError
 
     def get_image_name(self, image):
-        """Retrieves the name of an image.
+        """
+        Retrieves the name of an image.
 
         Args:
             image (dict): Informations about an image
 
         Returns:
-            (str) Name of the image.
+            str: Name of the image.
         """
 
         raise NotImplementedError
 
     def get_image_mimetype(self, image):
-        """Retrieves the mimetype of an image.
+        """
+        Retrieves the mimetype of an image.
 
         Args:
             image (dict): Informations about an image
 
         Returns:
-            (str) mimetype of the image.
+            str: Mimetype of the image.
         """
 
         raise NotImplementedError
 
     def get_image_content(self, image):
-        """Retrieves the content of an image.
+        """
+        Retrieves the content of an image.
 
         Args:
             image (dict): Informations about an image
 
         Returns:
-            (File) Content of the image.
+            File: Content of the image.
         """
 
         raise NotImplementedError
 
     def get_image_dimensions(self, image):
-        """Retrieves the width and height of an image.
+        """
+        Retrieves the width and height of an image.
 
         Args:
             image (dict): Informations about an image
 
         Returns:
-            (int, int) Width and height of the image.
+            (int, int): Width and height of the image.
 
         Raises:
-            ValueError if the width and height of the image can't be retrieved.
+            ValueError: if the width and height of the image can't be retrieved.
         """
 
         raise NotImplementedError
 
     def get_message_id_from_edited_message(self, message):
-        """Retrieves the ID of the original message.
+        """
+        Retrieves the ID of the original message.
 
         Args:
-            message: A received message from a messaging app
+            message: A received message from a messaging app.
 
         Returns:
-            ID of the original message thet is being edited.
+            str: ID of the original message that is being edited.
         """
 
         raise NotImplementedError
 
     def get_message_text_from_edited_message(self, message):
-        """Retrieves the text an edited message
+        """
+        Retrieves the text an edited message.
 
         Args:
-            message: A received message from a messaging app
+            message: A received message from a messaging app.
 
         Returns:
-            Text of the edited message
+            str: Text of the edited message.
         """
 
         raise NotImplementedError
 
     def get_message_files_from_edited_message(self, message):
-        """Retrieves the files  from an edited message
+        """
+        Retrieves the files from an edited message.
 
         Args:
-            message: A received message from a messaging app
+            message: A received message from a messaging app.
 
         Returns:
-            files of the edited message
+            list: Files of the edited message.
         """
 
         raise NotImplementedError
 
     def get_embed(self, text):
-        """Check if a text is an embed for this receiver and return embed URL if so.
+        """
+        Checks if a text is an embed for this receiver and return embed URL if so.
 
         Args:
-            text (str): Text to check
+            text (str): Text to check.
 
         Returns:
-            (str) URL of the embed if the text contains an embed, else "".
+            str: URL of the embed if the text contains an embed, else `""`.
         """
 
         return text if is_embed(text=text) else ""
 
     def parse_text(self, text):
-        """Parses a raw text content according to the input source formatting rules.
+        """
+        Parses a raw text content according to the input source formatting rules.
 
         Args:
-            text (str): a text
+            text (str): a text.
 
         Returns:
-            (str) the actual content of the text.
-                Returns the text itself by default.
+            str: the actual content of the text. (Returns the text itself by default).
         """
 
         return text
 
     def process_text(self, live_post, message_text):
-        """Processes the text of a message.
+        """
+        Processes the text of a message.
 
-        Parses the message, constructs corresponding block types
-        i.e Embed or Text and add those blocks to the given
-        live post.
+        Parses the message, constructs corresponding block types i.e Embed or Text
+        and add those blocks to the given live post.
 
         Args:
             live_post (LivePostBlock):
-                Live post to update
+                Live post to update.
             message_text (str):
                 Text to add to a live post.
         """
@@ -283,14 +298,14 @@ class BaseMessageReceiver:
             )
 
     def process_files(self, live_post, files):
-        """Processes the files of a message.
+        """
+        Processes the files of a message.
 
-        Creates the corresponding block for any file and add it
-        to the given live post.
+        Creates the corresponding block for any file and adds it to the given live post.
 
         Args:
             live_post (LivePostBlock):
-                Live post to update
+                Live post to update.
             files (list):
                 Files to add to a live post.
         """
@@ -329,12 +344,12 @@ class BaseMessageReceiver:
             )
 
     def add_message(self, message):
-        """Adds a received message from a messaging app to the
-        live page corresponding to the channel where the
-        message was posted if such a page exists.
+        """
+        Adds a received message from a messaging app to the live page corresponding
+        to the channel where the message was posted if such a page exists.
 
         Args:
-            message: A message received from a messaging app
+            message: A message received from a messaging app.
         """
 
         channel_id = self.get_channel_id_from_message(message=message)
@@ -355,12 +370,12 @@ class BaseMessageReceiver:
         live_page.add_live_post(live_post=live_post)
 
     def change_message(self, message):
-        """Changes an edited message in a messaging app in the
-        live page corresponding to the channel where the
-        message was posted if such a page exists.
+        """
+        Changes an edited message in a messaging app in the live page corresponding
+        to the channel where the message was posted if such a page exists.
 
         Args:
-            message: A message edited from a messaging app
+            message: A message edited from a messaging app.
         """
 
         channel_id = self.get_channel_id_from_message(message=message)
@@ -382,11 +397,12 @@ class BaseMessageReceiver:
         live_page.update_live_post(live_post=live_post)
 
     def delete_message(self, message):
-        """Deletes a message in the live page corresponding to
-        the channel where the message was posted if such a page exists.
+        """
+        Deletes a message in the live page corresponding to the channel where
+        the message was posted if such a page exists.
 
         Args:
-            message: A message deleted from a messaging app
+            message: A message deleted from a messaging app.
         """
 
         channel_id = self.get_channel_id_from_message(message=message)
@@ -401,7 +417,8 @@ class BaseMessageReceiver:
 
 @method_decorator(csrf_exempt, name="dispatch")
 class WebhookReceiverMixin(View):
-    """Mixin for receivers using the webhook technique.
+    """
+    Mixin for receivers using the webhook technique.
 
     Attributes:
         url_path (str):
@@ -414,32 +431,36 @@ class WebhookReceiverMixin(View):
     url_name = ""
 
     def verify_request(self, request, body, *args, **kwargs):
-        """Ensures that the incoming request comes from the messaging app expected.
+        """
+        Ensures that the incoming request comes from the messaging app expected.
 
         Args:
             request (HttpRequest): Http request
             body (str): Body of the request
 
         Raises:
-            (RequestVerificationError) if the request verification failed
+            RequestVerificationError: if the request verification failed
         """
 
         raise NotImplementedError
 
     def post(self, request, *args, **kwargs):
-        """This is the main method for Webhook receivers.
-        It handles new updates from messaging apps in these 3 steps:
-        1- Verify the request.
-        2- Dispatch the new event and process the updates received.
-        3- Acknowledge the request.
+        """
+        This is the main method for Webhook receivers.
+
+        It handles new updates from messaging apps in these three steps:
+
+        1. Verify the request.
+        2. Dispatch the new event and process the updates received.
+        3. Acknowledge the request.
 
         Args:
             request (HttpRequest): Http request
 
         Returns:
-            (HttpResponseForbidden) if the request couldn't be verified.
-            (HttpResponse) OK if the request is verified and updates have been processed
-            succesfully.
+            HttpResponse:
+            - `Forbidden` if the request couldn't be verified.
+            - `OK` if the request is verified and updates have been succesfully processed.
         """
 
         body = request.body.decode("utf-8")
@@ -453,43 +474,46 @@ class WebhookReceiverMixin(View):
 
     @classmethod
     def webhook_connection_set(cls):
-        """Checks if webhook connection is set.
-        We call this method before calling the set_webhook method in order to avoid sending
-        unneccesary requests to the messaging app server.
+        """
+        Checks if webhook a connection is set.
+
+        We call this method before calling the `set_webhook` method in order to
+        avoid sending unneccesary POST requests to the messaging app server.
 
         Returns:
-            (bool) True if webhook connection is set else False
+            bool:
+            - `True` if a webhook connection is set,
+            - `False` else.
         """
 
         raise NotImplementedError
 
     @classmethod
     def set_webhook(cls):
-        """Sets a webhook connection with the messaging app chosen.
-        This method may be trivial for messaging apps which propose
-        setting a webhook in their UI like Slack.
-        It may also be the main method if we have to set up
-        the webhook ourselves; like with Telegram for example.
+        """
+        Sets a webhook connection with the corresponding messaging app.
+
+        This method may be trivial for messaging apps which propose setting a webhook
+        in their UI like Slack. It may also be the main method if we have to set up
+        the webhook connection ourselves; like with Telegram for example.
 
         Raises:
-            (WebhookSetupError) if the webhook connection with the messaging app
-            chosen failed.
+            WebhookSetupError: if the webhook connection with the messaging app failed.
         """
 
         raise NotImplementedError
 
     @classmethod
     def get_urls(cls):
-        """Retrieves webhook urls after having ensured that a webhook connection
-        is enabled with the corresponding messaging app.
+        """
+        Retrieves webhook urls after having ensured that a webhook connection is enabled with
+        the corresponding messaging app.
 
         Returns:
-            (URLPattern) corresponding to the URL which messaging apps use
-            to send new updates.
+            URLPattern: URL which messaging apps use to send new updates.
 
         Raises:
-            (WebhookSetupError): if the webhook connection with the messaging app
-            didn't succeed.
+            WebhookSetupError: if the webhook connection with the messaging app didn't succeed.
         """
 
         if not cls.webhook_connection_set():
