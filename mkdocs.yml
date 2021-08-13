@@ -4,6 +4,9 @@ repo_url: https://github.com/wagtail/wagtail-live
 edit_uri: blob/main/docs/
 theme:
   name: 'material'
+  features:
+    - search.suggest
+    - search.highlight
   palette:
     primary: 'teal'
     accent: 'indigo'
@@ -38,6 +41,7 @@ nav:
   - Development: development.md
 
 plugins:
+  - search
   - mkdocstrings:
       handlers:
         python:
