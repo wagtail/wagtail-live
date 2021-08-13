@@ -52,4 +52,33 @@ You have to check the input source docs to see how this can be done.
 
 The relevant docs for Whatsapp can be found [here](https://developers.facebook.com/docs/whatsapp/api/webhooks).
 
-According to the docs, we 
+According to the Whatsapp docs, if we want to provide a new webhook url, we have to update the application settings of the WhatsApp Business API client. To achieve it, 
+> use the `/v1/settings/application` endpoint with a JSON message body containing the field names and values to be set.
+
+The field to update is `url` and the value will be our webhook url.
+
+A simple implementation of `set_webhook` would be:
+```python
+import requests
+
+class WhatsappWebhookReceiver(WebhookReceiverMixin):
+    # Previous code here
+
+    @classmethod
+    def set_webhook(cls):
+        """Sets webhook connection with Whatsapp API"""
+
+        response = requests.patch(
+            get_base_telegram_url() + "setWebhook",
+            params={
+                "url": get_telegram_webhook_url(),
+                "allowed_updates": [
+                    "message",
+                    "edited_message",
+                    "channel_post",
+                    "edited_channel_post",
+                ],
+            },
+        )
+
+
