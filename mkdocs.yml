@@ -1,9 +1,12 @@
 site_name: Wagtail Live
 site_url: https://wagtail.github.io/wagtail-live/
 repo_url: https://github.com/wagtail/wagtail-live
-edit_uri: blob/main/docs/
+repo_name: wagtail/wagtail-live
+edit_uri: edit/main/docs/
 theme:
   name: 'material'
+  icon:
+    repo: fontawesome/brands/github
   features:
     - search.suggest
     - search.highlight
