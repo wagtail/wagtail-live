@@ -93,7 +93,7 @@ def construct_embed_block(url):
 
 def construct_live_post_block(message_id, created):
     """
-    Helper function to construct a LivePostBlock .
+    Helper function to construct a LivePostBlock.
 
     Args:
         message_id (str):
