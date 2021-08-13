@@ -2,7 +2,6 @@ import json
 from datetime import datetime
 
 import pytest
-from django.utils.timezone import now
 from wagtail.core.blocks import StreamValue, StructValue
 from wagtail.embeds.blocks import EmbedValue
 
@@ -46,27 +45,6 @@ def test_construct_live_post_block():
             "content": StreamValue(ContentBlock(), []),
         },
     )
-
-
-def test_update_modified_field():
-    live_post_block = construct_live_post_block(
-        message_id="1234",
-        created=datetime(1970, 1, 1, 12, 00),
-    )
-    assert live_post_block["modified"] is None
-
-    live_post_block["content"] = StreamValue(ContentBlock(), [("text", "Some text")])
-    live_post_block.block.clean(live_post_block)
-
-    last_modified = live_post_block["modified"]
-    diff = now() - last_modified
-    assert diff.total_seconds() == pytest.approx(0.0, abs=1)
-
-    live_post_block["content"] = StreamValue(
-        ContentBlock(), [("text", "Some text modified")]
-    )
-    live_post_block.block.clean(live_post_block)
-    assert live_post_block["modified"] > last_modified
 
 
 def test_add_block_to_live_post_structvalue():
