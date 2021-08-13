@@ -10,7 +10,7 @@ install_requires = [
 ]
 
 docs_requires = [
-    "mkdocs>=1.1,<1.2",
+    "mkdocs>=1.2,<1.3",
     "mkdocs-material>=7.1,<7.2",
     "mkdocstrings>=0.15.2,<0.16",
 ]
