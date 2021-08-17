@@ -202,24 +202,6 @@ The `BaseMessageReceiver` proposes an interface to process updates received from
 
 ---
 
----
-
-**Tip:** In the early phases, you can add a line like this in the `dispatch_event` method:
-
-```python
-import json
-
-class InputSourceMessageReceiver(BaseMessageReceiver):
-    def dispatch_event(self, event):
-        with open("input_source.json", mode="a") as f:
-            f.write(json.dumps(event))
-
-        # Rest of the code goes here  
-```
-You will have a good overview of the input source's API but also fixtures for tests!
-
----
-
 ### Implement `dispatch_event`
 
 The `dispatch_event` method is the 'entry point' to the `BaseMessageReceiver` class.
@@ -265,6 +247,24 @@ class InputSourceMessageReceiver(BaseMessageReceiver):
         else:
             # Handle other event types
 ```
+
+---
+
+**Tip:** In the early phases, you can add a line like this in the `dispatch_event` method:
+
+```python
+import json
+
+class InputSourceMessageReceiver(BaseMessageReceiver):
+    def dispatch_event(self, event):
+        with open("input_source.json", mode="a") as f:
+            f.write(json.dumps(event))
+
+        # Rest of the code goes here  
+```
+You will have a good overview of the input source's API but also fixtures for tests!
+
+---
 
 ### Handle a given message
 
