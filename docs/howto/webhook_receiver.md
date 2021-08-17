@@ -4,7 +4,7 @@ This guide shows how to add a receiver using the webhook technique.
 
 ---
 
-**Note:** You have to check the input source docs to implement most of the functionality.
+**Note:** You have to check the input source docs to implement most of the receiver's methods.
 
 ---
 
@@ -204,7 +204,8 @@ The `BaseMessageReceiver` proposes an interface to process updates received from
 
 ---
 
-**Tip:** You can add a line like this in the `dispatch_event` method in the early phases:
+**Tip:** In the early phases, you can add a line like this in the `dispatch_event` method:
+
 ```python
 import json
 
