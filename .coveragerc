@@ -1,7 +1,7 @@
 [run]
 branch = True
 include = wagtail_live/*
-omit = */migrations/*,*/tests/*
+omit = */migrations/*,*/tests/*, src/wagtail_live/management/commands/run_publisher.py
 
 [report]
 # Regexes for lines to exclude from consideration
