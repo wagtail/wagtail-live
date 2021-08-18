@@ -1,5 +1,6 @@
 import json
 
+import pytest
 import requests
 from django.test import override_settings
 
@@ -7,6 +8,10 @@ from wagtail_live.publishers.piesocket.publisher import (
     PieSocketPublisher,
     headers,
     publish_url,
+)
+from wagtail_live.publishers.piesocket.utils import (
+    get_piesocket_api_key,
+    get_piesocket_secret,
 )
 
 
@@ -22,7 +27,15 @@ API_KEY = "api-key"
 SECRET = "not-secret"
 
 
-@override_settings(PIESOCKET_API_KEY=API_KEY, PIESOCKET_SECRET=SECRET)
+@pytest.fixture
+def piesocket_overrides():
+    get_piesocket_api_key.cache_clear()
+    get_piesocket_secret.cache_clear()
+    with override_settings(PIESOCKET_API_KEY=API_KEY, PIESOCKET_SECRET=SECRET):
+        yield
+
+
+@pytest.mark.usefixtures("piesocket_overrides")
 def test_publisher(mocker):
     publisher = PieSocketPublisher()
     channel_id = "some-id"
@@ -42,7 +55,7 @@ def test_publisher(mocker):
     requests.post.assert_called_once_with(publish_url, headers=headers, data=expected)
 
 
-@override_settings(PIESOCKET_API_KEY=API_KEY, PIESOCKET_SECRET=SECRET)
+@pytest.mark.usefixtures("piesocket_overrides")
 def test_publisher_response_not_ok(mocker, caplog):
     publisher = PieSocketPublisher()
     channel_id = "some-id"
