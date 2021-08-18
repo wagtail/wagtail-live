@@ -2,10 +2,10 @@
 
 import re
 from functools import lru_cache
-from importlib import import_module
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.module_loading import import_string
 from wagtail.embeds.oembed_providers import all_providers
 
 SUPPORTED_MIME_TYPES = ["png", "jpeg", "gif"]
@@ -22,6 +22,7 @@ def get_live_page_model():
     Raises:
         ImproperlyConfigured: if no live page model is specified or
             the one specified doesn't inherit from `wagtail_live.models.LivePageMixin`.
+        ImportError: if the live page model class couldn't be loaded.
     """
 
     from wagtail_live.models import LivePageMixin
@@ -32,14 +33,11 @@ def get_live_page_model():
             "You haven't specified a live page model in your settings."
         )
 
-    dotted_path, model_name = live_model.rsplit(".", 1)
-    module = import_module(dotted_path)
-    model = getattr(module, model_name)
+    model = import_string(live_model)
 
     if not issubclass(model, LivePageMixin):
         raise ImproperlyConfigured(
-            "The live page model specified doesn't inherit from "
-            + "wagtail_live.models.LivePageMixin."
+            "The live page model specified doesn't inherit from wagtail_live.models.LivePageMixin."
         )
 
     return model
@@ -55,6 +53,7 @@ def get_live_receiver():
     Raises:
         ImproperlyConfigured: if the receiver specified doesn't inherit from
             `wagtail_live.receivers.BaseMessageReceiver`.
+        ImportError: if the receiver class couldn't be loaded.
     """
 
     from wagtail_live.receivers.base import BaseMessageReceiver
@@ -64,13 +63,11 @@ def get_live_receiver():
         # Assume live interface is used, in which case no additional setup is needed.
         return
 
-    dotted_path, receiver_name = live_receiver.rsplit(".", 1)
-    module = import_module(dotted_path)
-    receiver = getattr(module, receiver_name)
+    receiver = import_string(live_receiver)
 
     if not issubclass(receiver, BaseMessageReceiver):
         raise ImproperlyConfigured(
-            f"The receiver {live_receiver} doesn't inherit from "
+            f"The receiver {live_receiver} doesn't inherit from"
             + "wagtail_live.receivers.BaseMessageReceiver."
         )
     return receiver
@@ -85,6 +82,7 @@ def get_live_publisher():
 
     Raises:
         ImproperlyConfigured: if no publisher class is specified in settings.
+        ImportError: if the publisher class couldn't be loaded.
     """
 
     live_publisher = getattr(settings, "WAGTAIL_LIVE_PUBLISHER", "")
@@ -93,11 +91,7 @@ def get_live_publisher():
             "You haven't specified a publisher class in your settings."
         )
 
-    dotted_path, publisher_name = live_publisher.rsplit(".", 1)
-    module = import_module(dotted_path)
-    publisher = getattr(module, publisher_name)
-
-    return publisher
+    return import_string(live_publisher)
 
 
 def get_polling_timeout():
