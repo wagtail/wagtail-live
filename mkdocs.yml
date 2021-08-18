@@ -20,12 +20,14 @@ nav:
   - Home: index.md
   - Getting started:
     - Tutorial: getting_started/tutorial.md
-    - Setup Slack Events API receiver: getting_started/setup_slack.md
-    - Setup Telegram webhook receiver: getting_started/setup_telegram.md
-    - Setup Django channels publisher: getting_started/setup_django_channels.md
-    - Setup long polling publisher: getting_started/setup_long_polling.md
-    - Setup PieSocket publisher: getting_started/setup_piesocket.md
-    - Setup a local web server with ngrok: getting_started/setup_ngrok.md
+    - Set up Slack Events API receiver: getting_started/setup_slack.md
+    - Set up Telegram webhook receiver: getting_started/setup_telegram.md
+    - Set up Django channels publisher: getting_started/setup_django_channels.md
+    - Set up websockets publisher: getting_started/setup_websockets.md
+    - Set up starlette publisher: getting_started/setup_starlette.md
+    - Set up long polling publisher: getting_started/setup_long_polling.md
+    - Set up PieSocket publisher: getting_started/setup_piesocket.md
+    - Set up a local web server with ngrok: getting_started/setup_ngrok.md
   - Reference:
       - Settings: reference/settings.md
       - LivePageMixin: reference/live-page-mixin.md

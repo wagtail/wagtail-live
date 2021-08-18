@@ -26,6 +26,9 @@ test_requires = [
     "pytest-mock>=3.6.1,<3.7.0",
     "pytest-asyncio",
     "channels",
+    "aioredis>=2.0.0, <3",
+    "starlette",
+    "websockets",
     "mock>=4.0.3,<5.0.0",
     "wagtail-factories>=2.0.1,<3",
 ]
