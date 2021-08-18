@@ -40,8 +40,7 @@ class RedisBus:
         self._running = None
 
     async def run(self):
-        """Retrieves new messages from Redis and dispatches them
-        as long as the server is running."""
+        """Retrieves messages from Redis and dispatches them as long as the server is running."""
 
         # We will have an error if we try to run the bus if we haven't
         # subscribed to any channel yet.
@@ -55,14 +54,15 @@ class RedisBus:
             self._running.set()
 
     def get_channel_group_subscribers(self, channel_group_name):
-        """Retrieves the connections that have subscribed to channel_group_name.
+        """
+        Retrieves the connections that have subscribed to channel_group_name.
 
         Args:
             channel_group_name (str):
                 The channel group to find subscribers for.
 
         Returns:
-            (Set) of connections/users that have subscribed to the given channel group.
+            Set: Connections/users that have subscribed to the given channel group.
         """
 
         return self.channel_groups[channel_group_name]
@@ -76,50 +76,42 @@ class RedisBus:
 
         Args:
             message (str): The message published on Redis.
-
-        Returns:
-            (None)
         """
 
         connections = self.get_channel_group_subscribers(message["channel"])
         asyncio.create_task(self.broadcast(message["data"], connections))
 
     async def subscribe(self, channel_group_name, ws_connection):
-        """Subscribes a connection to a channel group.
+        """
+        Subscribes a connection to a channel group.
 
         Args:
             channel_group_name (str):
                 Channel group to subscribe to
             ws_connection (*):
-                The websocket or connection instance to add to
-                the channel_group subscribers.
+                The websocket or connection instance to add to the channel_group subscribers.
                 It must have a method to send messages.
-
-        Returns:
-            (None)
         """
 
         # Subscribe to this channel group in Redis if not done yet.
         if not self.get_channel_group_subscribers(channel_group_name):
             # Passing parameters as `channel=handler` to the pubsub.subscribe method
             # has the effect to call `handler` whenever a message is published on `channel`.
-            await self.pubsub.subscribe(channel_group_name=self.handle_message)
+            await self.pubsub.subscribe(**{channel_group_name: self.handle_message})
 
         self.channel_groups[channel_group_name].add(ws_connection)
         self._set_running()
 
     async def unsubscribe(self, channel_group_name, ws_connection):
-        """Unsubscribes a connection from a channel group.
+        """
+        Unsubscribes a connection from a channel group.
 
         Args:
             channel_group_name (str):
                 Channel group to unsubscribe from.
             ws_connection (*):
-                The websocket or connection instance to remove from
-                the channel_group subscribers.
+                The websocket or connection instance to remove from the channel_group subscribers.
 
-        Returns:
-            (None)
         """
 
         self.channel_groups[channel_group_name].remove(ws_connection)

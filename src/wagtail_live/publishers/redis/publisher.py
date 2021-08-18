@@ -12,16 +12,14 @@ def make_channel_group_name(channel_id):
 
 
 async def redis_publish(channel_group_name, message):
-    """Publishes a message to the given channel in Redis.
+    """
+    Publishes a message to the given channel in Redis.
 
     Args:
         channel_group_name (str):
             Channel to publish the message to.
         message (*):
             Message to publish.
-
-    Returns:
-        (None)
     """
 
     redis = aioredis.from_url(get_redis_url())
