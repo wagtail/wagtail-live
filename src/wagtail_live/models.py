@@ -19,7 +19,8 @@ sync_with_admin = lazy(
 
 
 class LivePageMixin(models.Model):
-    """Base class for pages using Wagtail Live.
+    """
+    Base class for pages using Wagtail Live.
 
     Attributes:
         channel_id (str):
@@ -73,7 +74,7 @@ class LivePageMixin(models.Model):
             }
 
     def save(self, sync=True, *args, **kwargs):
-        """Update live page on save depending on the WAGTAIL_LIVE_SYNC_WITH_ADMIN setting."""
+        """Update live page on save depending on the `WAGTAIL_LIVE_SYNC_WITH_ADMIN` setting."""
 
         sync_changes = sync and sync_with_admin()
         if sync_changes:
@@ -128,7 +129,8 @@ class LivePageMixin(models.Model):
                 return i
 
     def get_live_post_index(self, message_id):
-        """Retrieves the index of a live post.
+        """
+        Retrieves the index of a live post.
 
         Args:
             message_id (str): ID of the message corresponding to a live post.
@@ -140,7 +142,8 @@ class LivePageMixin(models.Model):
         return self._get_live_post_index(message_id=message_id)
 
     def get_live_post_by_index(self, live_post_index):
-        """Retrieves a live post by its index.
+        """
+        Retrieves a live post by its index.
 
         Args:
             live_post_index (int): Index of the live post to look for.
@@ -155,7 +158,8 @@ class LivePageMixin(models.Model):
         return self.live_posts[live_post_index]
 
     def get_live_post_by_message_id(self, message_id):
-        """Retrieves a live post by its ID.
+        """
+        Retrieves a live post by its ID.
 
         Args:
             message_id (str):
@@ -174,7 +178,8 @@ class LivePageMixin(models.Model):
         return self.get_live_post_by_index(live_post_index)
 
     def add_live_post(self, live_post):
-        """Adds a new live post to live page.
+        """
+        Adds a new live post to live page.
 
         Args:
             live_post (LivePostBlock):
@@ -204,7 +209,8 @@ class LivePageMixin(models.Model):
         )
 
     def update_live_post(self, live_post):
-        """Updates a live post when it has been edited.
+        """
+        Updates a live post when it has been edited.
 
         Args:
             live_post (livePostBlock):
@@ -222,7 +228,8 @@ class LivePageMixin(models.Model):
         )
 
     def delete_live_post(self, message_id):
-        """Deletes the live post corresponding to message_id.
+        """
+        Deletes the live post corresponding to message_id.
 
         Args:
             message_id (str):
@@ -249,7 +256,8 @@ class LivePageMixin(models.Model):
         )
 
     def get_updates_since(self, last_update_ts):
-        """Retrieves new updates since a given timestamp value.
+        """
+        Retrieves new updates since a given timestamp value.
 
         Args:
             last_update_ts (DateTime):
