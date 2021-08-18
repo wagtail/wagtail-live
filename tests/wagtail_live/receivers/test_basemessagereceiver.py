@@ -1,7 +1,6 @@
 import json
 
 import pytest
-from django.core.exceptions import ImproperlyConfigured
 from wagtail.embeds.blocks import EmbedValue
 
 from tests.testapp.models import BlogPage
@@ -15,23 +14,6 @@ def base_receiver():
 
 def test_base_receiver_model(base_receiver):
     assert base_receiver.model == BlogPage
-
-
-def test_receiver_model_live_app_setting_missing(base_receiver, settings):
-    settings.WAGTAIL_LIVE_PAGE_MODEL = ""
-    expected_err = "You haven't specified a live page model in your settings."
-    with pytest.raises(ImproperlyConfigured, match=expected_err):
-        base_receiver.model
-
-
-def test_receiver_model_bad_model(base_receiver, settings):
-    settings.WAGTAIL_LIVE_PAGE_MODEL = "tests.testapp.models.RegularPage"
-    expected_err = (
-        "The live page model specified doesn't inherit from "
-        "wagtail_live.models.LivePageMixin."
-    )
-    with pytest.raises(ImproperlyConfigured, match=expected_err):
-        base_receiver.model
 
 
 @pytest.mark.django_db
