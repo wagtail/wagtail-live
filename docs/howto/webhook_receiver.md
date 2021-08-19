@@ -2,6 +2,12 @@
 
 This guide shows how to add a receiver using the webhook technique.
 
+First, we'll choose an input source to work with.
+
+Then we'll subclass and implement the `WebhookReceiverMixin` class to handle webhook connections.
+
+Finally we'll subclass and implement the `BaseMessageReceiver` class to process updates received from the input source chosen.
+
 ---
 
 **Note:** You have to check the input source docs to implement most of the receiver's methods.
@@ -20,17 +26,17 @@ The only requirement is that it should allow setting up an outgoing webhook conn
 
 After choosing an input source, we need to handle webhook connections with it. 
 
-The [`WebhookReceiverMixin`](../reference/receivers/webhook_receiver_mixin.md) is designed for that purpose. It makes the following assumptions about the input source:
+The [`WebhookReceiverMixin`](../reference/receivers/webhook_receiver_mixin.md) is designed for that purpose. It makes the following assumptions:
 
-- It sends new updates using POST requests,
-- It expects to receive an HttpResponse `OK` after sending our site a new update.
+- The input source sends new updates using POST requests,
+- The input source expects to receive an HttpResponse `OK` after sending our site a new update.
 
 
 ### Define a `webhook url`
 
 First, let's define the `webhook_url` that the input source uses to send us new updates.
 
-The base path of this url is `/wagtail_live/`. We need to specify an additional path parameter that is specific to an input source.
+The base path of this URL is `/wagtail_live/`. We need to specify an additional path parameter that is specific to an input source.
 
 To do so, we need to define the `url_path` and `url_name` attribute on our receiver like this: (you will want to replace any occurrence of `input source` in this guide by the actual name of the input source.)
 
@@ -55,8 +61,6 @@ The next step is to implement the `set_webhook` **class** method.
 The job of this method is to set a webhook connection with the input source.
 
 We can either do it programmatically (ex: Telegram, Whatsapp) or manually (ex: Slack).
-
-You have to check the input source docs to see how this can be done.
 
 For example, we can find the relevant docs for Whatsapp [here](https://developers.facebook.com/docs/whatsapp/api/webhooks).
 
@@ -206,7 +210,7 @@ The `BaseMessageReceiver` proposes an interface to process updates received from
 
 The `dispatch_event` method is the 'entry point' to the `BaseMessageReceiver` class.
 
-We will receive most updates when a message/post is added, edited, or deleted in the input source. Therefore, the first thing we will want to do when we receive a new update is finding its type i.e addition/edition/deletion. Then, we'll invoke the corresponding handler i.e `add_message`, `change_message` or `delete_message`.
+We will receive most updates when a message/post is added, edited, or deleted in the input source. Therefore, the first thing we will want to do when we receive a new update is finding its type i.e addition, edition or deletion. Then, we'll invoke the corresponding handler i.e `add_message`, `change_message` or `delete_message`.
 
 For example, if an input source sends payloads like these:
 ```python
