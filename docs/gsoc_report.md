@@ -80,6 +80,14 @@ Related Issues:
 - [webapp documentation](https://github.com/wagtail/wagtail-live/issues/107)
 
 
+## Current state of the project
+
+We've met most of the expectations outlined in the initial proposal. However, there is still some work to do. I have opened [issues](https://github.com/wagtail/wagtail-live/issues) decribing what's left to do.
+
+We would like to have more users try Wagtail Live and give us feedback.
+
+It would also be nice to have new contributors add more receivers/publishers.
+
 ## Tests and documentation
 
 We added documentation and tests for most of the functionalities proposed.
