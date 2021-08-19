@@ -44,6 +44,7 @@ nav:
         - Long polling: reference/publishers/long-polling.md
       - Utilities: reference/utils.md
   - Development: development.md
+  - GSOC report: gsoc_report.md
 
 plugins:
   - search
