@@ -127,6 +127,6 @@ We have also received nice help from Nick Lee (Senior designer at Torchbox) and 
 
 ## Links
 
-[Pypi](https://pypi.org/project/wagtail-live/)
+[PyPI](https://pypi.org/project/wagtail-live/)
 [Wagtail Live proposal](https://docs.google.com/document/d/e/2PACX-1vRu022h-LZn-X88Ao19_p8EEf8Bj9Lr-CPXiexpTkI7EyeMmSVVufYFxsf2bHh38kG9bAIkvRDRgttW/pub)
 [GSOC project page](https://summerofcode.withgoogle.com/projects/#6430724455923712)
