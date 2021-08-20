@@ -125,3 +125,8 @@ I thank my excellent mentors who have also contributed a lot to the project besi
 
 We have also received nice help from Nick Lee (Senior designer at Torchbox) and Andy Babic [@ababic](https://github.com/ababic).
 
+## Links
+
+[Pypi](https://pypi.org/project/wagtail-live/)
+[Wagtail Live proposal](https://docs.google.com/document/d/e/2PACX-1vRu022h-LZn-X88Ao19_p8EEf8Bj9Lr-CPXiexpTkI7EyeMmSVVufYFxsf2bHh38kG9bAIkvRDRgttW/pub)
+[GSOC project page](https://summerofcode.withgoogle.com/projects/#6430724455923712)
