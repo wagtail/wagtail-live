@@ -56,8 +56,13 @@ def construct_text_block(text):
     """
 
     # Make sure no malicious html is accepted
-    features = feature_registry.get_default_features()
-    cleaned_text = EditorHTMLConverter(features=features).whitelister.clean(text)
+    # BeautifulSoup prefers markup that contains at least 1 tag,
+    # if that's not the case we can accept the input as is.
+    if "<" in text:
+        features = feature_registry.get_default_features()
+        cleaned_text = EditorHTMLConverter(features=features).whitelister.clean(text)
+    else:
+        cleaned_text = text
 
     return RichTextBlock().to_python(cleaned_text)
 
