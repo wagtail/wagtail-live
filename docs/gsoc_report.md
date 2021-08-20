@@ -4,7 +4,7 @@ The goal of the Wagtail Live project was to propose a flexible open-source liveb
 
 A live blog is a blog providing real-time updates on an ongoing event.
 
-As part of the GSOC program, my mentors and I have spent summer 2021 working on it.
+As part of the GSOC program, my mentors and I have spent summer (June-August) 2021 working on it.
 
 This report aims to give an overview of the work done during that period.
 
