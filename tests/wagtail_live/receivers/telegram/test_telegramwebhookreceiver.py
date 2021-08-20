@@ -5,7 +5,6 @@ import requests
 from django.core.files.base import ContentFile
 from django.test import override_settings
 from django.urls import resolve, reverse
-from wagtail.core.rich_text import RichText
 
 from tests.utils import get_test_image_file, reload_urlconf
 from wagtail_live.blocks import construct_live_post_block
