@@ -82,7 +82,7 @@ Related Issues:
 
 ## Current state of the project
 
-We've met most of the expectations outlined in the initial proposal. However, there is still some work to do. I have opened [issues](https://github.com/wagtail/wagtail-live/issues) decribing what's left to do.
+We've met most of the expectations outlined in the initial proposal. However, there is still some work to do. I have opened [issues](https://github.com/wagtail/wagtail-live/issues) decribing what's left.
 
 We would like to have more users try Wagtail Live and give us feedback.
 
