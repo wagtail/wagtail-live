@@ -101,15 +101,15 @@ Tests can be found in the `tests` module [here](https://github.com/wagtail/wagta
 
 ## Talks
 
-I've been proposed to present the project at the What's New in Wagtail webinar. The recording can be found [here](https://www.youtube.com/watch?v=CQ7Gx8b7ac4).
+I was asked to present the project at the What's New in Wagtail webinar. The recording can be found [here](https://www.youtube.com/watch?v=CQ7Gx8b7ac4).
 
-I'm also delivering a talk at the [Djangocon US online event](https://2021.djangocon.us/) taking place on October 21-23.
+I'm also delivering a talk at the [Djangocon US conference](https://2021.djangocon.us/), which will take place on October 21-23, 2021.
 
 ## Feelings
 
-From technicals skills to soft skills, I've learned a lot in this project. To name a few:
+From technical skills to soft skills, I've learned a lot in this project. To name a few:
 
-- Django and Wagtail's internals
+- Django and Wagtail internals
 - asynchronous programming
 - websocket protocol
 - pytest
