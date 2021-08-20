@@ -10,7 +10,6 @@ from wagtail.core.blocks import (
     StructBlock,
     StructValue,
 )
-from wagtail.core.rich_text import RichText
 from wagtail.core.rich_text import features as feature_registry
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
