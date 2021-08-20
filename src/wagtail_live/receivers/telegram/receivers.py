@@ -8,6 +8,7 @@ from wagtail_live.receivers.base import BaseMessageReceiver, WebhookReceiverMixi
 from wagtail_live.utils import is_embed
 
 from .utils import (
+    format_url,
     get_base_telegram_url,
     get_telegram_bot_token,
     get_telegram_webhook_url,
@@ -201,6 +202,7 @@ class TelegramWebhookReceiver(TelegramWebhookMixin, BaseMessageReceiver):
                 description = text[start:end]
 
             if url:
+                url = format_url(url)
                 link = f'<a href="{url}">{description}</a>'
                 text = text[:start] + link + text[end:]
 

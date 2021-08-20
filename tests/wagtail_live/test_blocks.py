@@ -3,6 +3,7 @@ from datetime import datetime
 
 import pytest
 from wagtail.core.blocks import StreamValue, StructValue
+from wagtail.core.rich_text import RichText
 from wagtail.embeds.blocks import EmbedValue
 
 from wagtail_live.blocks import (
@@ -19,7 +20,7 @@ from wagtail_live.receivers.base import TEXT
 
 def test_construct_text_block():
     text_block = construct_text_block(text="Some text")
-    assert text_block == "Some text"
+    assert text_block.source == "Some text"
 
 
 def test_construct_embed_block():
@@ -57,7 +58,10 @@ def test_add_block_to_live_post_structvalue():
     add_block_to_live_post(TEXT, text_block, live_post)
 
     assert isinstance(live_post, StructValue)
-    assert live_post["content"] == StreamValue(ContentBlock(), [("text", "Some text")])
+    setattr(RichText, "__eq__", lambda self, other: self.source == other.source)
+    assert live_post["content"] == StreamValue(
+        ContentBlock(), [("text", RichText("Some text"))]
+    )
 
 
 @pytest.mark.django_db
@@ -84,8 +88,9 @@ def test_add_block_to_live_post_streamchild(blog_page_factory):
     add_block_to_live_post(TEXT, text_block, live_post)
 
     assert isinstance(live_post, StreamValue.StreamChild)
+    setattr(RichText, "__eq__", lambda self, other: self.source == other.source)
     assert live_post.value["content"] == StreamValue(
-        ContentBlock(), [("text", "Some text")]
+        ContentBlock(), [("text", RichText("Some text"))]
     )
 
 

@@ -5,6 +5,7 @@ import requests
 from django.core.files.base import ContentFile
 from django.test import override_settings
 from django.urls import resolve, reverse
+from wagtail.core.rich_text import RichText
 
 from tests.utils import get_test_image_file, reload_urlconf
 from wagtail_live.blocks import construct_live_post_block
@@ -301,14 +302,14 @@ def test_process_text(telegram_receiver, telegram_message_with_entities):
     telegram_receiver.process_text(live_post=live_post_block, message_text=text)
 
     content = live_post_block["content"]
-    assert content[0].value == "This post contains different type of entities."
+    assert content[0].value.source == "This post contains different type of entities."
     assert (
-        content[1].value
+        content[1].value.source
         == 'This is a regular link <a href="https://github.com/">https://github.com/</a>.'
     )
-    assert content[2].value == "This is a hashtag entity #WagtailLiveBot"
+    assert content[2].value.source == "This is a hashtag entity #WagtailLiveBot"
     assert (
-        content[3].value
+        content[3].value.source
         == 'This is a link_text <a href="https://github.com/wagtail">wagtail</a>.'
     )
 
@@ -439,8 +440,8 @@ def test_embed_message(telegram_receiver, telegram_embed_message, blog_page_fact
     telegram_receiver.process_text(live_post=live_post_block, message_text=text)
 
     content = live_post_block["content"]
-    assert content[0].value == "This is another test post."
-    assert content[1].value == "This post contains an embed."
+    assert content[0].value.source == "This is another test post."
+    assert content[1].value.source == "This post contains an embed."
     assert content[2].block_type == EMBED
     assert content[2].value.url == "https://www.youtube.com/watch?v=Cq3LOsf2kSY"
 
@@ -457,13 +458,13 @@ def test_embed_message_2(
     telegram_receiver.process_text(live_post=live_post_block, message_text=text)
 
     content = live_post_block["content"]
-    assert content[0].value == "This is another test post."
-    assert content[1].value == (
+    assert content[0].value.source == "This is another test post."
+    assert content[1].value.source == (
         '<a href="https://www.youtube.com/watch?v=Cq3LOsf2kSY">'
         "https://www.youtube.com/watch?v=Cq3LOsf2kSY</a>. "
         "Some content here."
     )
-    assert content[2].value == (
+    assert content[2].value.source == (
         "Some content here. "
         '<a href="https://www.youtube.com/watch?v=Cq3LOsf2kSY">'
         "https://www.youtube.com/watch?v=Cq3LOsf2kSY</a>"

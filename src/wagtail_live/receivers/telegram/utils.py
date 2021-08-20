@@ -55,3 +55,13 @@ def get_base_telegram_url():
     """Returns the base URL to use when calling Telegram's API."""
 
     return f"https://api.telegram.org/bot{get_telegram_bot_token()}/"
+
+
+def format_url(url):
+    """Fixes telegram url format"""
+
+    # Prevent e.g. www.example.com from being interpreted as relative url
+    if not url.startswith("http") and not url.startswith("//"):
+        url = f"//{url}"
+
+    return url
