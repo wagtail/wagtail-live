@@ -10,8 +10,7 @@ def test_urls_no_publisher(caplog):
     reload_urlconf()
 
     assert (
-        caplog.messages[0]
-        == "You haven't specified a publisher class in your settings."
+        caplog.messages[0] == "You haven't specified a live publisher in your settings."
     )
 
 

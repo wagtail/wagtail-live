@@ -1,12 +1,12 @@
 from functools import lru_cache
 
-from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
+from wagtail_live.utils import get_setting_or_raise
 
 
 @lru_cache(maxsize=1)
 def get_piesocket_api_key():
-    """Retrieves user's Piesocket API key.
+    """
+    Retrieves user's Piesocket API key.
 
     Returns:
         (str) Piesocket API key.
@@ -15,17 +15,15 @@ def get_piesocket_api_key():
         (ImproperlyConfigured) if the Piesocket API key isn't specified in settings.
     """
 
-    api_key = getattr(settings, "PIESOCKET_API_KEY", None)
-    if not api_key:
-        raise ImproperlyConfigured(
-            "Specify PIESOCKET_API_KEY if you intend to use Piesocket as publisher."
-        )
-    return api_key
+    return get_setting_or_raise(
+        setting="PIESOCKET_API_KEY", setting_str="PieSocket API Key"
+    )
 
 
 @lru_cache(maxsize=1)
 def get_piesocket_secret():
-    """Retrieves user's piesocket secret.
+    """
+    Retrieves user's piesocket secret.
 
     Returns:
         (str) Piesocket secret.
@@ -34,17 +32,15 @@ def get_piesocket_secret():
         (ImproperlyConfigured) if the piesocket secret isn't specified in settings.
     """
 
-    secret = getattr(settings, "PIESOCKET_SECRET", None)
-    if not secret:
-        raise ImproperlyConfigured(
-            "Specify PIESOCKET_SECRET if you intend to use Piesocket as publisher."
-        )
-    return secret
+    return get_setting_or_raise(
+        setting="PIESOCKET_SECRET", setting_str="PieSocket secret"
+    )
 
 
 @lru_cache(maxsize=1)
 def get_piesocket_endpoint():
-    """Retrieves user's piesocket endpoint.
+    """
+    Retrieves user's piesocket endpoint.
 
     Returns:
         (str) Piesocket endpoint.
@@ -53,9 +49,6 @@ def get_piesocket_endpoint():
         (ImproperlyConfigured) if the piesocket endpoint isn't specified in settings.
     """
 
-    endpoint = getattr(settings, "PIESOCKET_ENDPOINT", None)
-    if not endpoint:
-        raise ImproperlyConfigured(
-            "Specify PIESOCKET_ENDPOINT if you intend to use Piesocket as publisher."
-        )
-    return endpoint
+    return get_setting_or_raise(
+        setting="PIESOCKET_ENDPOINT", setting_str="PieSocket endpoint"
+    )

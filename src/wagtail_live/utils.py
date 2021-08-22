@@ -11,6 +11,31 @@ from wagtail.embeds.oembed_providers import all_providers
 SUPPORTED_MIME_TYPES = ["png", "jpeg", "gif"]
 
 
+def get_setting_or_raise(setting, setting_str):
+    """
+    Retrieves and returns the value of a setting if present in user's settings,
+    else raises an `ImproperlyConfigured` error.
+
+    Args:
+        setting (str):
+            The name of the setting to find in user's settings.
+        setting_str (str):
+            A verbose name for the setting when reporting errors.
+
+    Returns:
+        str: The value of the setting if defined in user's settings.
+
+    Raises:
+        ImproperlyConfigured: If the setting isn't defined.
+    """
+
+    value = getattr(settings, setting, "")
+    if not value:
+        err_msg = f"You haven't specified a {setting_str} in your settings."
+        raise ImproperlyConfigured(err_msg)
+    return value
+
+
 def get_live_page_model():
     """
     Retrieves the live page model specified in user's settings.
@@ -27,11 +52,9 @@ def get_live_page_model():
 
     from wagtail_live.models import LivePageMixin
 
-    live_model = getattr(settings, "WAGTAIL_LIVE_PAGE_MODEL", "")
-    if not live_model:
-        raise ImproperlyConfigured(
-            "You haven't specified a live page model in your settings."
-        )
+    live_model = get_setting_or_raise(
+        setting="WAGTAIL_LIVE_PAGE_MODEL", setting_str="live page model"
+    )
 
     model = import_string(live_model)
 
@@ -85,12 +108,9 @@ def get_live_publisher():
         ImportError: if the publisher class couldn't be loaded.
     """
 
-    live_publisher = getattr(settings, "WAGTAIL_LIVE_PUBLISHER", "")
-    if not live_publisher:
-        raise ImproperlyConfigured(
-            "You haven't specified a publisher class in your settings."
-        )
-
+    live_publisher = get_setting_or_raise(
+        setting="WAGTAIL_LIVE_PUBLISHER", setting_str="live publisher"
+    )
     return import_string(live_publisher)
 
 
