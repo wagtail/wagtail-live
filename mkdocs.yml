@@ -30,6 +30,8 @@ nav:
     - Set up a local web server with ngrok: getting_started/setup_ngrok.md
   - How-To:
     - How to write a websocket publisher: howto/websocket_publisher.md
+    - How to write a WebSocket publisher based on a hosted WebSocket solution: howto/hosted_websocket_solution.md
+    - How to write a WebSocket publisher based on a framework/library: howto/framework_library.md
   - Reference:
       - Settings: reference/settings.md
       - LivePageMixin: reference/live-page-mixin.md
