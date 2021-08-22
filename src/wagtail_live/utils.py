@@ -52,15 +52,16 @@ def get_live_page_model():
 
     from wagtail_live.models import LivePageMixin
 
-    live_model = get_setting_or_raise(
+    live_model_class = get_setting_or_raise(
         setting="WAGTAIL_LIVE_PAGE_MODEL", setting_str="live page model"
     )
 
-    model = import_string(live_model)
+    model = import_string(live_model_class)
 
     if not issubclass(model, LivePageMixin):
         raise ImproperlyConfigured(
-            "The live page model specified doesn't inherit from wagtail_live.models.LivePageMixin."
+            f"The live page model {live_model_class} doesn't inherit from "
+            "wagtail_live.models.LivePageMixin."
         )
 
     return model
@@ -81,17 +82,17 @@ def get_live_receiver():
 
     from wagtail_live.receivers.base import BaseMessageReceiver
 
-    live_receiver = getattr(settings, "WAGTAIL_LIVE_RECEIVER", "")
-    if not live_receiver:
+    live_receiver_class = getattr(settings, "WAGTAIL_LIVE_RECEIVER", "")
+    if not live_receiver_class:
         # Assume live interface is used, in which case no additional setup is needed.
         return
 
-    receiver = import_string(live_receiver)
+    receiver = import_string(live_receiver_class)
 
     if not issubclass(receiver, BaseMessageReceiver):
         raise ImproperlyConfigured(
-            f"The receiver {live_receiver} doesn't inherit from "
-            + "wagtail_live.receivers.BaseMessageReceiver."
+            f"The receiver {live_receiver_class} doesn't inherit from "
+            "wagtail_live.receivers.BaseMessageReceiver."
         )
     return receiver
 
@@ -108,10 +109,10 @@ def get_live_publisher():
         ImportError: if the publisher class couldn't be loaded.
     """
 
-    live_publisher = get_setting_or_raise(
+    live_publisher_class = get_setting_or_raise(
         setting="WAGTAIL_LIVE_PUBLISHER", setting_str="live publisher"
     )
-    return import_string(live_publisher)
+    return import_string(live_publisher_class)
 
 
 def get_polling_timeout():

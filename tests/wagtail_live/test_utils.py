@@ -15,7 +15,7 @@ def test_get_live_page_model_setting_missing():
 @override_settings(WAGTAIL_LIVE_PAGE_MODEL="tests.testapp.models.RegularPage")
 def test_get_live_page_model_bad_model():
     expected_err = (
-        "The live page model specified doesn't inherit from "
+        "The live page model tests.testapp.models.RegularPage doesn't inherit from "
         "wagtail_live.models.LivePageMixin."
     )
     with pytest.raises(ImproperlyConfigured, match=expected_err):
@@ -26,7 +26,7 @@ def test_get_live_page_model_bad_model():
 def test_get_live_receiver_bad_receiver():
     expected_err = (
         "The receiver tests.testapp.receivers.DummyReceiver doesn't inherit from "
-        + "wagtail_live.receivers.BaseMessageReceiver."
+        "wagtail_live.receivers.BaseMessageReceiver."
     )
     with pytest.raises(ImproperlyConfigured, match=expected_err):
         get_live_receiver()
