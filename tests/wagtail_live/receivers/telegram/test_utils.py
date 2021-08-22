@@ -15,9 +15,7 @@ def test_get_telegram_bot_token():
 
 
 def test_get_telegram_bot_token_raises_error():
-    expected_err = (
-        "Specify TELEGRAM_BOT_TOKEN if you intend to use Telegram as input source."
-    )
+    expected_err = "You haven't specified a Telegram bot token in your settings."
     get_telegram_bot_token.cache_clear()
 
     with pytest.raises(ImproperlyConfigured, match=expected_err):
@@ -49,9 +47,7 @@ def test_get_telegram_webhook_url_trailing_slash():
 
 
 def test_get_telegram_webhook_url_raises_error():
-    expected_err = (
-        "Specify TELEGRAM_WEBHOOK_URL if you intend to use Telegram as input source."
-    )
+    expected_err = "You haven't specified a Telegram webhook URL in your settings."
     get_telegram_webhook_url.cache_clear()
 
     with pytest.raises(ImproperlyConfigured, match=expected_err):
