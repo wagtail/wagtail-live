@@ -320,6 +320,15 @@ They all work in a similar manner:
         - Implement [`process_text`](../reference/receivers/base-message-receiver.md#wagtail_live.receivers.base.BaseMessageReceiver.process_text) method.
         - Implement [`process_files`](../reference/receivers/base-message-receiver.md#wagtail_live.receivers.base.BaseMessageReceiver.process_files) method.
 
+        We also need to implement the following methods related to image handling:
+
+        - Implement [`get_image_title`](../reference/receivers/base-message-receiver.md#wagtail_live.receivers.base.BaseMessageReceiver.get_image_title) method.
+        - Implement [`get_image_name`](../reference/receivers/base-message-receiver.md#wagtail_live.receivers.base.BaseMessageReceiver.get_image_name) method.
+        - Implement [`get_image_mimetype`](../reference/receivers/base-message-receiver.md#wagtail_live.receivers.base.BaseMessageReceiver.get_image_mimetype) method.
+        - Implement [`get_image_dimensions`](../reference/receivers/base-message-receiver.md#wagtail_live.receivers.base.BaseMessageReceiver.get_image_dimensions) method.
+        - Implement [`get_image_content`](../reference/receivers/base-message-receiver.md#wagtail_live.receivers.base.BaseMessageReceiver.get_image_content) method.
+
+
 6. Add/update the live post corresponding to the given message to/in live page.
 
 ## Wrap up
