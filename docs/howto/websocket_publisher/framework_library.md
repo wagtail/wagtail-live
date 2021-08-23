@@ -27,6 +27,12 @@ class MyWebsocketPublisher(RedisPubSubPublisher):
 
 You can also provide your event bus and implement the `publish` method accordingly.
 
+---
+
+**Note:** You can set up an event bus using [`broadcaster`](https://github.com/encode/broadcaster). It supports Redis PUB/SUB, Apache Kafka, and Postgres LISTEN/NOTIFY. However, it's still in Alpha phase.
+
+---
+
 In this architecture, we need to perform additional work to handle WebSocket connections.
 
 ### Handle WebSocket connections
