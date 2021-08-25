@@ -13,7 +13,7 @@ You can optionally set a polling timeout:
 ```python
 WAGTAIL_LIVE_POLLING_TIMEOUT = value # in seconds
 ```
-The default value is **30**(s).
+The default value is **60**(s).
 
 ## Add publisher template
 
