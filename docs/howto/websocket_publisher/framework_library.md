@@ -29,7 +29,10 @@ You can also provide your event bus and implement the `publish` method according
 
 ---
 
-**Note:** You can set up an event bus using [`broadcaster`](https://github.com/encode/broadcaster). It supports Redis PUB/SUB, Apache Kafka, and Postgres LISTEN/NOTIFY. However, it's still in Alpha phase.
+**Note:** The following packages can help you set up an event bus:
+
+- [kombu](https://github.com/celery/kombu) - Messaging library for Python.
+- [broadcaster](https://github.com/encode/broadcaster) - Broadcast channels for async web apps (Still in alpha phase).
 
 ---
 
