@@ -207,10 +207,10 @@ def test_add_message(blog_page_factory, webapp_receiver, message):
     assert len(content) == len(message_parts)
 
     assert content[0].block_type == TEXT
-    assert content[0].value == message_parts[0].strip()
+    assert content[0].value.source == message_parts[0].strip()
 
     assert content[-1].block_type == TEXT
-    assert content[-1].value == message_parts[-1].strip()
+    assert content[-1].value.source == message_parts[-1].strip()
 
 
 @pytest.mark.django_db
@@ -240,7 +240,7 @@ def test_change_message(blog_page_factory, webapp_receiver, message):
     assert len(content) == 1
 
     first_block = content[0]
-    assert first_block.value == "Edited"
+    assert first_block.value.source == "Edited"
 
 
 @pytest.mark.django_db
@@ -258,8 +258,8 @@ def test_change_message_wrong_channel(blog_page_factory, webapp_receiver, messag
 
     # live post content shouldn't change
     assert len(content) == 2
-    assert content[0].value == "Some content."
-    assert content[-1].value == "More content here."
+    assert content[0].value.source == "Some content."
+    assert content[-1].value.source == "More content here."
 
 
 @pytest.mark.django_db

@@ -85,7 +85,7 @@ class Migration(migrations.Migration):
                                                 [
                                                     (
                                                         "text",
-                                                        wagtail.core.blocks.TextBlock(
+                                                        wagtail.core.blocks.RichTextBlock(
                                                             help_text="Text of the message"
                                                         ),
                                                     ),

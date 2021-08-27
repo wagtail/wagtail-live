@@ -69,17 +69,17 @@ def test_process_text(base_receiver, blog_page_factory):
     post_content = live_post.value["content"]
 
     assert post_content[0].block_type == TEXT
-    assert post_content[0].value == "Live Post Title"
+    assert post_content[0].value.source == "Live Post Title"
 
     assert post_content[1].block_type == TEXT
-    assert post_content[1].value == "Check out Wagtail"
+    assert post_content[1].value.source == "Check out Wagtail"
 
     assert post_content[2].block_type == EMBED
     assert isinstance(post_content[2].value, EmbedValue)
     assert post_content[2].value.url == valid_embed
 
     assert post_content[-1].block_type == TEXT
-    assert post_content[-1].value == "Have fun!"
+    assert post_content[-1].value.source == "Have fun!"
 
 
 @pytest.mark.django_db

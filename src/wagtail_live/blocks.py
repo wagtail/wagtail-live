@@ -1,14 +1,16 @@
 """ Block types and block constructors are defined in this module."""
 
+from wagtail.admin.rich_text.converters.editor_html import EditorHTMLConverter
 from wagtail.core.blocks import (
     BooleanBlock,
     CharBlock,
     DateTimeBlock,
+    RichTextBlock,
     StreamBlock,
     StructBlock,
     StructValue,
-    TextBlock,
 )
+from wagtail.core.rich_text import features as feature_registry
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 
@@ -16,7 +18,7 @@ from wagtail.images.blocks import ImageChooserBlock
 class ContentBlock(StreamBlock):
     """A block that represents a live post content."""
 
-    text = TextBlock(help_text="Text of the message")
+    text = RichTextBlock(help_text="Text of the message")
     image = ImageChooserBlock(help_text="Image of the message")
     embed = EmbedBlock(help_text="URL of the embed message")
 
@@ -50,10 +52,19 @@ def construct_text_block(text):
         text (str): Text to add
 
     Returns:
-        TextBlock: a TextBlock filled with the given text.
+        RichText: a TextBlock filled with the given text.
     """
 
-    return TextBlock().to_python(text)
+    # Make sure no malicious html is accepted
+    # BeautifulSoup prefers markup that contains at least 1 tag,
+    # if that's not the case we can accept the input as is.
+    if "<" in text:
+        features = feature_registry.get_default_features()
+        cleaned_text = EditorHTMLConverter(features=features).whitelister.clean(text)
+    else:
+        cleaned_text = text
+
+    return RichTextBlock().to_python(cleaned_text)
 
 
 def construct_image_block(image):

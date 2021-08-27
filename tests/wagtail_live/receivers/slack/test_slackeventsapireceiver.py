@@ -407,10 +407,10 @@ def test_add_message(slack_receiver, slack_message, slack_page):
     assert len(content) == len(message_parts)
 
     assert content[0].block_type == TEXT
-    assert content[0].value == message_parts[0]
+    assert content[0].value.source == message_parts[0]
 
     assert content[-1].block_type == TEXT
-    assert content[-1].value == message_parts[-1]
+    assert content[-1].value.source == message_parts[-1]
 
 
 @pytest.mark.django_db
@@ -439,7 +439,7 @@ def test_change_message(
     message_added = BlogPage.objects.first().live_posts[-1]
     previous_id = message_added.id
     first_block = message_added.value["content"][0]
-    assert first_block.value == "This is another test post."
+    assert first_block.value.source == "This is another test post."
 
     # Edit the message
     edited_message = slack_edited_message["event"]
@@ -448,7 +448,7 @@ def test_change_message(
     message_added = BlogPage.objects.first().live_posts[-1]
     id_after_edit = message_added.id
     first_block = message_added.value["content"][0]
-    assert first_block.value == "This is another test post that has been edited."
+    assert first_block.value.source == "This is another test post that has been edited."
 
     # ID is preserved.
     assert previous_id == id_after_edit
@@ -464,7 +464,7 @@ def test_change_message_wrong_channel(
     message_added = BlogPage.objects.first().live_posts[-1]
     previous_id = message_added.id
     first_block = message_added.value["content"][0]
-    assert first_block.value == "This is another test post."
+    assert first_block.value.source == "This is another test post."
 
     edited_message = slack_edited_message["event"]
     edited_message["channel"] = "not_slack_channel"
@@ -473,7 +473,7 @@ def test_change_message_wrong_channel(
     message_added = BlogPage.objects.first().live_posts[-1]
     id_after_edit = message_added.id
     first_block = message_added.value["content"][0]
-    assert first_block.value == "This is another test post."
+    assert first_block.value.source == "This is another test post."
 
     assert previous_id == id_after_edit
 
