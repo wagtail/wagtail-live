@@ -138,8 +138,10 @@ That's it for the configuration part.
 
 Go to [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) and create a new page of type `LiveBlogPage`.
 
-You can choose the title you like for the page and fill the `channel_id` field with the ID of the channel you created in Slack.
+You can choose the title you like for the page and fill the `channel_id` field with the ID of the channel you created in the input source chosen (Slack/Telegram).
 
 Click on the `Live` button to display the page.
 
-Enter in the channel you created in Slack and start posting in the channel. You should see your posts in the page momentarily!
+Enter in the channel you created in the input source chosen and start posting.
+
+You should see your posts in the page momentarily!

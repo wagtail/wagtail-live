@@ -29,6 +29,7 @@ nav:
       - Set up interval polling publisher: getting_started/publishers/setup_interval_polling.md
       - Set up Django channels publisher: getting_started/publishers/setup_django_channels.md
       - Set up PieSocket publisher: getting_started/publishers/setup_piesocket.md
+      - Set up an event bus based on Redis PubSub: getting_started/publishers/setup_event_bus_redis.md
       - Set up websockets publisher: getting_started/publishers/setup_websockets.md
       - Set up starlette publisher: getting_started/publishers/setup_starlette.md
   - Reference:

@@ -3,12 +3,6 @@
 <a href="https://github.com/wagtail/wagtail-live/actions/workflows/test.yml">
     <img src="https://github.com/wagtail/wagtail-live/actions/workflows/test.yml/badge.svg"/>
 </a>
-<a href="https://opensource.org/licenses/BSD-3-Clause">
-    <img src="https://img.shields.io/badge/license-BSD-blue.svg"/>
-</a>
-<a href="https://pypi.org/project/wagtail-live/">
-    <img src="https://badge.fury.io/py/wagtail-live.svg" alt="Package version">
-</a>
 <a href="https://codecov.io/gh/wagtail/wagtail-live">
     <img src="https://codecov.io/gh/wagtail/wagtail-live/branch/main/graph/badge.svg?token=C2PNLG02P0"/>
 </a>
@@ -21,11 +15,19 @@
 <a href="https://lgtm.com/projects/g/wagtail/wagtail-live/context:javascript">
     <img alt="Language grade: JavaScript" src="https://img.shields.io/lgtm/grade/javascript/g/wagtail/wagtail-live.svg?logo=lgtm&logoWidth=18"/>
 </a>
+<a href="https://pypi.org/project/wagtail-live/">
+    <img src="https://badge.fury.io/py/wagtail-live.svg" alt="Package version">
+</a>
+<a href="https://opensource.org/licenses/BSD-3-Clause">
+    <img src="https://img.shields.io/badge/license-BSD-blue.svg"/>
+</a>
 </p>
 
-## About
+# Wagtail Live
 
-_Wagtail Live_ is a Wagtail CMS package to create live blog pages. 
+_Wagtail Live_ is a Wagtail CMS package to create live blog pages.
+
+## About
 
 With Wagtail Live:
 
@@ -45,15 +47,23 @@ Content is also editable via the Wagtail admin:
 
 ## Compatibility
 
-Wagtail Live works with Wagtail>=`2.12`, Django>=`2.2` and Python>=`3.7`.
+Wagtail Live works with:
+
+- Wagtail 2.12 or higher
+- Django 2.2 or higher
+- Python 3.7 or higher
 
 ## Getting started
 
-To get started with Wagtail Live, see the [Wagtail Live tutorial](https://wagtail.github.io/wagtail-live/getting_started/tutorial/).
+To get started with Wagtail Live, check out the [Wagtail Live tutorial](https://wagtail.github.io/wagtail-live/getting_started/tutorial/).
 
 ## Documentation
 
 All documentation is in the "docs" directory and online at [wagtail.github.io/wagtail-live/](https://wagtail.github.io/wagtail-live/).
+
+## Community
+
+We have a `wagtail-live` channel in [Wagtail's Slack workspace](https://github.com/wagtail/wagtail/wiki/Slack) where happens discussions about the project.
 
 ## Contributing - Testing
 
