@@ -22,6 +22,9 @@ def test_construct_text_block():
     text_block = construct_text_block(text="Some text")
     assert text_block.source == "Some text"
 
+    text_block = construct_text_block(text="Some <script>alert(1)</script>")
+    assert text_block.source == "Some alert(1)"
+
 
 def test_construct_embed_block():
     valid_embed = "https://www.youtube.com/watch?v=Wrc_gofwDR8"

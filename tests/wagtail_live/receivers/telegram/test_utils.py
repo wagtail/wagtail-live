@@ -7,6 +7,7 @@ from wagtail_live.receivers.telegram import (
     get_telegram_bot_token,
     get_telegram_webhook_url,
 )
+from wagtail_live.receivers.telegram.utils import format_url
 
 
 @override_settings(TELEGRAM_BOT_TOKEN="telegram-token")
@@ -56,3 +57,10 @@ def test_get_telegram_webhook_url_raises_error():
 
     with pytest.raises(ImproperlyConfigured, match=expected_err):
         get_telegram_webhook_url()
+
+
+def test_format_url():
+    assert format_url('www.example.com') == '//www.example.com'
+    assert format_url('//www.example.com') == '//www.example.com'
+    assert format_url('http://www.example.com') == 'http://www.example.com'
+    assert format_url('https://www.example.com') == 'https://www.example.com'
