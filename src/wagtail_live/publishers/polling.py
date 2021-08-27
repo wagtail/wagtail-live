@@ -199,7 +199,8 @@ class IntervalPollingPublisher(PollingPublisherMixin):
 
 
 class LongPollingPublisher(PollingPublisherMixin):
-    """Long polling Publisher. Class Based View.
+    """
+    Long polling Publisher. Class Based View.
 
     This class handles delivering new updates to the client side (Long polling technique).
     It accepts 2 request methods (POST and GET) which correspond to the following steps:

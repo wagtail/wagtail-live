@@ -2,13 +2,38 @@
 
 import re
 from functools import lru_cache
-from importlib import import_module
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.module_loading import import_string
 from wagtail.embeds.oembed_providers import all_providers
 
 SUPPORTED_MIME_TYPES = ["png", "jpeg", "gif"]
+
+
+def get_setting_or_raise(setting, setting_str):
+    """
+    Retrieves and returns the value of a setting if present in user's settings,
+    else raises an `ImproperlyConfigured` error.
+
+    Args:
+        setting (str):
+            The name of the setting to find in user's settings.
+        setting_str (str):
+            A verbose name for the setting when reporting errors.
+
+    Returns:
+        str: The value of the setting if defined in user's settings.
+
+    Raises:
+        ImproperlyConfigured: If the setting isn't defined.
+    """
+
+    value = getattr(settings, setting, "")
+    if not value:
+        err_msg = f"You haven't specified a {setting_str} in your settings."
+        raise ImproperlyConfigured(err_msg)
+    return value
 
 
 def get_live_page_model():
@@ -22,24 +47,21 @@ def get_live_page_model():
     Raises:
         ImproperlyConfigured: if no live page model is specified or
             the one specified doesn't inherit from `wagtail_live.models.LivePageMixin`.
+        ImportError: if the live page model class couldn't be loaded.
     """
 
     from wagtail_live.models import LivePageMixin
 
-    live_model = getattr(settings, "WAGTAIL_LIVE_PAGE_MODEL", "")
-    if not live_model:
-        raise ImproperlyConfigured(
-            "You haven't specified a live page model in your settings."
-        )
+    live_model_class = get_setting_or_raise(
+        setting="WAGTAIL_LIVE_PAGE_MODEL", setting_str="live page model"
+    )
 
-    dotted_path, model_name = live_model.rsplit(".", 1)
-    module = import_module(dotted_path)
-    model = getattr(module, model_name)
+    model = import_string(live_model_class)
 
     if not issubclass(model, LivePageMixin):
         raise ImproperlyConfigured(
-            "The live page model specified doesn't inherit from "
-            + "wagtail_live.models.LivePageMixin."
+            f"The live page model {live_model_class} doesn't inherit from "
+            "wagtail_live.models.LivePageMixin."
         )
 
     return model
@@ -55,23 +77,22 @@ def get_live_receiver():
     Raises:
         ImproperlyConfigured: if the receiver specified doesn't inherit from
             `wagtail_live.receivers.BaseMessageReceiver`.
+        ImportError: if the receiver class couldn't be loaded.
     """
 
     from wagtail_live.receivers.base import BaseMessageReceiver
 
-    live_receiver = getattr(settings, "WAGTAIL_LIVE_RECEIVER", "")
-    if not live_receiver:
+    live_receiver_class = getattr(settings, "WAGTAIL_LIVE_RECEIVER", "")
+    if not live_receiver_class:
         # Assume live interface is used, in which case no additional setup is needed.
         return
 
-    dotted_path, receiver_name = live_receiver.rsplit(".", 1)
-    module = import_module(dotted_path)
-    receiver = getattr(module, receiver_name)
+    receiver = import_string(live_receiver_class)
 
     if not issubclass(receiver, BaseMessageReceiver):
         raise ImproperlyConfigured(
-            f"The receiver {live_receiver} doesn't inherit from "
-            + "wagtail_live.receivers.BaseMessageReceiver."
+            f"The receiver {live_receiver_class} doesn't inherit from "
+            "wagtail_live.receivers.BaseMessageReceiver."
         )
     return receiver
 
@@ -85,19 +106,13 @@ def get_live_publisher():
 
     Raises:
         ImproperlyConfigured: if no publisher class is specified in settings.
+        ImportError: if the publisher class couldn't be loaded.
     """
 
-    live_publisher = getattr(settings, "WAGTAIL_LIVE_PUBLISHER", "")
-    if not live_publisher:
-        raise ImproperlyConfigured(
-            "You haven't specified a publisher class in your settings."
-        )
-
-    dotted_path, publisher_name = live_publisher.rsplit(".", 1)
-    module = import_module(dotted_path)
-    publisher = getattr(module, publisher_name)
-
-    return publisher
+    live_publisher_class = get_setting_or_raise(
+        setting="WAGTAIL_LIVE_PUBLISHER", setting_str="live publisher"
+    )
+    return import_string(live_publisher_class)
 
 
 def get_polling_timeout():

@@ -334,8 +334,15 @@ def test_get_embed_if_embed(slack_receiver):
     assert got == slack_embed_url[1:-1].split("|")[0]
 
 
-def test_get_embed_if_not_embed(slack_receiver):
+def test_get_embed_if_not_embed_1(slack_receiver):
     assert slack_receiver.get_embed("Not embed") == ""
+
+
+def test_get_embed_if_not_embed_2(slack_receiver):
+    slack_url = "<https://www.youtube.com/|https://www.youtube.com/>"
+    got = slack_receiver.get_embed(text=slack_url)
+
+    assert got == ""
 
 
 def test_parse_text_valid_url_format_1(slack_receiver):

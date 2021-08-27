@@ -25,6 +25,7 @@ nav:
     - Set up Django channels publisher: getting_started/setup_django_channels.md
     - Set up websockets publisher: getting_started/setup_websockets.md
     - Set up starlette publisher: getting_started/setup_starlette.md
+    - Set up event bus: getting_started/setup_event_bus_redis.md
     - Set up long polling publisher: getting_started/setup_long_polling.md
     - Set up PieSocket publisher: getting_started/setup_piesocket.md
     - Set up a local web server with ngrok: getting_started/setup_ngrok.md

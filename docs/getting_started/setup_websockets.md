@@ -6,7 +6,7 @@ This document describes how to set up a publisher using the websocket technique 
 
 ## Set up event bus
 
-First, follow the steps in [set up an event bus](setup_event_bus.md). 
+First, follow the steps in [set up an event bus](setup_event_bus_redis.md). 
 
 ## Install websockets
 Install `websockets`:

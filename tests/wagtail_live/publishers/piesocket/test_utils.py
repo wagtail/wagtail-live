@@ -11,9 +11,7 @@ from wagtail_live.publishers.piesocket import (
 
 def test_get_piesocket_api_key_setting_missing():
     get_piesocket_api_key.cache_clear()
-    expected_err = (
-        "Specify PIESOCKET_API_KEY if you intend to use Piesocket as publisher."
-    )
+    expected_err = "You haven't specified a PieSocket API Key in your settings."
 
     with pytest.raises(ImproperlyConfigured, match=expected_err):
         get_piesocket_api_key()
@@ -28,9 +26,7 @@ def test_get_piesocket_api_key():
 
 def test_get_piesocket_secret_setting_missing():
     get_piesocket_secret.cache_clear()
-    expected_err = (
-        "Specify PIESOCKET_SECRET if you intend to use Piesocket as publisher."
-    )
+    expected_err = "You haven't specified a PieSocket secret in your settings."
 
     with pytest.raises(ImproperlyConfigured, match=expected_err):
         get_piesocket_secret()
@@ -45,9 +41,7 @@ def test_get_piesocket_secret():
 
 def test_get_piesocket_endpoint_setting_missing():
     get_piesocket_endpoint.cache_clear()
-    expected_err = (
-        "Specify PIESOCKET_ENDPOINT if you intend to use Piesocket as publisher."
-    )
+    expected_err = "You haven't specified a PieSocket endpoint in your settings."
 
     with pytest.raises(ImproperlyConfigured, match=expected_err):
         get_piesocket_endpoint()

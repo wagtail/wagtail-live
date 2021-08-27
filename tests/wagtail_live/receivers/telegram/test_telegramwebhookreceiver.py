@@ -161,6 +161,13 @@ class TestTelegramwebhookMixin:
         with pytest.raises(WebhookSetupError, match=expected_err):
             TelegramWebhookReceiver.set_webhook()
 
+    def test_get_urls(self, mocker):
+        mocker.patch.object(TelegramWebhookMixin, "set_webhook", return_value=None)
+        urlpattern = TelegramWebhookMixin.get_urls()[0]
+
+        assert urlpattern.name == "telegram_events_handler"
+        TelegramWebhookMixin.set_webhook.assert_called_once()
+
 
 # BaseMessageReceiver methods
 
