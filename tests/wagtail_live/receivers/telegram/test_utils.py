@@ -60,7 +60,7 @@ def test_get_telegram_webhook_url_raises_error():
 
 
 def test_format_url():
-    assert format_url('www.example.com') == '//www.example.com'
-    assert format_url('//www.example.com') == '//www.example.com'
-    assert format_url('http://www.example.com') == 'http://www.example.com'
-    assert format_url('https://www.example.com') == 'https://www.example.com'
+    assert format_url("www.example.com") == "//www.example.com"
+    assert format_url("//www.example.com") == "//www.example.com"
+    assert format_url("http://www.example.com") == "http://www.example.com"
+    assert format_url("https://www.example.com") == "https://www.example.com"
