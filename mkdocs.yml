@@ -29,6 +29,11 @@ nav:
     - Set up long polling publisher: getting_started/setup_long_polling.md
     - Set up PieSocket publisher: getting_started/setup_piesocket.md
     - Set up a local web server with ngrok: getting_started/setup_ngrok.md
+  - How-To:
+    - WebSocket publisher:
+      - Introduction: howto/websocket_publisher/introduction.md
+      - How to write a WebSocket publisher based on a hosted WebSocket solution: howto/websocket_publisher/hosted_websocket_solution.md
+      - How to write a WebSocket publisher based on a framework/library: howto/websocket_publisher/framework_library.md
   - Reference:
       - Settings: reference/settings.md
       - LivePageMixin: reference/live-page-mixin.md
