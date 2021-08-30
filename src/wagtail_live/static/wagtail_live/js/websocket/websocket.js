@@ -1,6 +1,6 @@
 class WebsocketPublisher {
     /**
-     * Initializes and pens a new websocket connection with server side 
+     * Initializes and opens a new websocket connection with server side 
      * or a real-time message service.
      * @constructor
      * @param {String} baseURL - baseURL to use for websocket connections.
@@ -11,7 +11,7 @@ class WebsocketPublisher {
     }
 
     /**
-     * Registers callbacks on websockets events.
+     * Registers callbacks on websocket events.
      */
     start() {
         this.initialize_on_message_event();
