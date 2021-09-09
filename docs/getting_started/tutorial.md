@@ -77,7 +77,11 @@ We can now create our first `LiveBlogPage`. Add the following in `liveblog.model
         content_panels = Page.content_panels + LivePageMixin.panels
 ```
 
+We'll need to precise the path to our live page model as the value of the `WAGTAIL_LIVE_PAGE_MODEL` setting:
 
+```python
+WAGTAIL_LIVE_PAGE_MODEL = "liveblog.models.LiveBlogPage"
+```
 
 Create a `templates` folder inside your `liveblog` app. Add a `liveblog` folder in the `templates` folder that you just created and create a `live_blog_page.html` file. This represents our `LiveBlogPage` template.
 
