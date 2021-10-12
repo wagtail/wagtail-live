@@ -77,7 +77,7 @@ We can now create our first `LiveBlogPage`. Add the following in `liveblog.model
         content_panels = Page.content_panels + LivePageMixin.panels
 ```
 
-We'll need to precise the path to our live page model as the value of the `WAGTAIL_LIVE_PAGE_MODEL` setting:
+We'll need to specify the path to our live page model as the value of the `WAGTAIL_LIVE_PAGE_MODEL` setting:
 
 ```python
 WAGTAIL_LIVE_PAGE_MODEL = "liveblog.models.LiveBlogPage"
@@ -146,6 +146,6 @@ You can choose the title you like for the page and fill the `channel_id` field w
 
 Click on the `Live` button to display the page.
 
-Enter in the channel you created in the input source chosen and start posting.
+Enter the channel you created in the input source chosen and start posting.
 
 You should see your posts in the page momentarily!

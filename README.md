@@ -63,7 +63,7 @@ All documentation is in the "docs" directory and online at [wagtail.github.io/wa
 
 ## Community
 
-We have a `wagtail-live` channel in [Wagtail's Slack workspace](https://github.com/wagtail/wagtail/wiki/Slack) where happens discussions about the project.
+We have a `wagtail-live` channel in [Wagtail's Slack workspace](https://github.com/wagtail/wagtail/wiki/Slack) for discussions about the project.
 
 ## Contributing - Testing
 
