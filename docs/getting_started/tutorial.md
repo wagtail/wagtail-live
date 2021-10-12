@@ -77,7 +77,11 @@ We can now create our first `LiveBlogPage`. Add the following in `liveblog.model
         content_panels = Page.content_panels + LivePageMixin.panels
 ```
 
+We'll need to specify the path to our live page model as the value of the `WAGTAIL_LIVE_PAGE_MODEL` setting:
 
+```python
+WAGTAIL_LIVE_PAGE_MODEL = "liveblog.models.LiveBlogPage"
+```
 
 Create a `templates` folder inside your `liveblog` app. Add a `liveblog` folder in the `templates` folder that you just created and create a `live_blog_page.html` file. This represents our `LiveBlogPage` template.
 
@@ -112,9 +116,10 @@ An input source is a platform (often a messaging app, but any other tool that al
 
 We also need a receiver for our input source. The goal of a receiver is to receive/retrieve updates from an input source.
 
-For this tutorial, we will use Slack as an input source and configure its corresponding receiver.
+Choose an input source from the following list and configure its corresponding receiver:
 
-To do so, follow the steps in [Setup Slack Events API receiver](setup_slack.md)
+- Slack: [Setup Slack Events API receiver](receivers/setup_slack.md)
+- Telegram: [Setup Telegram webhook receiver](receivers/setup_telegram.md)
 
 ## Configuring a publisher
 
@@ -122,9 +127,14 @@ The last step required is to configure a publisher.
 
 The goal of publishers is to "publish" new updates to the frontend/client side.
 
-In this tutorial we will use the long polling technique to publish new updates on the frontend.
+Choose and configure a publisher from the following list:
 
-To do so, follow the steps in [Set up long polling publisher](setup_long_polling.md)
+- Long Polling: [Set up long polling publisher](publishers/setup_long_polling.md)
+- Interval Polling: [Set up interval polling publisher](publishers/setup_interval_polling.md)
+- Django channels: [Set up Django channels publisher](publishers/setup_django_channels.md)
+- PieSocket: [Set up PieSocket publisher](publishers/setup_piesocket.md)
+- Websockets: [Set up websockets publisher](publishers/setup_websockets.md)
+- Starlette: [Set up starlette publisher](publishers/setup_starlette.md)
 
 That's it for the configuration part.
 
@@ -132,8 +142,10 @@ That's it for the configuration part.
 
 Go to [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) and create a new page of type `LiveBlogPage`.
 
-You can choose the title you like for the page and fill the `channel_id` field with the ID of the channel you created in Slack.
+You can choose the title you like for the page and fill the `channel_id` field with the ID of the channel you created in the input source chosen (Slack/Telegram).
 
 Click on the `Live` button to display the page.
 
-Enter in the channel you created in Slack and start posting in the channel. You should see your posts in the page momentarily!
+Enter the channel you created in the input source chosen and start posting.
+
+You should see your posts in the page momentarily!

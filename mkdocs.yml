@@ -20,15 +20,18 @@ nav:
   - Home: index.md
   - Getting started:
     - Tutorial: getting_started/tutorial.md
-    - Set up Slack Events API receiver: getting_started/setup_slack.md
-    - Set up Telegram webhook receiver: getting_started/setup_telegram.md
-    - Set up Django channels publisher: getting_started/setup_django_channels.md
-    - Set up websockets publisher: getting_started/setup_websockets.md
-    - Set up starlette publisher: getting_started/setup_starlette.md
-    - Set up event bus: getting_started/setup_event_bus_redis.md
-    - Set up long polling publisher: getting_started/setup_long_polling.md
-    - Set up PieSocket publisher: getting_started/setup_piesocket.md
-    - Set up a local web server with ngrok: getting_started/setup_ngrok.md
+    - Receivers:
+      - Set up a local web server with ngrok: getting_started/receivers/setup_ngrok.md
+      - Set up Slack Events API receiver: getting_started/receivers/setup_slack.md
+      - Set up Telegram webhook receiver: getting_started/receivers/setup_telegram.md
+    - Publishers:
+      - Set up long polling publisher: getting_started/publishers/setup_long_polling.md
+      - Set up interval polling publisher: getting_started/publishers/setup_interval_polling.md
+      - Set up Django channels publisher: getting_started/publishers/setup_django_channels.md
+      - Set up PieSocket publisher: getting_started/publishers/setup_piesocket.md
+      - Set up an event bus based on Redis PubSub: getting_started/publishers/setup_event_bus_redis.md
+      - Set up websockets publisher: getting_started/publishers/setup_websockets.md
+      - Set up starlette publisher: getting_started/publishers/setup_starlette.md
   - Reference:
       - Settings: reference/settings.md
       - LivePageMixin: reference/live-page-mixin.md

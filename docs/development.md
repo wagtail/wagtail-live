@@ -15,7 +15,7 @@ python -m pip install -e '.[test,docs]' -U
 
 ## Testing
 
-Run the test suite locally
+Run the test suite locally:
 
 ```shell
 pytest
@@ -30,13 +30,13 @@ tox
 
 ## Code style linting
 
-Check code style of all files (requires GNU Make to be installed)
+Check the code style of all files (requires GNU Make to be installed):
 
 ```shell
 make lint
 ```
 
-Fix any errors that can be automatically fixed
+Fix any errors that can be automatically fixed:
 
 ```shell
 make format
@@ -46,7 +46,7 @@ make format
 
 ## Documentation
 
-Run documentation locally
+Run documentation locally:
 
 ```shell
 mkdocs serve
@@ -58,8 +58,6 @@ Deploy documentation to Github pages:
 ```shell
 mkdocs gh-deploy
 ```
-
-See [https://wagtail.github.io/wagtail-live/](https://wagtail.github.io/wagtail-live/)
 
 
 ## Releasing new versions

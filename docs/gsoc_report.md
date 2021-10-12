@@ -14,7 +14,7 @@ As a blogging tool, Wagtail Live cares about how a blogger manages content.
 
 In addition to the Wagtail admin that provides a smooth but less mobile-friendly editing interface, Wagtail Live gives a blogger the ability to use a messaging app like Slack, Telegram, Whatsapp to write blog posts.
 
-![Image showing a blogger and its audience](../images/wagtaillive.png)
+![Image showing a blogger and her audience](images/wagtaillive.png)
 
 Wagtail Live can be divided into three major components:
 
