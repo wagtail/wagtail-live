@@ -1,5 +1,8 @@
 """ Webapp views """
 
+from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ImproperlyConfigured
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
@@ -22,7 +25,18 @@ def send_update(update_type, data):
     LIVE_RECEIVER.dispatch_event(event=event)
 
 
-class ChannelListView(ListView):
+class WebappLoginRequiredMixin(LoginRequiredMixin):
+    def get_login_url(self):
+        login_url = getattr(settings, "WEBAPP_LOGIN_URL", "")
+        if not login_url:
+            raise ImproperlyConfigured(
+                "You haven't specified the WEBAPP_LOGIN_URL in your settings. "
+                "It is required if you intend to use the webapp interface."
+            )
+        return str(login_url)
+
+
+class ChannelListView(WebappLoginRequiredMixin, ListView):
     """List all channels"""
 
     model = Channel
@@ -32,7 +46,7 @@ class ChannelListView(ListView):
 channels_list_view = ChannelListView.as_view()
 
 
-class ChannelDetailView(DetailView):
+class ChannelDetailView(WebappLoginRequiredMixin, DetailView):
     """Channel details view"""
 
     model = Channel
