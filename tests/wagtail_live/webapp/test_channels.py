@@ -1,7 +1,6 @@
 """ Webapp Channel test suite """
 
 from django.contrib.auth.models import User
-from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase
 
 from wagtail_live.webapp.models import Channel
@@ -111,25 +110,3 @@ class ChannelAPITests(ChannelTestCaseSetUp):
         response = self.delete_channel(channel_name="non_existent_channel")
         self.assertEqual(response.status_code, 404)
         self.assertEqual(Channel.objects.count(), self.channels_count)
-
-
-class AuthenticationTests(TestCase):
-    def test_missing_webapp_login_url_setting(self):
-        expected = (
-            "You haven't specified the WEBAPP_LOGIN_URL in your settings. "
-            "It is required if you intend to use the webapp interface."
-        )
-        with self.assertRaisesMessage(ImproperlyConfigured, expected):
-            self.client.get("/webapp/channels/")
-
-    def test_login_required_for_channels_views(self):
-        webapp_login_url = "/login/"
-
-        with self.settings(WEBAPP_LOGIN_URL=webapp_login_url):
-            response = self.client.get("/webapp/channels/")
-            self.assertEqual(response.url, f"{webapp_login_url}?next=/webapp/channels/")
-
-            response = self.client.get("/webapp/channels/channel_2/")
-            self.assertEqual(
-                response.url, f"{webapp_login_url}?next=/webapp/channels/channel_2/"
-            )

@@ -1,5 +1,6 @@
 """ Webapp Image test suite """
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from tests.utils import get_test_image_file
@@ -13,8 +14,11 @@ class ImageAPITests(TestCase):
 
         image_content = get_test_image_file()
         self.image = Image.objects.create(message=message, image=image_content)
+        self.user = User.objects.create(username="Tester")
+        self.client.force_login(self.user)
 
     def tearDown(self):
+        self.client.logout()
         self.image.image.delete()
 
     def test_delete_image(self):

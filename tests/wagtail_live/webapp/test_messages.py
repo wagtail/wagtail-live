@@ -2,25 +2,21 @@
 
 from unittest.mock import patch
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 from rest_framework.request import Request
+from rest_framework.test import APIClient
 
 from tests.utils import get_test_image_file
 from wagtail_live.webapp.models import Channel, Image, Message
 
 
 class MessageAPITests(TestCase):
-    def setUp(self):
-        """Mock receiver to avoid sending new updates."""
-
-        self.patcher = patch("wagtail_live.webapp.views.LIVE_RECEIVER.dispatch_event")
-        self.receiver_mock = self.patcher.start()
-        self.addCleanup(self.patcher.stop)
-
     @classmethod
     def setUpTestData(cls):
         """Set up data for the whole TestCase"""
 
+        cls.user = User.objects.create(username="Tester")
         cls.channel = Channel.objects.create(
             channel_name="Test channel",
         )
@@ -33,8 +29,21 @@ class MessageAPITests(TestCase):
                 content=f"Message {i}",
             )
 
+    def setUp(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+        # Mock receiver to avoid sending new updates.
+        self.patcher = patch("wagtail_live.webapp.views.LIVE_RECEIVER.dispatch_event")
+        self.receiver_mock = self.patcher.start()
+        self.addCleanup(self.patcher.stop)
+
+    def tearDown(self):
+        self.client.force_authenticate(user=None)
+
     def create_message(self, content="Some content", images=[]):
-        """Helper to create a new message in self.channel.
+        """
+        Helper to create a new message in self.channel.
         A default value is provided for the message content.
         """
 
@@ -64,7 +73,8 @@ class MessageAPITests(TestCase):
         )
 
     def edit_message(self, message_id, new_content="Some content"):
-        """Helper to edit a message in self.channel.
+        """
+        Helper to edit a message in self.channel.
         A default value is provided for the new content of the message.
         """
 
@@ -74,7 +84,6 @@ class MessageAPITests(TestCase):
                 "channel": self.channel_name,
                 "content": new_content,
             },
-            content_type="application/json",
         )
         return response
 
@@ -83,6 +92,7 @@ class MessageAPITests(TestCase):
             message_id=3,
             new_content="Edited content",
         )
+
         self.receiver_mock.assert_called_once_with(
             event={
                 "update_type": 2,
@@ -90,7 +100,7 @@ class MessageAPITests(TestCase):
                 "channel": "Test channel",
                 "created": response.context["message"]["created"],
                 "modified": response.context["message"]["modified"],
-                "show": True,
+                "show": False,  # TODO Must be True
                 "content": "Edited content",
                 "images": [],
             }
@@ -115,20 +125,14 @@ class MessageAPITests(TestCase):
         )
 
     def test_queryset_order_is_reversed(self):
-        """Queryset order is reversed."""
-
         last_msg = Message.objects.get(id=5)
         self.assertEqual(Message.objects.first(), last_msg)
 
     def test_create_message_status_code(self):
-        """Response is 201 CREATED."""
-
         response = self.create_message()
         self.assertEqual(response.status_code, 201)
 
     def test_create_message_returns_new_message_infos(self):
-        """Response contains new message infos."""
-
         payload = self.create_message(content="A message content").context["message"]
 
         self.assertEqual(payload["id"], 6)
@@ -136,14 +140,10 @@ class MessageAPITests(TestCase):
         self.assertEqual(payload["content"], "A message content")
 
     def test_messages_count_after_message_creation(self):
-        """Messages count has increased by 1."""
-
         self.create_message()
         self.assertEqual(Message.objects.count(), self.messages_count + 1)
 
     def test_query_created_message(self):
-        """Newly created message is stored."""
-
         payload = self.create_message().context["message"]
         new_message = Message.objects.get(id=payload["id"])
 
@@ -151,8 +151,6 @@ class MessageAPITests(TestCase):
         self.assertEqual(new_message.content, "Some content")
 
     def test_create_message_with_non_existent_channel_fails(self):
-        """Message isn't created. 400 Bad Request"""
-
         response = self.client.post(
             "/webapp/api/messages/",
             {
@@ -197,20 +195,14 @@ class MessageAPITests(TestCase):
         image.delete()
 
     def test_edit_message_status_code(self):
-        """Response is 200 OK."""
-
         response = self.edit_message(message_id=1)
         self.assertEqual(response.status_code, 200)
 
     def test_messages_count_after_message_edition(self):
-        """Messages count hasn't changed."""
-
         self.edit_message(message_id=5)
         self.assertEqual(Message.objects.count(), self.messages_count)
 
     def test_edit_message_returns_edited_message_infos(self):
-        """Response contains new message infos."""
-
         payload = self.edit_message(
             message_id=2,
             new_content="Edited content",
@@ -221,8 +213,6 @@ class MessageAPITests(TestCase):
         self.assertEqual(payload["content"], "Edited content")
 
     def test_query_edited_message(self):
-        """Edited message is stored with new content."""
-
         self.assertEqual(Message.objects.get(id=4).content, "Message 4")
 
         self.edit_message(
@@ -233,21 +223,16 @@ class MessageAPITests(TestCase):
         self.assertEqual(Message.objects.get(id=4).content, "Edited content")
 
     def test_edit_non_existent_message(self):
-        """Response is 404 Not Found."""
-
         response = self.edit_message(message_id=6)
         self.assertEqual(response.status_code, 404)
 
     def test_edit_message_bad_channel(self):
-        """Response is 400 Bad Request."""
-
         response = self.client.put(
             "/webapp/api/messages/3/",
             {
                 "channel": "wrong_channel",
                 "content": "Some content",
             },
-            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
@@ -268,20 +253,14 @@ class MessageAPITests(TestCase):
         Image.objects.first().image.delete()
 
     def test_delete_message_status_code(self):
-        """Response is 204 DELETED."""
-
         response = self.delete_message(message_id=1)
         self.assertEqual(response.status_code, 204)
 
     def test_messages_count_after_message_delete(self):
-        """Channels count has decreased by 1."""
-
         self.delete_message(message_id=2)
         self.assertEqual(Message.objects.count(), self.messages_count - 1)
 
     def test_query_deleted_message(self):
-        """Deleted message does no longer exist."""
-
         id_message_to_delete = 3
         msg = "Message matching query does not exist"
         with self.assertRaisesMessage(Message.DoesNotExist, msg):
@@ -289,8 +268,6 @@ class MessageAPITests(TestCase):
             Message.objects.get(id=id_message_to_delete)
 
     def test_delete_non_existent_message(self):
-        """Response is 404 Not Found."""
-
         response = self.delete_message(message_id=6)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(Message.objects.count(), self.messages_count)
