@@ -106,6 +106,15 @@ class MessageAPITests(TestCase):
             }
         )
 
+    def test_new_update_sent_with_side_effect(self):
+        self.receiver_mock.side_effect = KeyError
+        response = self.edit_message(
+            message_id=3,
+            new_content="Edited content",
+        )
+        # No error.
+        self.assertEqual(response.status_code, 200)
+
     def delete_message(self, message_id):
         """Helper to delete a message."""
 

@@ -24,7 +24,11 @@ LIVE_RECEIVER = WebAppReceiver()
 def send_update(update_type, data):
     event = {"update_type": update_type}
     event.update(data)
-    LIVE_RECEIVER.dispatch_event(event=event)
+    try:
+        LIVE_RECEIVER.dispatch_event(event=event)
+    except KeyError:
+        # Message has been deleted from elsewhere.
+        pass
 
 
 class WebappLoginRequiredMixin(LoginRequiredMixin):
