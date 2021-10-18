@@ -66,7 +66,7 @@ class MessageAPITests(TestCase):
                 "channel": "Test channel",
                 "created": response.context["message"]["created"],
                 "modified": None,
-                "show": False,  # TODO Must be True
+                "show": True,
                 "content": "Some content",
                 "images": [],
             }
@@ -100,7 +100,7 @@ class MessageAPITests(TestCase):
                 "channel": "Test channel",
                 "created": response.context["message"]["created"],
                 "modified": response.context["message"]["modified"],
-                "show": False,  # TODO Must be True
+                "show": True,
                 "content": "Edited content",
                 "images": [],
             }

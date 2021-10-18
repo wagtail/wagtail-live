@@ -100,6 +100,7 @@ class CreateMessageView(WebappAPIView):
 
     def post(self, request):
         """API endpoint: create a new message"""
+
         serializer = MessageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
