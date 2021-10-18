@@ -1,21 +1,13 @@
 """ Wagtail Live models."""
 
-from collections import namedtuple
-
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from django.utils.functional import lazy
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.fields import StreamField
 
-from wagtail_live.blocks import LivePostBlock
+from wagtail_live.blocks import LivePostBlock, compare_live_posts_values
 from wagtail_live.signals import live_page_update
-
-PostContent = namedtuple("PostContent", ["show", "content"])
-sync_with_admin = lazy(
-    lambda: getattr(settings, "WAGTAIL_LIVE_SYNC_WITH_ADMIN", True), bool
-)
 
 
 class LivePageMixin(models.Model):
@@ -62,58 +54,54 @@ class LivePageMixin(models.Model):
 
         return self.last_updated_at.timestamp()
 
-    def __init__(self, *args, **kwargs):
-        """Add extra attributes to track changes made in the admin interface."""
-
-        super().__init__(*args, **kwargs)
-
-        if sync_with_admin():
-            self._previous_posts = {
-                post.id: PostContent(post.value["show"], post.value["content"])
-                for post in self.live_posts
-            }
-
     def save(self, sync=True, *args, **kwargs):
         """Update live page on save depending on the `WAGTAIL_LIVE_SYNC_WITH_ADMIN` setting."""
 
-        sync_changes = sync and sync_with_admin()
-        if sync_changes:
-            renders, _new_posts, _seen = [], {}, set()
+        sync_changes = sync and getattr(settings, "WAGTAIL_LIVE_SYNC_WITH_ADMIN", True)
+        has_changed = False
+        if sync_changes and self.id:
+            renders, seen = [], set()
+            previous_posts = {
+                live_post.id: live_post
+                for live_post in self.__class__.objects.get(id=self.id).live_posts
+            }
             now = timezone.now()
 
-            for post in reversed(self.live_posts):  # New posts
+            for i, post in enumerate(self.live_posts):  # New posts
                 post_id = post.id
-                show, content = post.value["show"], post.value["content"]
-                _new_posts[post_id] = PostContent(show, content)
-
-                if post_id in self._previous_posts:
-                    _seen.add(post_id)
-                    previous_version = self._previous_posts[post_id]
+                if post_id in previous_posts:
+                    seen.add(post_id)
 
                     # Check if the post has been modified.
-                    if (
-                        previous_version.show != show
-                        or previous_version.content != content
-                    ):
+                    previous_post = previous_posts[post_id]
+                    identic = compare_live_posts_values(post.value, previous_post.value)
+                    if not identic:
                         post.value["modified"] = now
-                        renders.append(post)
+                        renders.append(i)
 
-                else:  # This is a new post
-                    renders.append(post)
+                else:
+                    # This is a new post.
+                    # Force the value of `created` here to keep it synchronized with the
+                    # `last_updated_at` property.
+                    # This is mostly to avoid missing new updates with the polling publishers.
+                    post.value["created"] = now
+                    renders.append(i)
 
-            removals = list(set(self._previous_posts.keys()).difference(_seen))
+            removals = list(set(previous_posts.keys()).difference(seen))
 
-            _has_changed = bool(renders or removals)
-            if _has_changed:
+            has_changed = bool(renders or removals)
+            if has_changed:
                 self.last_updated_at = now
 
         result = super().save(*args, **kwargs)
 
-        if sync_changes and _has_changed:
-            # Update extra attributes when the page is saved
-            self._previous_posts = _new_posts
+        if sync_changes and has_changed:
+            # Reverse renders so the latest posts, which are in the start of the list,
+            # are processed later in the front end.
+            renders.reverse()
+            renders = list(map(self.get_live_post_by_index, renders))
 
-            # Send signal
+            # Send signal.
             live_page_update.send(
                 sender=self.__class__,
                 channel_id=self.channel_id,
@@ -277,7 +265,7 @@ class LivePageMixin(models.Model):
             current_posts.append(post_id)
 
             created = post.value["created"]
-            if created > last_update_ts:  # This is a new post
+            if created >= last_update_ts:  # This is a new post
                 updated_posts[post_id] = {
                     "show": post.value["show"],
                     "content": post.render(context={"block_id": post.id}),
@@ -285,7 +273,7 @@ class LivePageMixin(models.Model):
                 continue
 
             last_modified = post.value["modified"]
-            if last_modified and last_modified > last_update_ts:
+            if last_modified and last_modified >= last_update_ts:
                 # This is an edited post
                 updated_posts[post_id] = {
                     "show": post.value["show"],
