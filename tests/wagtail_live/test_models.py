@@ -636,15 +636,15 @@ def test_save_live_page_edited_post(blog_page_factory):
         page.save()
         page.refresh_from_db()
 
-        # last_updated_at field is modified
+        # last_updated_at field is modified.
         assert page.last_updated_at > last_updated_at
 
         post = page.get_live_post_by_message_id(message_id="some-id")
 
-        # The value of the modified field for the first post should change
-        assert post.value["modified"] is not None
+        # The value of the modified field for the first post should change.
+        assert post.value["modified"] == page.last_updated_at
 
-        # Signal is sent with correct renders
+        # Signal is sent with correct renders.
         assert count == 1
         assert _channel_id == "channel_id"
         assert _renders == [post]
