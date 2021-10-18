@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 from django.views.generic import DetailView, ListView
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -58,7 +60,12 @@ class ChannelDetailView(WebappLoginRequiredMixin, DetailView):
 channel_detail_view = ChannelDetailView.as_view()
 
 
-class CreateChannelView(APIView):
+class WebappAPIView(APIView):
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+class CreateChannelView(WebappAPIView):
     def post(self, request):
         """API endpoint: create a new channel"""
 
@@ -72,7 +79,7 @@ class CreateChannelView(APIView):
 create_channel_view = CreateChannelView.as_view()
 
 
-class DeleteChannelView(APIView):
+class DeleteChannelView(WebappAPIView):
     slug_field = "channel_name"
     slug_url_kwarg = "channel_name"
 
@@ -87,7 +94,7 @@ class DeleteChannelView(APIView):
 delete_channel_view = DeleteChannelView.as_view()
 
 
-class CreateMessageView(APIView):
+class CreateMessageView(WebappAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "webapp/message.html"
 
@@ -105,7 +112,7 @@ class CreateMessageView(APIView):
 create_message_view = CreateMessageView.as_view()
 
 
-class MessageDetailView(APIView):
+class MessageDetailView(WebappAPIView):
     """
     Retrieve, update or delete a Message instance.
     """
@@ -142,7 +149,7 @@ class MessageDetailView(APIView):
 message_detail_view = MessageDetailView.as_view()
 
 
-class DeleteImageView(APIView):
+class DeleteImageView(WebappAPIView):
     def delete(self, request, pk):
         """API endpoint: delete an image by its ID"""
 
