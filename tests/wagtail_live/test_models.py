@@ -564,6 +564,7 @@ def test_save_live_page_new_post(blog_page_factory):
 
     try:
         page.save()
+        page.refresh_from_db()
 
         # last_updated_at field is modified
         assert page.last_updated_at > last_updated_at
@@ -635,6 +636,7 @@ def test_save_live_page_edited_post(blog_page_factory):
 
     try:
         page.save()
+        page.refresh_from_db()
 
         # last_updated_at field is modified
         assert page.last_updated_at > last_updated_at
@@ -693,6 +695,7 @@ def test_save_live_page_deleted_post(blog_page_factory):
 
     try:
         page.save()
+        page.refresh_from_db()
 
         # last_updated_at field is modified
         assert page.last_updated_at > last_updated_at
@@ -757,6 +760,7 @@ def test_save_live_page_no_changes(blog_page_factory):
 
     try:
         page.save()
+        page.refresh_from_db()
 
         # last_updated_at field isn't modified
         assert page.last_updated_at == last_updated_at
