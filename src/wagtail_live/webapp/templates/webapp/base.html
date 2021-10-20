@@ -12,7 +12,7 @@
         <link href="{% static 'webapp/main.css' %}" rel="stylesheet" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&display=swap" rel="stylesheet">
     </head>
 
     <body>
@@ -20,30 +20,26 @@
             {% include "webapp/assets/logo.svg" %}
 
             <header>
-                <div class="d-flex flex-wrap bg-teal px-5 py-2 align-items-center">
-                    <a href="/" class="me-auto nav-item">
+                <div class="d-flex flex-wrap bg-teal px-lg-5 px-2 py-2 align-items-center">
+                    <a href="/" class="me-auto nav-item pt-1">
                         <svg role="img" aria-label="WagtailLive" width="185" height="50">
                             <use xlink:href="#wagtail-live-logo"></use>
                         </svg>
                     </a>
                     <div class="text-white">
-                        <span>Tidiane</span>
+                        <span>{{ user.username }}</span>
                         (<a href="/" class="nav-item text-white">logout</a>)
                     </div>
                 </div>
             </header>
     
             {% block nav %} {% endblock nav %}
-
-            <div id="infos" class="alert px-5 py-0 mb-0 sticky-top" style="opacity: 0; transition: all 1s ease 0s;" role="alert">
-                Channel alerts.
-            </div>
         
-            <main class="container-full mx-5">
-                <div class="row mx-0 justify-content-center">
-                    <div class="col-6 px-0">
+            <main class="container container-md-full mx-lg-5">
+                <div class="row mx-0 mt-lg-4 justify-content-center">
+                    <div class="col-lg-6 col-md-10 col-12 px-lg-0">
                         {% block form %} {% endblock form %}
-                        {% block content %}{% endblock content %} 
+                        {% block content %} {% endblock content %} 
                     </div>
                 </div>
             </main>

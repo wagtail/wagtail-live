@@ -1,12 +1,12 @@
 {% extends 'webapp/base.html' %} 
 {% load static %}
 
-{% block title %} Channels {%e ndblock title %}
+{% block title %} Channels {% endblock title %}
 
 {% block form %}
     <form id="new-channel-form">
         {% csrf_token %}
-        <div class="input-group input-group-lg mb-3">
+        <div class="input-group my-3">
             <input type="text" id="channel_name" name="channel_name" class="form-control" placeholder="Channel name" aria-label="Channel name" required>
             <button type="submit" class="btn btn-primary">New Channel</button>
         </div>
@@ -15,15 +15,15 @@
 
 {% block content %}
     <div class="mt-5">
-        <h1 style="font-size: 1.5rem;">Channels</h1>
+        <h1 class="fs-4">Channels</h1>
         <ul class="list-group my-4">
             {% for channel in channels %} 
                 {% with channel.channel_name as channel_name %}
                     <div class="d-flex" data-id="{{ channel_name }}">
 
-                        <li class="list-group-item list-group-item-action col-10">
+                        <li class="list-group-item list-group-item-action">
                             <a href="{% url 'channel_detail' channel_name %}" class="text-decoration-none">
-                                <div class="d-flex w-100 justify-content-between">
+                                <div class="d-flex flex-wrap my-1 justify-content-between">
                                     <h5 class="mb-1">{{ channel }}</h5>
                                     <small class="text-muted">Created {{ channel.created|timesince }} ago</small>
                                 </div>
@@ -33,7 +33,7 @@
                             </a>
                         </li>
 
-                        <button type="button" class="btn col-2 delete-btn" data-channel="{{channel_name}}">
+                        <button type="button" class="btn col-2 delete-btn opacity-50" data-channel="{{channel_name}}">
                             {% include "webapp/assets/delete.svg" %}
                         </button>
                     </div>

@@ -1,42 +1,73 @@
-{% with message_id=message.id  content=message.content images=message.images %}
-  <div class="message" data-id="{{message_id}}">
-    
-    <div class="message-content">
-      <div class="message-meta">
-        <span class="message-created">{{ message.created }}</span>
-        {% if message.modified %}
-          <span class="message-modified">edited on: {{ message.modified }}</span>
-        {% endif %}
-      </div>
-        
-      <div class="message-body">
-        <p class="message-text">{{ content }}</p>
-        {% if images %}
-          {% for img in images %}
-            <img class="message-image" src="{{img.image.url}}" width="{{img.image.width}}" height="{{img.image.height}}">
-          {% endfor %}
-        {% endif %}
-      </div>
-    </div>
-      
-    <form class="edit-form" data-id="{{message_id}}">
-      {% csrf_token %}
-      <textarea name="content" value="{{content}}">{{ content }}</textarea>
-      {% if images %}
-        {% for img in images %}
-          <div class="image-box" data-id="{{img.id}}">
-            <a href="{{img.image.url}}">{{ img.image.name }}</a>
-            <button data-id="{{img.id}}" class="delete-image delete-btn">Delete image</button>
-          </div>
-        {% endfor %}
-      {% endif %}
-      <input type="file" name="images" accept=".jpg, .jpeg, .png" multiple>
-      <button data-id="{{message_id}}" class="edit-message">Save changes</button>
-    </form>
+{% load webapp_tags %}
 
-    <div class="btn-group">
-      <button data-id="{{message_id}}" class="show-edit-form">Edit message</button>
-      <button data-id="{{message_id}}" class="delete-message delete-btn">Delete message</button>
+{% with message_id=message.id content=message.content images=message.images %}
+    <div class="message row m-0 align-items-center align-items-md-start" data-id="{{message_id}}">
+        <div class="message-meta col-9 col-md-2 px-0">
+            <span class="message-created fs-6 opacity-75" style="color: #de5c54">
+				{{ message.created|to_datetime|date:"d M" }}
+			</span>
+            {% if message.modified %}
+				<span class="d-md-none">-</span>
+				<span class="small text-muted">
+					{{ message.modified|to_datetime|timesince }} ago
+				</span>
+            {% endif %}
+        </div>
+
+        <div class="message-content px-0 py-2 col-12 col-md-8 order-3 order-md-2">
+
+            <div class="message-body">
+                {{ content|linebreaks }} 
+				{% if images %} 
+					{% for img in images %}
+						<img data-id="{{img.id}}" class="img-fluid my-1" src="{{img.image.url}}"/>
+					{% endfor %}
+				{% endif %}
+            </div>
+
+			<form class="edit-form" data-id="{{message_id}}" style="display: none;">
+				{% csrf_token %}
+				<textarea class="form-control" name="content" value="{{content}}" style="height: 200px;">{{ content }}</textarea>
+				
+				{% if images %}
+					<ul class="list-unstyled row mx-0 mt-2 align-items-center">
+						{% for img in images %}
+							<li class="p-3 col-4" data-id="{{img.id}}">
+								<div class="d-flex">
+									<img data-id="{{img.id}}" class="img-thumbnail col-9" src="{{img.image.url}}"/>
+									<button data-id="{{img.id}}" class="opacity-50 col-3 delete-image btn">
+										{% include "webapp/assets/delete.svg" %}
+									</button>
+								</div>
+							</li>
+						{% endfor %} 
+					</ul>
+				{% endif %}
+
+				<div class="d-flex my-4 justify-content-between">
+					<button type="button" class="btn d-flex align-items-center upload-btn">
+						<input class="upload-file" type="file" name="images" accept=".jpg, .jpeg, .png" multiple style="display: none;">
+						{% include "webapp/assets/choose_image.svg" %}
+						<div class="upload-count small form-text"></div>
+					</button>
+					<div class="btn-group small">
+						<button type="reset" data-id="{{message_id}}" class="cancel-edit btn">Cancel</button>
+						<button type="submit" data-id="{{message_id}}" class="edit-message btn btn-primary">Save changes</button>
+					</div>
+				</div>
+
+			</form>
+        </div>
+
+        <div class="col-3 col-md-2 order-md-3 pe-0">
+			<div class="d-flex justify-content-between">
+				<button  type="button" data-id="{{message_id}}" class="show-edit-form opacity-50 rounded-btn btn">
+					{% include "webapp/assets/edit.svg" %}
+				</button>
+				<button  type="button" data-id="{{message_id}}" class="delete-message btn opacity-50 rounded-btn delete-btn">
+					{% include "webapp/assets/delete.svg" %}
+				</button>
+			</div>
+        </div>
     </div>
-  </div>
 {% endwith %}
