@@ -28,7 +28,7 @@
                     </a>
                     <div class="text-white">
                         <span>{{ user.username }}</span>
-                        (<a href="/" class="nav-item text-white">logout</a>)
+                        <a href="/" class="nav-item text-white">logout</a>
                     </div>
                 </div>
             </header>
@@ -36,13 +36,41 @@
             {% block nav %} {% endblock nav %}
         
             <main class="container container-md-full mx-lg-5">
-                <div class="row mx-0 mt-lg-4 justify-content-center">
+                <div class="row mx-0 justify-content-center">
                     <div class="col-lg-6 col-md-10 col-12 px-lg-0">
                         {% block form %} {% endblock form %}
                         {% block content %} {% endblock content %} 
                     </div>
                 </div>
             </main>
+
+            <footer class="container-fluid ps-5 mt-5">
+                <div class="row text-center text-lg-start">
+                    <div class="col-lg-3"></div>
+
+                    <div class="col-lg-6 col-12 row align-items-start justify-content-between">
+                        <menu class="list-unstyled col-6 row gy-2 text-decoration-none">
+                            <li class="col-12"><a href="#" class="text-decoration-none">Home</a></li>
+                            <li class="col-12"><a href="#" class="text-decoration-none" class="active">Channels</a></li>
+                            <li class="col-12"><a href="#" class="text-decoration-none">About</a></li>
+                            <li class="col-12"><a href="#" class="text-decoration-none">Get in touch</a></li>
+                        </menu>
+                
+                        <ul class="list-unstyled col-6 row gy-2 text-decoration-none">
+                            <li class="col-12"><a href="#" class="text-decoration-none">Cookie Information</a></li>
+                            <li class="col-12"><a href="#" class="text-decoration-none">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3 col-12 mt-4 list-unstyled">
+                        <svg role="img" aria-label="WagtailLive" width="185" height="50">
+                            <use xlink:href="#footer-logo"></use>
+                        </svg>
+                    </div>
+
+                    <span class="col-12 col-lg-6 mx-auto py-3 text-secondary">© Copyright 2021 WagtailLive</span>
+                </div>
+            </footer>
         </div>
 
         <script src="{% static 'webapp/main.js' %}"></script>

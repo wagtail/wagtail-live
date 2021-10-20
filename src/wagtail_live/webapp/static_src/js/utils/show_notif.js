@@ -15,7 +15,9 @@ export default function showNotif(msg, reason = 1) {
     notifDiv.innerText = msg;
     notifDiv.style.opacity = 0;
     notifDiv.style.height = 0;
-    document.body.insertAdjacentElement("afterbegin", notifDiv);
+    document
+        .querySelector(".wrapper")
+        .insertAdjacentElement("beforeend", notifDiv);
 
     if (reason == 1) {
         notifDiv.classList.add("alert-success");

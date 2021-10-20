@@ -38,7 +38,7 @@
 {% endblock nav %}
 
 {% block form %}
-    <form class="m-0 fixed-bottom bg-body w-100 w-md-auto compose-form" id="new-message-form">
+    <form class="m-0 mt-md-5 fixed-bottom bg-body w-100 w-md-auto compose-form" id="new-message-form" style="transition: all 1s ease-out;">
         {% csrf_token %}
         <textarea class="form-control p-3 light-border" placeholder="What is happening?" id="content" name="content" required></textarea>
         <div class="p-2 pb-0 d-flex flex-wrap align-items-center publish-actions">
