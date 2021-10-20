@@ -78,4 +78,3 @@ db.sqlite3
 
 ### Frontend ###
 node_modules/
-src/wagtail_live/webapp_tmp/static/
