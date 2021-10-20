@@ -6,10 +6,10 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   devtool: "source-map",
   entry: {
-    main: path.resolve(__dirname, "src/wagtail_live/webapp_tmp/static_src/js/main.js"),
+    main: path.resolve(__dirname, "src/wagtail_live/webapp/static_src/js/main.js"),
   },
   output: {
-    path: path.resolve(__dirname, "src/wagtail_live/webapp_tmp/static/webapp"),
+    path: path.resolve(__dirname, "src/wagtail_live/webapp/static/webapp"),
     publicPath: "",
     filename: "[name].js",
   },
