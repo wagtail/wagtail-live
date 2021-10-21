@@ -7,8 +7,10 @@ from django.utils.timezone import now
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks.stream_block import StreamValue
 from wagtail.core.models import Page
+from wagtail.images import get_image_model
 
 from tests.testapp.models import BlogPage
+from tests.utils import get_test_image_file
 from wagtail_live.blocks import construct_live_post_block
 from wagtail_live.models import LivePageMixin
 from wagtail_live.signals import live_page_update
@@ -588,7 +590,7 @@ def test_save_live_page_new_post(blog_page_factory):
 
 
 @pytest.mark.django_db
-def test_save_live_page_edited_post(blog_page_factory):
+def test_save_live_page_show_edited(blog_page_factory):
     # Setup signal callback
     count = 0
     _channel_id = _renders = _removals = None
@@ -634,6 +636,303 @@ def test_save_live_page_edited_post(blog_page_factory):
         ]
     )
     page.live_posts = new_posts
+
+    try:
+        page.save()
+
+        # last_updated_at field is modified.
+        assert page.last_updated_at > last_updated_at
+
+        post = page.get_live_post_by_message_id(message_id="some-id")
+
+        # The value of the modified field for the first post should change.
+        assert post.value["modified"] == page.last_updated_at
+
+        # Signal is sent with correct renders.
+        assert count == 1
+        assert _channel_id == "channel_id"
+        assert _renders == [post]
+        assert _removals == []
+
+    finally:
+        live_page_update.disconnect(callback)
+
+
+@pytest.mark.django_db
+def test_save_live_page_content_edited(blog_page_factory):
+    # Setup signal callback
+    count = 0
+    _channel_id = _renders = _removals = None
+
+    def callback(sender, channel_id, renders, removals, **kwargs):
+        nonlocal count, _channel_id, _renders, _removals
+        _channel_id, _renders, _removals = channel_id, renders, removals
+        count += 1
+
+    live_page_update.connect(callback)
+
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="channel_id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [
+                        {
+                            "type": "text",
+                            "value": "Some text",
+                        },
+                    ],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+
+    try:
+        page.save()
+
+        # last_updated_at field is modified.
+        assert page.last_updated_at > last_updated_at
+
+        post = page.get_live_post_by_message_id(message_id="some-id")
+
+        # The value of the modified field for the first post should change.
+        assert post.value["modified"] == page.last_updated_at
+
+        # Signal is sent with correct renders.
+        assert count == 1
+        assert _channel_id == "channel_id"
+        assert _renders == [post]
+        assert _removals == []
+
+    finally:
+        live_page_update.disconnect(callback)
+
+
+@pytest.mark.django_db
+def test_save_live_page_different_block_types(blog_page_factory):
+    # Setup signal callback
+    count = 0
+    _channel_id = _renders = _removals = None
+
+    def callback(sender, channel_id, renders, removals, **kwargs):
+        nonlocal count, _channel_id, _renders, _removals
+        _channel_id, _renders, _removals = channel_id, renders, removals
+        count += 1
+
+    live_page_update.connect(callback)
+
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [
+                        {
+                            "type": "embed",
+                            "value": "https://www.youtube.com/watch?v=Wrc_gofwDR8",
+                        },
+                    ],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="channel_id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [
+                        {
+                            "type": "text",
+                            "value": "Some text",
+                        },
+                    ],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+
+    try:
+        page.save()
+
+        # last_updated_at field is modified.
+        assert page.last_updated_at > last_updated_at
+
+        post = page.get_live_post_by_message_id(message_id="some-id")
+
+        # The value of the modified field for the first post should change.
+        assert post.value["modified"] == page.last_updated_at
+
+        # Signal is sent with correct renders.
+        assert count == 1
+        assert _channel_id == "channel_id"
+        assert _renders == [post]
+        assert _removals == []
+
+    finally:
+        live_page_update.disconnect(callback)
+
+
+@pytest.mark.django_db
+def test_save_live_page_different_embed_values(blog_page_factory):
+    # Setup signal callback
+    count = 0
+    _channel_id = _renders = _removals = None
+
+    def callback(sender, channel_id, renders, removals, **kwargs):
+        nonlocal count, _channel_id, _renders, _removals
+        _channel_id, _renders, _removals = channel_id, renders, removals
+        count += 1
+
+    live_page_update.connect(callback)
+
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [
+                        {
+                            "type": "embed",
+                            "value": "https://www.youtube.com/watch?v=Wrc_gofwDR8",
+                        },
+                    ],
+                },
+            },
+        ]
+    )
+    page = blog_page_factory(channel_id="channel_id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    new_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [
+                        {
+                            "type": "embed",
+                            "value": "https://www.youtube.com/watch?v=CQ7Gx8b7ac4&t=939s",
+                        },
+                    ],
+                },
+            },
+        ]
+    )
+    page.live_posts = new_posts
+
+    try:
+        page.save()
+
+        # last_updated_at field is modified.
+        assert page.last_updated_at > last_updated_at
+
+        post = page.get_live_post_by_message_id(message_id="some-id")
+
+        # The value of the modified field for the first post should change.
+        assert post.value["modified"] == page.last_updated_at
+
+        # Signal is sent with correct renders.
+        assert count == 1
+        assert _channel_id == "channel_id"
+        assert _renders == [post]
+        assert _removals == []
+
+    finally:
+        live_page_update.disconnect(callback)
+
+
+@pytest.mark.django_db
+def test_save_live_page_different_images(blog_page_factory):
+    # Setup signal callback
+    count = 0
+    _channel_id = _renders = _removals = None
+
+    def callback(sender, channel_id, renders, removals, **kwargs):
+        nonlocal count, _channel_id, _renders, _removals
+        _channel_id, _renders, _removals = channel_id, renders, removals
+        count += 1
+
+    live_page_update.connect(callback)
+
+    live_posts = json.dumps(
+        [
+            {
+                "type": "live_post",
+                "id": "some-id",
+                "value": {
+                    "message_id": "some-id",
+                    "created": "2021-01-01T12:00:00",
+                    "modified": None,
+                    "show": True,
+                    "content": [
+                        {
+                            "type": "image",
+                            "value": "1",
+                        },
+                    ],
+                },
+            },
+        ]
+    )
+
+    page = blog_page_factory(channel_id="channel_id", live_posts=live_posts)
+    last_updated_at = page.last_updated_at
+
+    # Replace image
+    post = page.get_live_post_by_index(0)
+    image1 = get_image_model().objects.create(
+        title="image1", file=get_test_image_file(filename="image1.png", size=(100, 100))
+    )
+    post.value["content"][0].value = image1
 
     try:
         page.save()
@@ -729,7 +1028,12 @@ def test_save_live_page_no_changes(blog_page_factory):
                     "created": "2021-01-01T12:00:00",
                     "modified": None,
                     "show": True,
-                    "content": [],
+                    "content": [
+                        {
+                            "type": "text",
+                            "value": "Some text",
+                        },
+                    ],
                 },
             },
         ]
@@ -747,7 +1051,12 @@ def test_save_live_page_no_changes(blog_page_factory):
                     "created": "2021-01-01T12:00:00",
                     "modified": None,
                     "show": True,
-                    "content": [],
+                    "content": [
+                        {
+                            "type": "text",
+                            "value": "Some text",
+                        },
+                    ],
                 },
             },
         ]
