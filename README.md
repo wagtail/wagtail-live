@@ -72,3 +72,9 @@ To contribute to Wagtail Live or run the test suite, refer to the [development s
 ## Google Summer of Code
 
 This project is part of Google Summer of Code 2021 by Tidiane Dia. Check out the [GSOC report](https://wagtail.github.io/wagtail-live/gsoc_report/).
+
+## Sponsors
+
+Wagtail-live provides a [publisher based on PieSocket](https://wagtail.github.io/wagtail-live/getting_started/publishers/setup_piesocket/). 
+
+PieSocket offers a 'free-plus' plan to all our users. See the link above for details.
