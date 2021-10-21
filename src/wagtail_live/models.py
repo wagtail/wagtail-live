@@ -52,7 +52,10 @@ class LivePageMixin(models.Model):
     def last_update_timestamp(self):
         """Timestamp of the last update of this page."""
 
-        return self.last_updated_at.timestamp()
+        # Live posts are saved using a json format.
+        # We strip the microseconds here to follow that format.
+        microsecond = (self.last_updated_at.microsecond // 1000) * 1000
+        return self.last_updated_at.replace(microsecond=microsecond).timestamp()
 
     def save(self, sync=True, *args, **kwargs):
         """Update live page on save depending on the `WAGTAIL_LIVE_SYNC_WITH_ADMIN` setting."""

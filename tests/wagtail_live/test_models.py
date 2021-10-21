@@ -56,7 +56,11 @@ def test_live_page_mixin_live_posts_is_optional():
 def test_last_update_timestamp(blog_page_factory):
     page = blog_page_factory(channel_id="some-id")
 
-    assert page.last_update_timestamp == page.last_updated_at.timestamp()
+    microsecond = (page.last_updated_at.microsecond // 1000) * 1000
+    assert (
+        page.last_update_timestamp
+        == page.last_updated_at.replace(microsecond=microsecond).timestamp()
+    )
 
 
 @pytest.mark.django_db
@@ -563,7 +567,6 @@ def test_save_live_page_new_post(blog_page_factory):
 
     try:
         page.save()
-        page.refresh_from_db()
 
         # last_updated_at field is modified
         assert page.last_updated_at > last_updated_at
@@ -634,7 +637,6 @@ def test_save_live_page_edited_post(blog_page_factory):
 
     try:
         page.save()
-        page.refresh_from_db()
 
         # last_updated_at field is modified.
         assert page.last_updated_at > last_updated_at
@@ -690,7 +692,6 @@ def test_save_live_page_deleted_post(blog_page_factory):
 
     try:
         page.save()
-        page.refresh_from_db()
 
         # last_updated_at field is modified
         assert page.last_updated_at > last_updated_at
@@ -755,7 +756,6 @@ def test_save_live_page_no_changes(blog_page_factory):
 
     try:
         page.save()
-        page.refresh_from_db()
 
         # last_updated_at field isn't modified
         assert page.last_updated_at == last_updated_at
