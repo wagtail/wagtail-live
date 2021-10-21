@@ -1,10 +1,16 @@
 # Set up PieSocket publisher
 
-This document describes how to set up a publisher using [PieSocket](https://www.piesocket.com/) websocket server API.
+---
+
+**Note:** PieSocket proposes a free-plus plan to Wagtail-live users which consists of the free plan with a daily rate message increased to 1 million. To benefit from it, follow the partner link instead of the regular one.
+
+---
+
+This document describes how to set up a publisher using [PieSocket](https://www.piesocket.com/)([partner link](https://www.piesocket.com/?partner=2106)) websocket server API.
 
 ## Create a PieSocket account
 
-First, you will need to create a PieSocket account [here](https://www.piesocket.com/pricing).
+First, you will need to create a PieSocket account [here](https://www.piesocket.com/pricing)([partner link](https://www.piesocket.com/pricing/?partner=2106)).
 
 ## Create a new API key
 
