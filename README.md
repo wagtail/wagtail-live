@@ -77,4 +77,4 @@ This project is part of Google Summer of Code 2021 by Tidiane Dia. Check out the
 
 Wagtail-live provides a [publisher based on PieSocket](https://wagtail.github.io/wagtail-live/getting_started/publishers/setup_piesocket/). 
 
-PieSocket offers to all our users a free-plus plan. See the link above for more details.
+PieSocket offers a 'free-plus' plan to all our users. See the link above for details.
