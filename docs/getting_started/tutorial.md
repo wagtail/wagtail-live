@@ -27,8 +27,6 @@ $ source livesite/livesite/bin/activate
 
 For other shells see the [`venv` documentation](https://docs.python.org/3/library/venv.html).
 
-
-
 ### Install Wagtail Live and other dependencies
 
 Use pip to install Wagtail and Wagtail Live:
@@ -91,22 +89,18 @@ For now, add this to your `live_blog_page.html` template:
 ```
 That's all we need in our models.
 
-### Create the database
+## Configuring a publisher
 
-Let's create our tables now:
+The goal of publishers is to "publish" new updates to the frontend/client side.
 
-```console
-$ python3 manage.py makemigrations
-$ python3 manage.py migrate
-```
+Choose and configure a publisher from the following list:
 
-### Create an admin user
-
-```console
-$ python3 manage.py createsuperuser
-```
-
-When logged into the admin site, a superuser has full permissions and is able to view/create/manage the database.
+- Long Polling: [Set up long polling publisher](publishers/setup_long_polling.md)
+- Interval Polling: [Set up interval polling publisher](publishers/setup_interval_polling.md)
+- Django channels: [Set up Django channels publisher](publishers/setup_django_channels.md)
+- PieSocket: [Set up PieSocket publisher](publishers/setup_piesocket.md)
+- Websockets: [Set up websockets publisher](publishers/setup_websockets.md)
+- Starlette: [Set up starlette publisher](publishers/setup_starlette.md)
 
 ## Configure an input source and its corresponding receiver
 
@@ -121,22 +115,20 @@ Choose an input source from the following list and configure its corresponding r
 - Slack: [Setup Slack Events API receiver](receivers/setup_slack.md)
 - Telegram: [Setup Telegram webhook receiver](receivers/setup_telegram.md)
 
-## Configuring a publisher
-
-The last step required is to configure a publisher.
-
-The goal of publishers is to "publish" new updates to the frontend/client side.
-
-Choose and configure a publisher from the following list:
-
-- Long Polling: [Set up long polling publisher](publishers/setup_long_polling.md)
-- Interval Polling: [Set up interval polling publisher](publishers/setup_interval_polling.md)
-- Django channels: [Set up Django channels publisher](publishers/setup_django_channels.md)
-- PieSocket: [Set up PieSocket publisher](publishers/setup_piesocket.md)
-- Websockets: [Set up websockets publisher](publishers/setup_websockets.md)
-- Starlette: [Set up starlette publisher](publishers/setup_starlette.md)
 
 That's it for the configuration part.
+
+## Create the database
+
+Finally, let's create our tables and an admin user:
+
+```console
+$ python3 manage.py makemigrations
+$ python3 manage.py migrate
+$ python3 manage.py createsuperuser
+```
+
+When logged into the admin site, a superuser has full permissions and is able to view/create/manage the database.
 
 ## Liveblogging
 
