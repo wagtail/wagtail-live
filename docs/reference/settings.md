@@ -61,7 +61,7 @@ TELEGRAM_BOT_TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
 ### `TELEGRAM_WEBHOOK_URL`
 | Description                                                                                                           | Required               | Default |
 |-----------------------------------------------------------------------------------------------------------------------|------------------------|---------|
-| The URL used by Telegram to send updates to your app.<br><br>It must be publicly accessible and served over `https`. | For Telegram receivers | None    |
+| The URL used by Telegram to send updates to your app.<br>It must be publicly accessible and served over `https`. | For Telegram receivers | None    |
 
 ## Polling publishers
 ### `WAGTAIL_LIVE_POLLING_TIMEOUT`
