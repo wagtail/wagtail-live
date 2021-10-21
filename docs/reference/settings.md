@@ -1,6 +1,6 @@
 # Settings
 
-Wagtail Live makes use of the following settings, in addition to Django and Wagtail's:
+Wagtail Live makes use of the following settings, in addition to Django's and Wagtail's:
 
 ## Core
 ### `WAGTAIL_LIVE_PAGE_MODEL`
@@ -34,7 +34,7 @@ See [Configuring a publisher](../getting_started/tutorial.md#configuring-a-publi
 |----------------------|---------------------|---------|
 | Slack signing secret | For Slack receivers | None    |
 
-We recommend storing sensitives values as environment variables.
+We recommend storing sensitive values as environment variables.
 ```python
 SLACK_SIGNING_SECRET = os.environ['SLACK_SIGNING_SECRET']
 ```
@@ -42,7 +42,7 @@ SLACK_SIGNING_SECRET = os.environ['SLACK_SIGNING_SECRET']
 ### `SLACK_BOT_TOKEN`
 | Description                                                   | Required            | Default |
 |---------------------------------------------------------------|---------------------|---------|
-| Slack bot token. It's used to download images from Slack API. | For Slack receivers | None    |
+| Slack bot token. This is used to download images from the Slack API. | For Slack receivers | None    |
 
 ```python
 SLACK_BOT_TOKEN = os.environ['SLACK_BOT_TOKEN']
@@ -61,7 +61,7 @@ TELEGRAM_BOT_TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
 ### `TELEGRAM_WEBHOOK_URL`
 | Description                                                                                                           | Required               | Default |
 |-----------------------------------------------------------------------------------------------------------------------|------------------------|---------|
-| The URL Telegram uses to send updates to your app.<br><br>It needs to be publicly accessible and server over `https`. | For Telegram receivers | None    |
+| The URL used by Telegram to send updates to your app.<br><br>It must be publicly accessible and served over `https`. | For Telegram receivers | None    |
 
 ## Polling publishers
 ### `WAGTAIL_LIVE_POLLING_TIMEOUT`
