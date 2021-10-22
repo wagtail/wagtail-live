@@ -132,6 +132,11 @@ When logged into the admin site, a superuser has full permissions and is able to
 
 ## Liveblogging
 
+Start the development server as following:
+```console
+$ python3 manage.py runserver
+```
+
 Go to [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) and create a new page of type `LiveBlogPage`.
 
 You can choose the title you like for the page and fill the `channel_id` field with the ID of the channel you created in the input source chosen (Slack/Telegram).
