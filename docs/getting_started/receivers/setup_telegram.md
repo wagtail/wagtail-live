@@ -9,27 +9,11 @@ First, you will need to [create a Telegram bot](https://core.telegram.org/bots#6
 After creating a bot, an authorization token will be genrated for your new bot.
 > The token is a string along the lines of 110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw that is required to authorize the bot and send requests to the Bot API. Keep your token secure and store it safely, it can be used by anyone to control your bot.
 
-### Save your bot token
-
-Let's save the bot token as an environment variable like this:
-
-**On Windows** (cmd.exe):
-
-```doscon
-> SET TELEGRAM_BOT_TOKEN=<your-bot-token>
-```
-
-**On GNU/Linux or MacOS** (bash):
-
-```console
-$ export TELEGRAM_BOT_TOKEN=<your-bot-token>
-```
-
 ### Add your bot token to `settings`
 
 Add the following in your `settings.base` file:
 ```python
-TELEGRAM_BOT_TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
+TELEGRAM_BOT_TOKEN = "your-bot-token"
 ```
 
 ## Receiving Telegram events
