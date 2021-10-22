@@ -44,31 +44,12 @@ Wagtail Live needs the following information to communicate with your app:
 
     Grab the token and copy it somewhere. Keep your token safe!
 
-
-### Save your tokens
-
-Let's save the bot token and signing secret as environment variables like this:
-
-**On Windows** (cmd.exe):
-
-```doscon
-> SET SLACK_SIGNING_SECRET=<your-signing-secret>
-> SET SLACK_BOT_TOKEN=xoxb-<your-bot-token>
-```
-
-**On GNU/Linux or MacOS** (bash):
-
-```console
-$ export SLACK_SIGNING_SECRET=<your-signing-secret>
-$ export SLACK_BOT_TOKEN=xoxb-<your-bot-token>
-```
-
 ### Add your tokens to `settings`
 
 Add the following in your `settings.base` file:
 ```python
-SLACK_SIGNING_SECRET = os.environ['SLACK_SIGNING_SECRET']
-SLACK_BOT_TOKEN = os.environ['SLACK_BOT_TOKEN']
+SLACK_SIGNING_SECRET = "your-signing-secret"
+SLACK_BOT_TOKEN = "your-bot-token"
 ```
 
 ## Receiving Slack events

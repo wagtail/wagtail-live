@@ -27,23 +27,6 @@ After creating a new key, you can click the little information icon to find them
 
 
 ![PieSocket credentials](../../images/piesocket_credentials.jpg)
-### Save your credentials
-
-Let's save the API key and the secret as environment variables like this:
-
-**On Windows** (cmd.exe):
-
-```doscon
-> SET PIESOCKET_API_KEY=<your-api-key>
-> SET PIESOCKET_SECRET=<your-secret>>
-```
-
-**On GNU/Linux or MacOS** (bash):
-
-```console
-$ export PIESOCKET_API_KEY=<your-api-key>
-$ export PIESOCKET_SECRET=<your-secret>>
-```
 
 ### Add your credentials and PieSocket endpoint to `settings`
 
@@ -51,8 +34,8 @@ The PieSocket endpoint depends on the cluster. In the above image the PieSocket 
 
 Add the following in your `settings.base` file:
 ```python
-PIESOCKET_API_KEY = os.environ['PIESOCKET_API_KEY']
-PIESOCKET_SECRET = os.environ['PIESOCKET_SECRET']
+PIESOCKET_API_KEY = "your-api-key"
+PIESOCKET_SECRET = "your-secret"
 PIESOCKET_ENDPOINT = "your-piesocket-endpoint"
 ```
 

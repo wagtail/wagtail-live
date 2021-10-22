@@ -34,29 +34,17 @@ See [Configuring a publisher](../getting_started/tutorial.md#configuring-a-publi
 |----------------------|---------------------|---------|
 | Slack signing secret | For Slack receivers | None    |
 
-We recommend storing sensitive values as environment variables.
-```python
-SLACK_SIGNING_SECRET = os.environ['SLACK_SIGNING_SECRET']
-```
 
 ### `SLACK_BOT_TOKEN`
 | Description                                                   | Required            | Default |
 |---------------------------------------------------------------|---------------------|---------|
 | Slack bot token. This is used to download images from the Slack API. | For Slack receivers | None    |
 
-```python
-SLACK_BOT_TOKEN = os.environ['SLACK_BOT_TOKEN']
-```
-
 ## Telegram receivers
 ### `TELEGRAM_BOT_TOKEN`
 | Description        | Required               | Default |
 |--------------------|------------------------|---------|
 | Telegram bot token | For Telegram receivers | None    |
-
-```python
-TELEGRAM_BOT_TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
-```
 
 ### `TELEGRAM_WEBHOOK_URL`
 | Description                                                                                                           | Required               | Default |
