@@ -49,7 +49,7 @@ class BaseMessageReceiver:
         Dispatches an event to find the corresponding handler.
 
         Args:
-            event: New event from a messaging app.
+            event (dict): New event from a messaging app.
         """
 
         raise NotImplementedError
@@ -59,7 +59,7 @@ class BaseMessageReceiver:
         Retrieves a channel ID from a message.
 
         Args:
-            message: A received message from a messaging app.
+            message (dict): A received message from a messaging app.
 
         Returns:
             str: ID of the channel which the given message belongs to.
@@ -88,7 +88,7 @@ class BaseMessageReceiver:
         Retrieves message's ID.
 
         Args:
-            message: A received message from a messaging app
+            message (dict): A received message from a messaging app
 
         Returns:
             str: Id of the given message
@@ -103,7 +103,7 @@ class BaseMessageReceiver:
         A message is made of text and files.
 
         Args:
-            message: A received message from a messaging app
+            message (dict): A received message from a messaging app
 
         Returns:
             str: Text of the given message.
@@ -118,7 +118,7 @@ class BaseMessageReceiver:
         A message is made of text and files.
 
         Args:
-            message: A received message from a messaging app
+            message (dict): A received message from a messaging app
 
         Returns:
             list: Files included in the given message.
@@ -199,7 +199,7 @@ class BaseMessageReceiver:
         Retrieves the ID of the original message.
 
         Args:
-            message: A received message from a messaging app.
+            message (dict): A received message from a messaging app.
 
         Returns:
             str: ID of the original message that is being edited.
@@ -212,7 +212,7 @@ class BaseMessageReceiver:
         Retrieves the text an edited message.
 
         Args:
-            message: A received message from a messaging app.
+            message (dict): A received message from a messaging app.
 
         Returns:
             str: Text of the edited message.
@@ -225,7 +225,7 @@ class BaseMessageReceiver:
         Retrieves the files from an edited message.
 
         Args:
-            message: A received message from a messaging app.
+            message (dict): A received message from a messaging app.
 
         Returns:
             list: Files of the edited message.
@@ -349,7 +349,7 @@ class BaseMessageReceiver:
         to the channel where the message was posted if such a page exists.
 
         Args:
-            message: A message received from a messaging app.
+            message (dict): A message received from a messaging app.
         """
 
         channel_id = self.get_channel_id_from_message(message=message)
@@ -375,7 +375,7 @@ class BaseMessageReceiver:
         to the channel where the message was posted if such a page exists.
 
         Args:
-            message: A message edited from a messaging app.
+            message (dict): A message edited from a messaging app.
         """
 
         channel_id = self.get_channel_id_from_message(message=message)
@@ -402,7 +402,7 @@ class BaseMessageReceiver:
         the message was posted if such a page exists.
 
         Args:
-            message: A message deleted from a messaging app.
+            message (dict): A message deleted from a messaging app.
         """
 
         channel_id = self.get_channel_id_from_message(message=message)
