@@ -16,4 +16,9 @@ class WagtailLiveConfig(AppConfig):
         if issubclass(live_publisher, BaseWebsocketPublisher):
             from wagtail_live.signals import live_page_update
 
-            live_page_update.connect(live_publisher(), weak=False, dispatch_uid="live_publisher")
+            # Set`weak=False` to avoid the publisher being garbage collected.
+            # See:
+            # https://docs.djangoproject.com/en/3.2/topics/signals/#django.dispatch.Signal.connect
+            live_page_update.connect(
+                live_publisher(), weak=False, dispatch_uid="live_publisher"
+            )
