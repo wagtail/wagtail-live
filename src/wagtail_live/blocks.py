@@ -1,6 +1,7 @@
 """ Block types and block constructors are defined in this module."""
 
 from wagtail.admin.rich_text.converters.editor_html import EditorHTMLConverter
+from wagtail.core import rich_text
 from wagtail.core.blocks import (
     BooleanBlock,
     CharBlock,
@@ -10,8 +11,7 @@ from wagtail.core.blocks import (
     StructBlock,
     StructValue,
 )
-from wagtail.core.rich_text import features as feature_registry
-from wagtail.embeds.blocks import EmbedBlock
+from wagtail.embeds.blocks import EmbedBlock, EmbedValue
 from wagtail.images.blocks import ImageChooserBlock
 
 
@@ -27,11 +27,12 @@ class LivePostBlock(StructBlock):
     """A generic block that maps to a message in a messaging app."""
 
     message_id = CharBlock(help_text="Message's ID")
-    created = DateTimeBlock(help_text="Date and time of message creation")
+    created = DateTimeBlock(
+        required=False, help_text="Date and time of message creation"
+    )
     modified = DateTimeBlock(
         required=False,
         help_text="Date and time of last update",
-        blank=True,
     )
     show = BooleanBlock(
         required=False,
@@ -59,7 +60,7 @@ def construct_text_block(text):
     # BeautifulSoup prefers markup that contains at least 1 tag,
     # if that's not the case we can accept the input as is.
     if "<" in text:
-        features = feature_registry.get_default_features()
+        features = rich_text.features.get_default_features()
         cleaned_text = EditorHTMLConverter(features=features).whitelister.clean(text)
     else:
         cleaned_text = text
@@ -148,3 +149,47 @@ def clear_live_post_content(live_post):
         live_post["content"].clear()
     else:
         live_post.value["content"].clear()
+
+
+def compare_live_posts_values(first_post_value, second_post_value):
+    """
+    Compares the values of two live posts.
+
+    Args:
+        first_post_value (StreamValue):   First live post.
+        second_post_value (StreamValue):  Second live post.
+
+    Returns:
+        bool: True if the live posts are identic, False else.
+    """
+
+    if first_post_value["show"] != second_post_value["show"]:
+        return False
+
+    first_content = first_post_value["content"]
+    second_content = second_post_value["content"]
+    if len(first_content) != len(second_content):
+        return False
+
+    for i in range(0, len(first_content)):
+        first_item = first_content[i]
+        second_item = second_content[i]
+        if (
+            first_item.block_type != second_item.block_type
+            or first_item.id != second_item.id
+        ):
+            return False
+
+        first_value = first_item.value
+        second_value = second_item.value
+        if isinstance(first_value, rich_text.RichText):
+            first_value = first_value.source
+            second_value = second_value.source
+        elif isinstance(first_value, EmbedValue):
+            first_value = first_value.url
+            second_value = second_value.url
+
+        if first_value != second_value:
+            return False
+
+    return True
