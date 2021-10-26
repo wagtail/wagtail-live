@@ -183,8 +183,8 @@ def compare_live_posts_values(first_post_value, second_post_value):
         first_value = first_item.value
         second_value = second_item.value
         if isinstance(first_value, rich_text.RichText):
-            first_value = first_value.source
-            second_value = second_value.source
+            first_value = rich_text.get_text_for_indexing(first_value.source)
+            second_value = rich_text.get_text_for_indexing(second_value.source)
         elif isinstance(first_value, EmbedValue):
             first_value = first_value.url
             second_value = second_value.url
