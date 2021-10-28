@@ -55,24 +55,24 @@ $ python3 manage.py startapp liveblog
 
 You will then need to add `wagtail_live` and `liveblog` to your `INSTALLED_APPS` in your `settings.base` file:
 ```python
-    INSTALLED_APPS = [
-        'home',
-        'search',
-        'liveblog',
-        'wagtail_live',
-        ...
-        # Other apps
-    ]
+INSTALLED_APPS = [
+    'home',
+    'search',
+    'liveblog',
+    'wagtail_live',
+    ...
+    # Other apps
+]
 ```
 
 We can now create our first `LiveBlogPage`. Add the following in `liveblog.models`:
 ```python
-    from wagtail.core.models import Page
+from wagtail.core.models import Page
 
-    from wagtail_live.models import LivePageMixin
+from wagtail_live.models import LivePageMixin
 
-    class LiveBlogPage(Page, LivePageMixin):
-        content_panels = Page.content_panels + LivePageMixin.panels
+class LiveBlogPage(Page, LivePageMixin):
+    content_panels = Page.content_panels + LivePageMixin.panels
 ```
 
 We'll need to specify the path to our live page model as the value of the `WAGTAIL_LIVE_PAGE_MODEL` setting:
@@ -85,7 +85,7 @@ Create a `templates` folder inside your `liveblog` app. Add a `liveblog` folder 
 
 For now, add this to your `live_blog_page.html` template:
 ```python
-    {% include "wagtail_live/live_posts.html" %}
+{% include "wagtail_live/live_posts.html" %}
 ```
 That's all we need in our models.
 
