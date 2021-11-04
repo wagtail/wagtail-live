@@ -14,6 +14,7 @@ theme:
     primary: 'teal'
     accent: 'indigo'
 markdown_extensions:
+  - admonition
   - pymdownx.highlight
   - pymdownx.superfences
 nav:
@@ -47,6 +48,9 @@ nav:
         - Interval polling: reference/publishers/interval-polling.md
         - Long polling: reference/publishers/long-polling.md
       - Utilities: reference/utils.md
+  - Background infromation:
+      - Receivers: background-information/input-sources-and-receivers.md
+      - Publishers: background-information/publishers.md
   - Development: development.md
   - GSOC report: gsoc_report.md
 

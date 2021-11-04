@@ -38,6 +38,7 @@ Connections               ttl     opn      rt1     rt5     p50     p90
                            0       0       0.00    0.00    0.00    0.00
 ```
 
-**Note:** Most messaging apps will require the one that starts with _https://_.
+!!! note
+    Most messaging apps will require the one that starts with _https://_.
 
 You can now register a public-facing URL that tunnels to your local server.

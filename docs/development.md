@@ -83,6 +83,6 @@ This project comes with a helper script that assists in making a release.
 This script will:
 
 1. Verify that no git tag exists for the current version number.
-2. Builds wheels and source distributions.
+2. Build wheel and source distributions.
 3. Show instructions on how to create a git tag.
 4. Show instructions on how to upload to PyPI.
