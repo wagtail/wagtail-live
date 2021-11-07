@@ -25,6 +25,7 @@ test_requires = [
     "pytest-factoryboy>=2.1.0,<3",
     "pytest-mock>=3.6.1,<3.7.0",
     "pytest-asyncio>=0.15.1,<0.16",
+    "async_timeout>=3.0,<4.0",
     "channels>=3.0.0,<4.0.0",
     "aioredis>=2.0.0,<3",
     "starlette>=0.16.0,<0.17",
