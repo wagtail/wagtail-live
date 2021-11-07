@@ -28,3 +28,16 @@ Make sure you have these 2 lines in your template:
 
 {% include "wagtail_live/polling/long_polling.html" %}
 ```
+
+## Add URLs
+
+Add the Wagtail Live URLs to your `urls.py`:
+
+```python
+from django.urls import include, path
+from wagtail_live import urls as live_urls
+
+urlpatterns += [
+    path('wagtail_live/', include(live_urls)),
+]
+```
