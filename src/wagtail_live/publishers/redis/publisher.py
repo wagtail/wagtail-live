@@ -27,7 +27,7 @@ async def redis_publish(channel_group_name, message):
 
 
 class RedisPubSubPublisher(BaseWebsocketPublisher):
-    """Publisher using Redis PubSub functionnality."""
+    """Publisher using Redis PubSub functionality."""
 
     def publish(self, channel_id, renders, removals):
         """

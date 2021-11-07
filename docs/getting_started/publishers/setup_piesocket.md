@@ -2,7 +2,8 @@
 
 ---
 
-**Note:** PieSocket offers a 'free-plus' plan to Wagtail-live users. This is the same as the free plan, but with an increased limit of 1 million messages per day. To benefit from this offer, follow the partner link instead of the regular one.
+!!! note
+    PieSocket offers a 'free-plus' plan to Wagtail-live users. This is the same as the free plan, but with an increased limit of 1 million messages per day. To benefit from this offer, follow the partner link instead of the regular one.
 
 ---
 
