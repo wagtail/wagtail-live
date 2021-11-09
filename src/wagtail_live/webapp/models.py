@@ -43,7 +43,6 @@ class Message(models.Model):
     )
     show = models.BooleanField(
         default=True,
-        blank=True,
         help_text="Indicates if this message is shown/hidden",
     )
     content = models.TextField(help_text="Content of the message")

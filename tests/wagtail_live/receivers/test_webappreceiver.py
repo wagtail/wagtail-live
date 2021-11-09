@@ -72,7 +72,7 @@ def test_get_channel_id_from_message(webapp_receiver, message):
 
 def test_get_message_id_from_message(webapp_receiver, message):
     got = webapp_receiver.get_message_id_from_message(message)
-    assert got == message["id"]
+    assert got == str(message["id"])
 
 
 def test_get_message_text(webapp_receiver, message):
@@ -112,7 +112,7 @@ def test_get_message_files_if_files(webapp_receiver, image, message):
 
 def test_get_message_id_from_edited_message(webapp_receiver, edited_message):
     got = webapp_receiver.get_message_id_from_edited_message(edited_message)
-    assert got == edited_message["id"]
+    assert got == str(edited_message["id"])
 
 
 def test_get_message_text_from_edited_message(webapp_receiver, edited_message):
@@ -200,7 +200,7 @@ def test_add_message(blog_page_factory, webapp_receiver, message):
     assert len(page.live_posts) == 2
 
     post_added = page.live_posts[0].value
-    assert post_added["message_id"] == message["id"]
+    assert post_added["message_id"] == str(message["id"])
 
     message_parts = message["content"].split("\n")
     content = post_added["content"]

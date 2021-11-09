@@ -46,6 +46,7 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ["id", "channel", "created", "modified", "show", "content", "images"]
+        extra_kwargs = {"show": {"default": True}}
 
     def create(self, validated_data):
         images = validated_data.pop("images")

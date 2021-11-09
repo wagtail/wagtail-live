@@ -33,7 +33,7 @@ class WebAppReceiver(BaseMessageReceiver):
     def get_message_id_from_message(self, message):
         """See base class."""
 
-        return message["id"]
+        return str(message["id"])
 
     def get_message_text(self, message):
         """See base class."""
