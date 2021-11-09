@@ -75,3 +75,6 @@ db.sqlite3
 /media/
 
 .envrc
+
+### Frontend ###
+node_modules/

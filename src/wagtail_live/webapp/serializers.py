@@ -73,6 +73,11 @@ class MessageSerializer(serializers.ModelSerializer):
 class ChannelSerializer(serializers.ModelSerializer):
     """Channel serializer"""
 
+    posts_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Channel
-        fields = ["channel_name", "created"]
+        fields = ["channel_name", "created", "posts_count"]
+
+    def get_posts_count(self, obj):
+        return obj.messages.count()

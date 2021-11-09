@@ -1,52 +1,44 @@
-{% extends 'webapp/base.html' %}
+{% extends 'webapp/base.html' %} 
 {% load static %}
 
 {% block title %} Channels {% endblock title %}
 
-{% block header %}
-  <h2>Channels</h2>
-{% endblock header %}
-
 {% block form %}
-<form id="new-channel-form">
-    {% csrf_token %}
-    <div>
-      <input type="text" id="channel_name" name="channel_name" autofocus required>
-    </div>
-    <div>
-      <button type="submit">New Channel</button>
-    </div>
-</form>
-{% endblock form %}
+    <form id="new-channel-form">
+        {% csrf_token %}
+        <div class="input-group my-3">
+            <input type="text" id="channel_name" name="channel_name" class="form-control" placeholder="Channel name" aria-label="Channel name" required>
+            <button type="submit" class="btn btn-primary">New Channel</button>
+        </div>
+    </form>
+{% endblock form %} 
 
 {% block content %}
-<ul>
-  {% for channel in channels %}
-    {% with channel.channel_name as channel_name %}
-      <li data-id="{{ channel_name }}">
+    <div class="mt-5">
+        <h1 class="fs-4">Channels</h1>
+        <ul class="list-group my-4">
+            {% for channel in channels %} 
+                {% with channel.channel_name as channel_name %}
+                    <div class="d-flex" data-id="{{ channel_name }}">
 
-        <div>
-          <a href="{% url 'channel_detail' channel_name %}">{{ channel }}</a>
-          <span class="date">{{ channel.created }}</span>
-        </div>
+                        <li class="list-group-item list-group-item-action">
+                            <a href="{% url 'channel_detail' channel_name %}" class="text-decoration-none">
+                                <div class="d-flex flex-wrap my-1 justify-content-between align-items-center">
+                                    <h5 class="mb-1">{{ channel }}</h5>
+                                    <small class="text-muted">Created {{ channel.created|timesince }} ago</small>
+                                </div>
+                                <small class="text-muted">
+                                    {{ channel.messages.all.count }} post{{ channel.messages.all.count|pluralize }}
+                                </small>
+                            </a>
+                        </li>
 
-        <div class="btn-group channel-btn">
-          <a href="{% url 'channel_detail' channel_name %}">
-            <button class="enter-btn">Go to channel</button>
-          </a>
-          <button class="delete-btn" data-channel="{{channel_name}}">Delete</button>
-        </div>
-
-      </li>
-    {% endwith %}
-  {% endfor %}
-</ul>
+                        <button type="button" class="btn col-2 delete-btn opacity-50" data-channel="{{channel_name}}">
+                            {% include "webapp/assets/delete.svg" %}
+                        </button>
+                    </div>
+                {% endwith %} 
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock content %}
-
-
-{% block extra_js %}
-<script>
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-</script>
-<script src="{% static 'webapp/js/channels.js' %}"></script>
-{% endblock extra_js %}

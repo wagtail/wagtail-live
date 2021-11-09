@@ -3,42 +3,64 @@
 
 {% block title %} {{ channel }} {% endblock title %}
 
+{% block nav %}
+    <nav class="container-fluid px-md-5 m-0 bg-light" style="background-image: url({% static 'webapp/assets/contours.svg' %});">
+        <div class="row mx-0">
 
-{% block header %}
-  <h2>{{ channel }}</h2>
-{% endblock header %}
+            <ul class="nav col-1 col-lg-3">
+                <li class="nav-item">
+                    <a href="{% url 'channels' %}" class="nav-link link-dark d-flex flex-wrap ps-0">
+                        <svg role="img" aria-label="Back to channels" width="24" height="24">
+                            <use xlink:href="#arrow-back"></use>
+                        </svg>
+                        <span class="fs-6 d-none d-lg-block">Back to channels</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="col-10 col-lg-6 ps-lg-0">
+                <h1 class="pt-2" style="font-size: 1.25em">{{ channel }}</h1>
+            </div>
+
+            <ul class="nav col-3 d-none d-lg-flex justify-content-end pe-0">
+                <li class="nav-item">
+                    <a href="#" class="nav-link link-dark d-flex flex-wrap pe-0">
+                        <span class="me-1">View Live Blog</span>
+                        <svg role="img" aria-label="Back to channels" width="24" height="24">
+                            <use xlink:href="#launch"></use>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+{% endblock nav %}
 
 {% block form %}
-<form id="new-message-form">
-    {% csrf_token %}
-    <div>
-        <textarea placeholder="Type your message here" id="content" name="content" rows="4" cols="40" autofocus required></textarea>
-        <input type="file" id="images" name="images" accept=".jpg, .jpeg, .png" multiple>
-    </div>
-    <div>
-        <button type="submit">Submit</button>
-    </div>
-</form>
+    <form class="m-0 mt-md-5 fixed-bottom bg-body w-100 w-md-auto compose-form" id="new-message-form" style="transition: all 1s ease-out;">
+        {% csrf_token %}
+        <textarea class="form-control p-3 light-border" placeholder="What is happening?" id="content" name="content" required></textarea>
+        <div class="p-2 pb-0 d-flex flex-wrap align-items-center publish-actions">
+            <button type="button" class="btn me-auto d-flex align-items-center small" id="uploadFile">
+                <input type="file" id="images" name="images" accept=".jpg, .jpeg, .png" multiple style="display: none;">
+                {% include "webapp/assets/choose_image.svg" %}
+                <div id="imagesList" class="form-text"></div>
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm" style="border-radius: 20px;">Publish</button>
+        </div>
+    </form>
 {% endblock form %}
 
 {% block content %}
-<ul>
-    {% for message in channel.messages.all %}
-        <li>
-            {% include "webapp/message.html" with message=message %}
-        </li>
-    {% endfor %}    
-</ul>
-
-<div id="back">
-    <a href="{% url 'channels' %}">All channels</a>
-</div>
+    <div class="my-4">
+        <h2 class="fw-bold fs-5 opacity-75 py-3">Timeline</h2>
+        <ul class="list-unstyled list-group" id="live-posts" data-channel="{{ channel.channel_name }}">
+            {% for message in channel.messages.all %}
+                <li class="list-group-item mb-3 py-3 px-0" style="border: none; border-bottom: 1px solid rgba(0,0,0,0.13);" data-id="{{message.id}}">
+                    {% include "webapp/message.html" with message=message %}
+                </li>
+            {% endfor %}    
+        </ul>
+    </div>
 {% endblock content %}
-
-{% block extra_js %}
-<script>
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const channelName = "{{channel.channel_name}}";
-</script>
-<script src="{% static 'webapp/js/messages.js' %}"></script>
-{% endblock extra_js %}
