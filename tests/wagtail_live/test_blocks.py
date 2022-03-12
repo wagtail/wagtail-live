@@ -2,10 +2,13 @@ import json
 from datetime import datetime
 
 import pytest
+from django.test import override_settings
 from wagtail.core.blocks import StreamValue, StructValue
 from wagtail.core.rich_text import RichText
 from wagtail.embeds.blocks import EmbedValue
 
+from tests.testapp.blocks import CustomLivePostBlock
+from tests.utils import clear_function_cache_before_and_after_execution
 from wagtail_live.blocks import (
     ContentBlock,
     LivePostBlock,
@@ -16,6 +19,7 @@ from wagtail_live.blocks import (
     construct_text_block,
 )
 from wagtail_live.receivers.base import TEXT
+from wagtail_live.utils import get_live_post_block
 
 
 def test_construct_text_block():
@@ -47,6 +51,26 @@ def test_construct_live_post_block():
             "modified": None,
             "show": True,
             "content": StreamValue(ContentBlock(), []),
+        },
+    )
+
+
+@clear_function_cache_before_and_after_execution(cached_func=get_live_post_block)
+@override_settings(WAGTAIL_LIVE_POST_BLOCK="tests.testapp.blocks.CustomLivePostBlock")
+def test_construct_custom_live_post_block():
+    live_post_block = construct_live_post_block(
+        message_id="1234",
+        created=datetime(1970, 1, 1, 12, 00),
+    )
+    assert live_post_block == StructValue(
+        CustomLivePostBlock(),
+        {
+            "message_id": "1234",
+            "created": datetime(1970, 1, 1, 12, 00),
+            "modified": None,
+            "show": True,
+            "content": StreamValue(ContentBlock(), []),
+            "posted_by": None,
         },
     )
 
