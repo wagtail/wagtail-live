@@ -8,6 +8,7 @@ from django.core.files.base import ContentFile
 from django.test import override_settings
 from django.urls import resolve
 from django.urls.resolvers import URLPattern
+from wagtail.core import hooks
 from wagtail.images.models import Image
 
 from tests.testapp.models import BlogPage
@@ -415,6 +416,23 @@ def test_add_message(slack_receiver, slack_message, slack_page):
 
     assert content[-1].block_type == TEXT
     assert content[-1].value.source == message_parts[-1]
+
+
+@pytest.mark.django_db
+def test_add_message_uses_process_livepost_before_add_hook(
+    slack_receiver, slack_message, slack_page, mocker
+):
+    counter = 0
+
+    def hook(live_post, message):
+        nonlocal counter
+        counter += 1
+
+    with hooks.register_temporarily("process_livepost_before_add", hook):
+        message = slack_message["event"]
+        slack_receiver.add_message(message=message)
+
+    assert counter == 1
 
 
 @pytest.mark.django_db
