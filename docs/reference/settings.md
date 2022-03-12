@@ -28,6 +28,15 @@ See [Configure an input source and its corresponding receiver](../getting_starte
 
 See [Configuring a publisher](../getting_started/tutorial.md#configuring-a-publisher).
 
+### `WAGTAIL_LIVE_POST_BLOCK`
+| Description                                                                                                             	| Required 	| Default                             	|
+|-------------------------------------------------------------------------------------------------------------------------	|----------	|-------------------------------------	|
+| Path to the live-post block class to use.<br>The class specified must inherit from `wagtail_live.blocks.LivePostBlock`. 	| No       	| `wagtail_live.blocks.LivePostBlock` 	|
+
+This setting allows to customize or to add extra field(s) to the `LivePostBlock` class. 
+
+See also [`process_livepost_before_add` hook](../reference/hooks.md#process_livepost_before_add).
+
 ## Slack receivers
 ### `SLACK_SIGNING_SECRET`
 | Description          | Required            | Default |
