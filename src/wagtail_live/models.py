@@ -6,8 +6,9 @@ from django.utils import timezone
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.fields import StreamField
 
-from wagtail_live.blocks import LivePostBlock, compare_live_posts_values
+from wagtail_live.blocks import compare_live_posts_values
 from wagtail_live.signals import live_page_update
+from wagtail_live.utils import get_live_post_block
 
 
 class LivePageMixin(models.Model):
@@ -36,9 +37,10 @@ class LivePageMixin(models.Model):
         default=timezone.now,
     )
 
+    live_post_block = get_live_post_block()
     live_posts = StreamField(
         [
-            ("live_post", LivePostBlock()),
+            ("live_post", live_post_block()),
         ],
         blank=True,
     )

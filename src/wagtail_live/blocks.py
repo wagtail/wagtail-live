@@ -110,7 +110,10 @@ def construct_live_post_block(message_id, created):
         LivePostBlock: a LivePostBlock
     """
 
-    return LivePostBlock().to_python(
+    from .utils import get_live_post_block
+
+    live_post_block = get_live_post_block()
+    return live_post_block().to_python(
         {
             "message_id": message_id,
             "created": created,
