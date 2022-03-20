@@ -1,6 +1,8 @@
+const scheme = useSecureWsConnection === true ? "wss" : "ws";
+
 class WebsocketPublisher {
     /**
-     * Initializes and pens a new websocket connection with server side 
+     * Initializes and opens a new websocket connection with server side 
      * or a real-time message service.
      * @constructor
      * @param {String} baseURL - baseURL to use for websocket connections.
@@ -38,7 +40,7 @@ class WebsocketPublisher {
 class GenericWebsocketPublisher extends WebsocketPublisher {
     initialize_websocket_connection() {
         this.websocket = new WebSocket(
-            `ws://${this.baseURL}/ws/channel/${channelID}/`
+            `${scheme}://${this.baseURL}/ws/channel/${channelID}/`
         );
     }
 
