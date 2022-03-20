@@ -113,6 +113,10 @@ class TestPostSlackEventsAPIReceiver:
         )
 
         assert response.status_code == 200
+        if not hasattr(response, "headers"):  # Django < 2.2
+            assert response._headers["content-type"][1] == "plain/text"
+        else:
+            assert response.headers["content-type"] == "plain/text"
         assert "challenge_token" in response.content.decode()
 
     def test_post_request_verification_error(self, slack_receiver, client):
