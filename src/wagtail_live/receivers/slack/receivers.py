@@ -33,7 +33,7 @@ class SlackWebhookMixin(WebhookReceiverMixin):
 
         payload = json.loads(request.body.decode("utf-8"))
         if payload["type"] == "url_verification":
-            return HttpResponse(payload["challenge"])
+            return HttpResponse(payload["challenge"], content_type="plain/text")
         return super().post(request, *args, **kwargs)
 
     @staticmethod
