@@ -115,6 +115,37 @@ def get_live_publisher():
     return import_string(live_publisher_class)
 
 
+@lru_cache(maxsize=1)
+def get_live_post_block():
+    """
+    Retrieves the livepost block definition to use if specified in user's settings.
+
+    Returns:
+        LivePostBlock: The livepost block class if specified
+            else `wagtail_live.blocks.LivePostBlock`.
+
+    Raises:
+        ImproperlyConfigured: if the custom block specified doesn't inherit from
+            `wagtail_live.blocks.LivePostBlock`.
+        ImportError: if the block class couldn't be loaded.
+    """
+
+    from wagtail_live.blocks import LivePostBlock
+
+    live_post_block_class = getattr(settings, "WAGTAIL_LIVE_POST_BLOCK", None)
+    if live_post_block_class:
+        live_post_block = import_string(live_post_block_class)
+        if not issubclass(live_post_block, LivePostBlock):
+            raise ImproperlyConfigured(
+                f"The block {live_post_block_class} doesn't inherit from "
+                "wagtail_live.blocks.LivePostBlock."
+            )
+
+        return live_post_block
+
+    return LivePostBlock
+
+
 def get_polling_timeout():
     """
     Retrieves the duration of the polling timeout for the long polling technique.

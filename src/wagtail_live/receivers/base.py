@@ -10,6 +10,7 @@ from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from wagtail.core import hooks
 from wagtail.images import get_image_model
 
 from wagtail_live.blocks import (
@@ -366,6 +367,9 @@ class BaseMessageReceiver:
 
         files = self.get_message_files(message=message)
         self.process_files(live_post=live_post, files=files)
+
+        for hook in hooks.get_hooks("process_livepost_before_add"):
+            hook(live_post=live_post, message=message)
 
         live_page.add_live_post(live_post=live_post)
 

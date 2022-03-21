@@ -35,6 +35,7 @@ nav:
       - Set up starlette publisher: getting_started/publishers/setup_starlette.md
   - Reference:
       - Settings: reference/settings.md
+      - Hooks: reference/hooks.md
       - LivePageMixin: reference/live-page-mixin.md
       - Receivers:
         - BaseMessageReceiver: reference/receivers/base-message-receiver.md
