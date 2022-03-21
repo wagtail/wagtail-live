@@ -412,7 +412,15 @@ class BaseMessageReceiver:
             return
 
         message_id = self.get_message_id_from_edited_message(message=message)
-        live_page.delete_live_post(message_id=message_id)
+        try:
+            live_page.delete_live_post(message_id=message_id)
+        except KeyError:
+            logger.warning(
+                f"Couldn't delete message with id={message_id}.\n"
+                "This may be due for 2 reasons:\n"
+                "1- The post hasn't been saved on the live page.\n"
+                "2- The post has been deleted in the admin interface.\n"
+            )
 
 
 @method_decorator(csrf_exempt, name="dispatch")

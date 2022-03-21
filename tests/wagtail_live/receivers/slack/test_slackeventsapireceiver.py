@@ -496,6 +496,23 @@ def test_delete_message(
 
 
 @pytest.mark.django_db
+def test_delete_unsaved_message(
+    slack_receiver, slack_deleted_message, slack_page, caplog
+):
+    deleted_message = slack_deleted_message["event"]
+    slack_receiver.delete_message(message=deleted_message)
+
+    message_id = slack_receiver.get_message_id_from_edited_message(deleted_message)
+    expected = (
+        f"Couldn't delete message with id={message_id}.\n"
+        "This may be due for 2 reasons:\n"
+        "1- The post hasn't been saved on the live page.\n"
+        "2- The post has been deleted in the admin interface.\n"
+    )
+    assert caplog.messages[0] == expected
+
+
+@pytest.mark.django_db
 def test_delete_message_wrong_channel(
     slack_receiver, slack_embed_message, slack_deleted_message, slack_page
 ):
