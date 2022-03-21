@@ -1,0 +1,2078 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://wagtail.github.io/wagtail-live/reference/receivers/telegram/">
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.2.8">
+    
+    
+      
+        <title>Telegram - Wagtail Live</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.92558b1b.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#009485">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <script>function __prefix(e){return new URL("../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#telegram" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Wagtail Live" class="md-header__button md-logo" aria-label="Wagtail Live" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Wagtail Live
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Telegram
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/wagtail/wagtail-live/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    wagtail/wagtail-live
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Wagtail Live" class="md-nav__button md-logo" aria-label="Wagtail Live" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Wagtail Live
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/wagtail/wagtail-live/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    wagtail/wagtail-live
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Getting started
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Getting started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/tutorial/" class="md-nav__link">
+        Tutorial
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_2" type="checkbox" id="__nav_2_2" >
+      
+      <label class="md-nav__link" for="__nav_2_2">
+        Receivers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Receivers" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_2">
+          <span class="md-nav__icon md-icon"></span>
+          Receivers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/receivers/setup_ngrok/" class="md-nav__link">
+        Set up a local web server with ngrok
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/receivers/setup_slack/" class="md-nav__link">
+        Set up Slack Events API receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/receivers/setup_telegram/" class="md-nav__link">
+        Set up Telegram webhook receiver
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" >
+      
+      <label class="md-nav__link" for="__nav_2_3">
+        Publishers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Publishers" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          Publishers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/publishers/setup_long_polling/" class="md-nav__link">
+        Set up long polling publisher
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/publishers/setup_interval_polling/" class="md-nav__link">
+        Set up interval polling publisher
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/publishers/setup_django_channels/" class="md-nav__link">
+        Set up Django channels publisher
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/publishers/setup_piesocket/" class="md-nav__link">
+        Set up PieSocket publisher
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/publishers/setup_event_bus_redis/" class="md-nav__link">
+        Set up an event bus based on Redis PubSub
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/publishers/setup_websockets/" class="md-nav__link">
+        Set up websockets publisher
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting_started/publishers/setup_starlette/" class="md-nav__link">
+        Set up starlette publisher
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      <label class="md-nav__link" for="__nav_3">
+        Reference
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../settings/" class="md-nav__link">
+        Settings
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live-page-mixin/" class="md-nav__link">
+        LivePageMixin
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_3" type="checkbox" id="__nav_3_3" checked>
+      
+      <label class="md-nav__link" for="__nav_3_3">
+        Receivers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Receivers" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          Receivers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../base-message-receiver/" class="md-nav__link">
+        BaseMessageReceiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../webhook_receiver_mixin/" class="md-nav__link">
+        WebhookReceiverMixin
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../slack/" class="md-nav__link">
+        Slack
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Telegram
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Telegram
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin" class="md-nav__link">
+    TelegramWebhookMixin
+  </a>
+  
+    <nav class="md-nav" aria-label="TelegramWebhookMixin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin.set_webhook" class="md-nav__link">
+    set_webhook()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin.verify_request" class="md-nav__link">
+    verify_request()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin.webhook_connection_set" class="md-nav__link">
+    webhook_connection_set()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver" class="md-nav__link">
+    TelegramWebhookReceiver
+  </a>
+  
+    <nav class="md-nav" aria-label="TelegramWebhookReceiver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.add_image_to_message" class="md-nav__link">
+    add_image_to_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.dispatch_event" class="md-nav__link">
+    dispatch_event()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_channel_id_from_message" class="md-nav__link">
+    get_channel_id_from_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_file_path" class="md-nav__link">
+    get_file_path()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_content" class="md-nav__link">
+    get_image_content()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_dimensions" class="md-nav__link">
+    get_image_dimensions()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_mimetype" class="md-nav__link">
+    get_image_mimetype()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_name" class="md-nav__link">
+    get_image_name()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_title" class="md-nav__link">
+    get_image_title()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_files" class="md-nav__link">
+    get_message_files()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_files_from_edited_message" class="md-nav__link">
+    get_message_files_from_edited_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_id_from_edited_message" class="md-nav__link">
+    get_message_id_from_edited_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_id_from_message" class="md-nav__link">
+    get_message_id_from_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_text" class="md-nav__link">
+    get_message_text()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_text_from_edited_message" class="md-nav__link">
+    get_message_text_from_edited_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.handle_bot_command" class="md-nav__link">
+    handle_bot_command()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.process_text" class="md-nav__link">
+    process_text()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../webapp/" class="md-nav__link">
+        Webapp
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_4" type="checkbox" id="__nav_3_4" >
+      
+      <label class="md-nav__link" for="__nav_3_4">
+        Publishers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Publishers" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Publishers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../publishers/base_websocket_publisher/" class="md-nav__link">
+        Base Websocket Publisher
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../publishers/polling-mixin/" class="md-nav__link">
+        Polling publisher mixin
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../publishers/interval-polling/" class="md-nav__link">
+        Interval polling
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../publishers/long-polling/" class="md-nav__link">
+        Long polling
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/" class="md-nav__link">
+        Utilities
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Background infromation
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Background infromation" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Background infromation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../background-information/input-sources-and-receivers/" class="md-nav__link">
+        Receivers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../background-information/publishers/" class="md-nav__link">
+        Publishers
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/" class="md-nav__link">
+        Development
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gsoc_report/" class="md-nav__link">
+        GSOC report
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin" class="md-nav__link">
+    TelegramWebhookMixin
+  </a>
+  
+    <nav class="md-nav" aria-label="TelegramWebhookMixin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin.set_webhook" class="md-nav__link">
+    set_webhook()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin.verify_request" class="md-nav__link">
+    verify_request()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin.webhook_connection_set" class="md-nav__link">
+    webhook_connection_set()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver" class="md-nav__link">
+    TelegramWebhookReceiver
+  </a>
+  
+    <nav class="md-nav" aria-label="TelegramWebhookReceiver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.add_image_to_message" class="md-nav__link">
+    add_image_to_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.dispatch_event" class="md-nav__link">
+    dispatch_event()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_channel_id_from_message" class="md-nav__link">
+    get_channel_id_from_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_file_path" class="md-nav__link">
+    get_file_path()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_content" class="md-nav__link">
+    get_image_content()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_dimensions" class="md-nav__link">
+    get_image_dimensions()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_mimetype" class="md-nav__link">
+    get_image_mimetype()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_name" class="md-nav__link">
+    get_image_name()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_title" class="md-nav__link">
+    get_image_title()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_files" class="md-nav__link">
+    get_message_files()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_files_from_edited_message" class="md-nav__link">
+    get_message_files_from_edited_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_id_from_edited_message" class="md-nav__link">
+    get_message_id_from_edited_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_id_from_message" class="md-nav__link">
+    get_message_id_from_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_text" class="md-nav__link">
+    get_message_text()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_text_from_edited_message" class="md-nav__link">
+    get_message_text_from_edited_message()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.handle_bot_command" class="md-nav__link">
+    handle_bot_command()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.process_text" class="md-nav__link">
+    process_text()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/wagtail/wagtail-live/edit/main/docs/reference/receivers/telegram.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="telegram">Telegram</h1>
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin" class="doc doc-heading">
+        <code>wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents first">
+
+      <p>Telegram WebhookMixin.</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin.set_webhook" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_webhook</span><span class="p">()</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Sets webhook connection with Telegram's API</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">set_webhook</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sets webhook connection with Telegram&#39;s API&quot;&quot;&quot;</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">get_base_telegram_url</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;setWebhook&quot;</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">get_telegram_webhook_url</span><span class="p">(),</span>
+            <span class="s2">&quot;allowed_updates&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;edited_message&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;channel_post&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;edited_channel_post&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">response</span><span class="o">.</span><span class="n">ok</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;ok&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="n">WebhookSetupError</span><span class="p">(</span>
+            <span class="s2">&quot;Failed to set Webhook connection with Telegram&#39;s API. &quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin.verify_request" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">verify_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">verify_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">token</span> <span class="o">!=</span> <span class="n">get_telegram_bot_token</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="n">RequestVerificationError</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookMixin.webhook_connection_set" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">webhook_connection_set</span><span class="p">()</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">webhook_connection_set</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">get_base_telegram_url</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;getWebhookInfo&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
+        <span class="c1"># Ensure that the webhook is set with the correct URL</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;ok&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">][</span><span class="s2">&quot;url&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">get_telegram_webhook_url</span><span class="p">()</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver" class="doc doc-heading">
+        <code>wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents first">
+
+      <p>Telegram webhook receiver.</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.add_image_to_message" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_image_to_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Telegram sends images uploaded in a message one by one.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">add_image_to_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Telegram sends images uploaded in a message one by one.&quot;&quot;&quot;</span>
+
+    <span class="n">channel_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_channel_id_from_message</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">live_page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_live_page_from_channel_id</span><span class="p">(</span><span class="n">channel_id</span><span class="o">=</span><span class="n">channel_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">message_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_message_id_from_message</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+    <span class="n">live_post</span> <span class="o">=</span> <span class="n">live_page</span><span class="o">.</span><span class="n">get_live_post_by_message_id</span><span class="p">(</span><span class="n">message_id</span><span class="o">=</span><span class="n">message_id</span><span class="p">)</span>
+
+    <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_message_files</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">process_files</span><span class="p">(</span><span class="n">live_post</span><span class="o">=</span><span class="n">live_post</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">)</span>
+
+    <span class="n">live_page</span><span class="o">.</span><span class="n">update_live_post</span><span class="p">(</span><span class="n">live_post</span><span class="o">=</span><span class="n">live_post</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.dispatch_event" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">dispatch_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p><strong>Note</strong>: Telegram doesn't send an update when a message is deleted.</p>
+<p>See also base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">dispatch_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    **Note**: Telegram doesn&#39;t send an update when a message is deleted.</span>
+
+<span class="sd">    See also base class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">edit_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;edited_message&quot;</span><span class="p">,</span> <span class="s2">&quot;edited_channel_post&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">edit_type</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">change_message</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">edit_type</span><span class="p">))</span>
+            <span class="k">return</span>
+
+    <span class="n">message</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;channel_post&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;media_group_id&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_image_to_message</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">if</span> <span class="s2">&quot;entities&quot;</span> <span class="ow">in</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;entities&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;bot_command&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handle_bot_command</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_channel_id_from_message" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_channel_id_from_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_channel_id_from_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Since live posts aren&#39;t cleaned when they are added via a receiver,</span>
+    <span class="c1"># we make sure at this level that we return the correct types.</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;chat&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_file_path" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_id</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Retrieves the <code>file_path</code> of a Telegram file.</p>
+<p>The <code>file_path</code> is necessary to have more infos about the image and to download it.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>file_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Id of the file to download.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The <code>file_path</code> property of the file as sent by Telegram.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves the `file_path` of a Telegram file.</span>
+
+<span class="sd">    The `file_path` is necessary to have more infos about the image and to download it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_id (str): Id of the file to download.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The `file_path` property of the file as sent by Telegram.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">get_base_telegram_url</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;getFile&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;file_id&quot;</span><span class="p">:</span> <span class="n">file_id</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;result&quot;</span><span class="p">][</span><span class="s2">&quot;file_path&quot;</span><span class="p">]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_content" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_image_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_image_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">]</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;https://api.telegram.org/file/bot</span><span class="si">{</span><span class="n">get_telegram_bot_token</span><span class="p">()</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">ContentFile</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_dimensions" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_image_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_image_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">],</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_mimetype" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_image_mimetype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_image_mimetype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="n">mimetype</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s2">&quot;jpeg&quot;</span> <span class="k">if</span> <span class="n">mimetype</span> <span class="o">==</span> <span class="s2">&quot;jpg&quot;</span> <span class="k">else</span> <span class="n">mimetype</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_name" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_image_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_image_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_image_title" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_image_title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_image_title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_files" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_message_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_message_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;photo&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="c1"># Choose original photo which is the last of the list</span>
+        <span class="n">photo</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;photo&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">photo</span><span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_file_path</span><span class="p">(</span><span class="n">file_id</span><span class="o">=</span><span class="n">photo</span><span class="p">[</span><span class="s2">&quot;file_id&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">photo</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_files_from_edited_message" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_message_files_from_edited_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_message_files_from_edited_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_message_files</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_id_from_edited_message" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_message_id_from_edited_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_message_id_from_edited_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_message_id_from_message</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_id_from_message" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_message_id_from_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Messages containing multiple images have a <code>media_group_id</code> attribute.</p>
+<p>See also base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_message_id_from_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Messages containing multiple images have a `media_group_id` attribute.</span>
+
+<span class="sd">    See also base class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">msg_id</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;media_group_id&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message_id&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">msg_id</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_text" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_message_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_message_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Telegram parses the text of a message before sending it.</span>
+    <span class="c1"># The result can be found in the message&#39;s &quot;entities&quot;.</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;caption&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;entities&quot;</span><span class="p">:</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entities&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+    <span class="p">}</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.get_message_text_from_edited_message" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_message_text_from_edited_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>See base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_message_text_from_edited_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;See base class.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_message_text</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.handle_bot_command" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">handle_bot_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Handles the following bot commands:</p>
+<ul>
+<li><code>/get_chat_id</code>: returns the id of the current chat.</li>
+</ul>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">handle_bot_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles the following bot commands:</span>
+
+<span class="sd">    - `/get_chat_id`: returns the id of the current chat.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;entities&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">command</span><span class="p">[</span><span class="s2">&quot;offset&quot;</span><span class="p">]</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">command</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">]</span>
+    <span class="n">command_text</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">command_text</span> <span class="o">==</span> <span class="s2">&quot;/get_chat_id&quot;</span><span class="p">:</span>
+        <span class="n">chat_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_channel_id_from_message</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">get_base_telegram_url</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;sendMessage&quot;</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;chat_id&quot;</span><span class="p">:</span> <span class="n">chat_id</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">chat_id</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;ok&quot;</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="wagtail_live.receivers.telegram.receivers.TelegramWebhookReceiver.process_text" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">process_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">live_post</span><span class="p">,</span> <span class="n">message_text</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Use the message entities to convert links.</p>
+<p>A raw link isn't converted by Telegram and a link with a description
+is sent as a <code>text_link</code> entity.</p>
+<p>See also base class.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>wagtail_live/receivers/telegram/receivers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">process_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">live_post</span><span class="p">,</span> <span class="n">message_text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Use the message entities to convert links.</span>
+
+<span class="sd">    A raw link isn&#39;t converted by Telegram and a link with a description</span>
+<span class="sd">    is sent as a `text_link` entity.</span>
+
+<span class="sd">    See also base class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">message_text</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+    <span class="n">len_text</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">entities</span> <span class="o">=</span> <span class="n">message_text</span><span class="p">[</span><span class="s2">&quot;entities&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Process the entities in reversed order to be able to edit the text in place.</span>
+    <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">entities</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">entity</span><span class="p">[</span><span class="s2">&quot;offset&quot;</span><span class="p">]</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">entity</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">entity</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">description</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">is_embed</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+                <span class="c1"># Check if this can match an embed block, if so no conversion happens.</span>
+                <span class="c1"># It matches an embed block if it has a line in the text for itself.</span>
+                <span class="k">if</span> <span class="n">end</span> <span class="o">==</span> <span class="n">len_text</span> <span class="ow">or</span> <span class="n">text</span><span class="p">[</span><span class="n">end</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">text</span><span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+                        <span class="c1"># This is an embed block, skip to the next entity</span>
+                        <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">entity</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;text_link&quot;</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">entity</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">format_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;a href=&quot;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s1">&lt;/a&gt;&#39;</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[:</span><span class="n">start</span><span class="p">]</span> <span class="o">+</span> <span class="n">link</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="n">end</span><span class="p">:]</span>
+
+    <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">process_text</span><span class="p">(</span><span class="n">live_post</span><span class="o">=</span><span class="n">live_post</span><span class="p">,</span> <span class="n">message_text</span><span class="o">=</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../slack/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Slack" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Slack
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../webapp/" class="md-footer__link md-footer__link--next" aria-label="Next: Webapp" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Webapp
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.94ec81fe.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.48dfec6c.min.js"></script>
+      
+    
+  </body>
+</html>
