@@ -1,5 +1,7 @@
 {% load static wagtail_live_tags %}
 
+{% include "wagtail_live/websocket/websocket.html" %}
+
 <script>
     const serverHost = "{% get_server_host %}";
     const serverPort = "{% get_server_port %}";

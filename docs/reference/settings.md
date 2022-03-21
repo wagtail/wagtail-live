@@ -78,6 +78,11 @@ See [Configuring a publisher](../getting_started/tutorial.md#configuring-a-publi
 |------------------------------------------------------------------------|----------|---------|
 | Server port for websocket publishers based on starlette, websockets... | No       | 8765    |
 
+### `WAGTAIL_LIVE_USE_SECURE_WS_CONNECTION`
+| Description                                                                                                                                                                                                                    	| Required 	| Default 	|
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|----------	|---------	|
+| Determines if a publisher should use a secure WebSocket connection.<br>Set this to `True` if your site is deployed over `https` since browsers don't allow insecure WebSocket connections (ws) from secure websites (https). 	| No       	| False   	|
+
 ## Synchronize live page with admin interface
 ### `WAGTAIL_LIVE_SYNC_WITH_ADMIN`
 | Description                                                                                             | Required | Default |

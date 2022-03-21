@@ -1,5 +1,7 @@
 {% load wagtail_live_tags static %}
 
+{% include "wagtail_live/websocket/websocket.html" %}
+
 <script>
     const piesocketApiKey = "{% piesocket_api_key %}"
     const piesocketEndpoint = "{% piesocket_endpoint %}"

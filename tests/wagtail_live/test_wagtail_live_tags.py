@@ -9,6 +9,15 @@ from wagtail_live.publishers.piesocket.utils import (
 context = Context({})
 
 
+def test_use_secure_ws_connection():
+    to_render = Template(
+        "{% load wagtail_live_tags %}" "{% use_secure_ws_connection %}"
+    )
+    rendered = to_render.render(context)
+
+    assert rendered == "False"  # Default value
+
+
 def test_get_server_host_tag():
     to_render = Template("{% load wagtail_live_tags %}" "{% get_server_host %}")
     rendered = to_render.render(context)
